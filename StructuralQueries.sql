@@ -34,11 +34,13 @@ CREATE TABLE orders (
 );
 
 
+
+
 CREATE TABLE Events_tag(
     tag_id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
     start_date DATE NOT NULL,
-    end_date DATE NOT NULL
+    end_date DATE NOT NULL,
 );
 
 CREATE TABLE Product(
@@ -56,13 +58,19 @@ CREATE TABLE Product(
    is_shown BIT NOT NULL,
    category_name VARCHAR(50) NOT NULL,
    purchases_no INT NOT NULL,
-   shelf_id BIT NOT NULL
+   shelf_id INT NOT NULL, 
+
+FOREIGN KEY (shelf_id) REFERENCES Shelf(shelf_id)
+
 );
 
 CREATE TABLE Shelf(
     shelf_id INT PRIMARY KEY AUTO_INCREMENT,
     shelf_name VARCHAR(50) NOT NULL,
-    VID INT NOT NULL
+    VID INT PRIMARY KEY NOT NULL, 
+
+FOREIGN KEY (VID) REFERENCES Vendot(VID) ON DELETE CASCADE
+
 );
 
 CREATE TABLE Image(
@@ -76,7 +84,10 @@ CREATE TABLE product_image(
     image_id INT PRIMARY KEY AUTO_INCREMENT,
     image_name VARCHAR(50) NOT NULL,
     file_path TEXT NOT NULL,
-    PID INT NOT NULL
+    PID INT NOT NULL,
+
+FOREIGN KEY (PID) REFERENCES Product(PID) ON DELETE CASCADE
+
 );
 
 CREATE TABLE card(
