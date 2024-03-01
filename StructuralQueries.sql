@@ -34,6 +34,64 @@ CREATE TABLE orders (
 );
 
 
+CREATE TABLE Events_tag(
+    tag_id INT PRIMARY KEY AUTO_INCREMENT,
+    name VARCHAR(50) NOT NULL,
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL
+);
+
+CREATE TABLE Product(
+    product_id INT PRIMARY KEY AUTO_INCREMENT,
+    product_name VARCHAR(50) NOT NULL,
+    quantity INT NOT NULL,
+    discount DECIMAL(10, 2),
+    description VARCHAR(100),
+    is_used BIT NOT NULL,
+   deletion_date DATE,
+   time_since_restocking DATE NOT NULL,
+   price DECIMAL(10, 2) NOT NULL,
+   subscription_date DATE NOT NULL,
+   taxes DECIMAL(10, 2) NOT NULL,
+   is_shown BIT NOT NULL,
+   category_name VARCHAR(50) NOT NULL,
+   purchases_no INT NOT NULL,
+   shelf_id BIT NOT NULL
+);
+
+CREATE TABLE Shelf(
+    shelf_id INT PRIMARY KEY AUTO_INCREMENT,
+    shelf_name VARCHAR(50) NOT NULL,
+    VID INT NOT NULL
+);
+
+CREATE TABLE Image(
+    image_id INT PRIMARY KEY AUTO_INCREMENT,
+    image_name VARCHAR(50) NOT NULL,
+    file_path TEXT NOT NULL
+    
+);
+
+CREATE TABLE product_image(
+    image_id INT PRIMARY KEY AUTO_INCREMENT,
+    image_name VARCHAR(50) NOT NULL,
+    file_path TEXT NOT NULL,
+    PID INT NOT NULL
+);
+
+CREATE TABLE card(
+    card_id INT PRIMARY KEY AUTO_INCREMENT,
+    card_number VARCHAR(20) NOT NULL,
+    year INT NOT NULL,
+    month INT NOT NULL,
+    user_id INT NOT NULL,
+   
+FOREIGN KEY (user_id) REFERENCES Users (user_id) ON DELETE CASCADE
+);
+
+
+
+
 
 /* ----------------- Relationships ----------------- */
   
@@ -57,6 +115,34 @@ CREATE TABLE product_tag (
     FOREIGN KEY (tag_id) REFERENCES tags (tag_id) ON DELETE CASCADE
     PRIMARY KEY (product_id, tag_id)
 );
+
+/*user-image table */
+CREATE TABLE user_image(
+    user_id INT NOT NULL,
+    image_id INT NOT NULL,
+
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (image_id) REFERENCES Image(image_id) ON DELETE CASCADE
+    PRIMARY KEY (user_id, image_id)
+);
+
+/*product -event tag table */
+
+CREATE TABLE product_Events_tag(
+    PID INT NOT NULL,
+    EID INT NOT NULL,
+    image_id INT PRIMARY KEY AUTO_INCREMENT,
+    image_name VARCHAR(50) NOT NULL,
+    file_path TEXT NOT NULL,
+    
+
+    FOREIGN KEY (PID) REFERENCES Product(PID) ON DELETE CASCADE,
+    FOREIGN KEY (EID) REFERENCES Events_tag (tag_id) ON DELETE CASCADE,
+    PRIMARY KEY (PID, EID)
+);
+
+
+
 
 /* foreign keys for reviews table*/
 
