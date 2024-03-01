@@ -84,6 +84,6 @@ ADD CONSTRAINT fk_orders_customer
 FOREIGN KEY (customer_id) REFERENCES customer (customer_id) on DELETE CASCADE;
 
 ALTER TABLE orders
-ADD COLUMN card_id INT NOT NULL,
+ADD COLUMN card_id INT,
 ADD CONSTRAINT fk_orders_card
-FOREIGN KEY (card_id) REFERENCES card (card_id);
+FOREIGN KEY (card_id) REFERENCES card (card_id) on DELETE SET NULL;
