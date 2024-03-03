@@ -12,6 +12,7 @@ CREATE TABLE users (
     address_street VARCHAR(100) NOT NULL,
     address_apartment_no VARCHAR(10),
     address_Building_no VARCHAR(10),
+    image_file_path VARCHAR(255),
     CONSTRAINT CHK_User_Type CHECK (User_type IN ('admin', 'customer', 'vendor')),
     CONSTRAINT CHK_Phone_Number CHECK (LENGTH(phone_number) > 5), -- Assuming minimum length
     CONSTRAINT CHK_Email_Format CHECK (email REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
@@ -114,12 +115,7 @@ CREATE TABLE product_images(
 	FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
 
 );
-CREATE TABLE images(
-    image_id INT PRIMARY KEY AUTO_INCREMENT,
-    image_name VARCHAR(50) NOT NULL,
-    file_path TEXT NOT NULL
-    
-);
+
 CREATE TABLE cards(
     card_id INT PRIMARY KEY AUTO_INCREMENT,
     card_number VARCHAR(20) NOT NULL,
@@ -213,13 +209,7 @@ CREATE TABLE product_tags (
     FOREIGN KEY (tag_id) REFERENCES tags(tag_id) ON DELETE CASCADE,
     PRIMARY KEY (product_id, tag_id)
 );
-CREATE TABLE user_images(
-    user_id INT NOT NULL,
-    image_id INT NOT NULL,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (image_id) REFERENCES images(image_id) ON DELETE CASCADE,
-    PRIMARY KEY (user_id, image_id)
-);
+
 CREATE TABLE product_event_tags(
     PID INT NOT NULL,
     EID INT NOT NULL,
@@ -230,6 +220,8 @@ CREATE TABLE product_event_tags(
     FOREIGN KEY (EID) REFERENCES event_tags(tag_id) ON DELETE CASCADE,
     CONSTRAINT chk_image_name_length CHECK (LENGTH(image_name) <= 50)
 );
+
+
 
 
 
