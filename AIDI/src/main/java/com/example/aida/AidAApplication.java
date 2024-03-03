@@ -1,13 +1,13 @@
-package com.example.aidi;
+package com.example.aida;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class AidiApplication {
+public class AidAApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AidiApplication.class, args);
+        SpringApplication.run(AidAApplication.class, args);
     }
 
 }
