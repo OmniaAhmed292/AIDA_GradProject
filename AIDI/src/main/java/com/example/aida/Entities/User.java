@@ -10,7 +10,15 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.apache.catalina.realm.UserDatabaseRealm.getRoles;
 
 
 @Entity
@@ -61,6 +69,10 @@ public class User {
     @Column(length = 10)
     private String addressBuildingNo;
 
+
+    @Column(length = 255)
+    private String image_file_path;
+
     @OneToMany(mappedBy = "customer")
     private Set<Customer> customerCustomers;
 
@@ -73,13 +85,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Card> userCards;
 
-    @ManyToMany
-    @JoinTable(
-            name = "UserImage",
-            joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "imageId")
-    )
-    private Set<Image> userImageImages;
+
 
     public Integer getUserId() {
         return userId;
@@ -201,12 +207,23 @@ public class User {
         this.userCards = userCards;
     }
 
-    public Set<Image> getUserImageImages() {
-        return userImageImages;
+    public void setImage_file_path(String image_file_path) {
+        this.image_file_path = image_file_path;
     }
 
-    public void setUserImageImages(final Set<Image> userImageImages) {
-        this.userImageImages = userImageImages;
+
+    public String getImage_file_path() {
+        return image_file_path;
     }
 
+    public Collection<String> getRoles() {
+
+        return Arrays.asList("ADMIN", "Customer","Vendor");
+    }
+    public Collection<GrantedAuthority> getAuthorities() {
+        // Convert roles to GrantedAuthority instances
+        return getRoles().stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
 }
