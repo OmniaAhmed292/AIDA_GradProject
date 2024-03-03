@@ -10,7 +10,15 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import static org.apache.catalina.realm.UserDatabaseRealm.getRoles;
 
 
 @Entity
@@ -205,8 +213,18 @@ public class User {
         return userImageImages;
     }
 
+
     public void setUserImageImages(final Set<Image> userImageImages) {
         this.userImageImages = userImageImages;
     }
+    public Collection<String> getRoles() {
 
+        return Arrays.asList("ADMIN", "Customer","Vendor");
+    }
+    public Collection<GrantedAuthority> getAuthorities() {
+        // Convert roles to GrantedAuthority instances
+        return getRoles().stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
 }

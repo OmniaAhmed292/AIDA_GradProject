@@ -1,4 +1,6 @@
 package com.example.aida.Services.security;
+import com.example.aida.Repositories.UserRepository;
+
 
 
 
@@ -24,11 +26,11 @@ public class CustomUserDetailsService  implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        com.example.aida.Entities.User user = userRepository.findByEmail(username) // 1
-                .orElseThrow(() -> new UsernameNotFoundException("Username " + username + " not found"));
+    public UserDetails loadUserByUsername(String Email) throws UsernameNotFoundException {
+        com.example.aida.Entities.User user = userRepository.findByEmail(Email)
+                .orElseThrow(() -> new UsernameNotFoundException("Email " + Email + " not found"));
         //Opject represntaion of an Actual user
-        return new User(user.getEmail(), user.getPassword(), user.getAuthorities());
+        return new User(user.getEmail(), user.getHashedPassword(), user.getAuthorities());
     }
 
 }
