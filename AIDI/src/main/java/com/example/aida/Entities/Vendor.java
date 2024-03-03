@@ -1,25 +1,18 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
 
 @Entity
+@Table(name = "vendors")
 public class Vendor {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "vendor_id")
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
@@ -32,34 +25,34 @@ public class Vendor {
     )
     private Long id;
 
-    @Column(precision = 12, scale = 2)
+    @Column(precision = 12, scale = 2, name = "balance")
     private BigDecimal balance;
 
-    @Column(columnDefinition = "text")
+    @Column(columnDefinition = "text", name = "About_us_info")
     private String aboutUsInfo;
 
-    @Column(length = 50)
+    @Column(length = 50, name = "business_type")
     private String businessType;
 
-    @Column(length = 100)
+    @Column(length = 100, name = "business_name")
     private String businessName;
 
-    @Column
+    @Column(name = "exp_day")
     private LocalDate expDay;
 
-    @Column
+    @Column(name="exo_month")
     private String exoMonth;
 
-    @Column
+    @Column(name = "settings_late_emails")
     private Integer settingsLateEmails;
 
-    @Column
+    @Column(name = "settings_new_emails")
     private Integer settingsNewEmails;
 
-    @Column
+    @Column(name = "application_files_path")
     private String applicationFilesPath;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_id")
     private User vendor;
 

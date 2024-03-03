@@ -1,15 +1,5 @@
 package com.example.aida.Entities;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -22,11 +12,11 @@ import static org.apache.catalina.realm.UserDatabaseRealm.getRoles;
 
 
 @Entity
-@Table(name = "\"User\"")
+@Table(name = "users")
 public class User {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "user_id")
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
@@ -76,8 +66,8 @@ public class User {
     @OneToMany(mappedBy = "customer")
     private Set<Customer> customerCustomers;
 
-    @OneToMany(mappedBy = "vendor")
-    private Set<Vendor> vendorVendors;
+    @OneToOne(mappedBy = "vendor")
+    private Vendor vendorVendors;
 
     @OneToMany(mappedBy = "dummyAdmin")
     private Set<DummyAdmin> dummyAdminDummyAdmins;
@@ -183,11 +173,11 @@ public class User {
         this.customerCustomers = customerCustomers;
     }
 
-    public Set<Vendor> getVendorVendors() {
+    public Vendor getVendorVendors() {
         return vendorVendors;
     }
 
-    public void setVendorVendors(final Set<Vendor> vendorVendors) {
+    public void setVendorVendors(final Vendor vendorVendors) {
         this.vendorVendors = vendorVendors;
     }
 

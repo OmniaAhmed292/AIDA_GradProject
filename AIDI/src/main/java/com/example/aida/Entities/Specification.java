@@ -1,18 +1,14 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 
 
 @Entity
+@Table(name = "specifications")
 public class Specification {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "spec_id")
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
@@ -25,10 +21,10 @@ public class Specification {
     )
     private Integer specId;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, name = "attribute_name")
     private String attributeName;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, name = "attribute_value")
     private String attributeValue;
 
     public Integer getSpecId() {

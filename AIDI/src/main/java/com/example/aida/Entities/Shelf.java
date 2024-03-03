@@ -1,23 +1,16 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
+
 import java.util.Set;
 
 
 @Entity
+@Table(name = "shelfs")
 public class Shelf {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "shelf_id")
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
@@ -30,7 +23,7 @@ public class Shelf {
     )
     private Integer shelfId;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, name = "shelf_name")
     private String shelfName;
 
     @ManyToOne(fetch = FetchType.LAZY)
