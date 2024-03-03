@@ -1,4 +1,4 @@
-package com.example.aida.security;
+package com.example.aida.Services.security;
 
 
 import org.springframework.security.core.AuthenticationException;
