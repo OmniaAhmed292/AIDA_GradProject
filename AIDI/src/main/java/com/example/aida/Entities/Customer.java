@@ -2,6 +2,7 @@ package com.example.aida.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,9 +33,6 @@ public class Customer extends User {
     )
     private Long id;
 
-    @Column(precision = 12, scale = 2)
-    private BigDecimal balance;
-
     @Column
     private LocalDate birthdate;
 
@@ -48,16 +46,20 @@ public class Customer extends User {
     private Boolean settingsDeactivated;
 
     @Column
-    private Boolean settingsEmailSubscribed;
+    private Boolean AllowEmailSubscribed;
 
     @Column
-    private Boolean settingsEmailCartRecovery;
+    private Boolean AllowEmailCartRecovery;
+
+    @Column(name="points", nullable = false)
+    @ColumnDefault("0")
+    private int points;
 
     @Column(columnDefinition = "text")
-    private String settingsCollectInformation;
+    private String AllowInformationCollection;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
+    @JoinColumn(name="customer_id", referencedColumnName = "user_id")
     private User customer;
 
     @OneToMany(mappedBy = "customer")
@@ -71,9 +73,9 @@ public class Customer extends User {
 
     @ManyToMany
     @JoinTable(
-            name = "Subscription",
-            joinColumns = @JoinColumn(name = "id"),
-            inverseJoinColumns = @JoinColumn(name = "productId")
+            name = "subscription",
+            joinColumns = @JoinColumn(name = "customer_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private Set<Product> subscriptionProducts;
 

@@ -1,17 +1,7 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
+import org.hibernate.annotations.ColumnDefault;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -104,7 +94,15 @@ public class Product {
     )
     private Set<Tag> productTagTags;
 
-    @OneToMany(mappedBy = "pid")
-    private Set<ProductEventTag> pidProductEventTags;
+    @ColumnDefault("false")
+    @Column(nullable = false)
+    private boolean isInEvent;
+
+    @Column(nullable = true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "discount_id")
+    private Discount discountID;
+
+
 
 }

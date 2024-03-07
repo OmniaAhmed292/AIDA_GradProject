@@ -44,7 +44,15 @@ public class EventTag {
     @Column(nullable = false)
     private LocalDate endDate;
 
-    @OneToMany(mappedBy = "eid")
-    private Set<ProductEventTag> eidProductEventTags;
+    @Column(nullable = false)
+    private String eventDescription;
+
+    @Column(nullable = false)
+    private String imageName;
+
+    @Column(nullable = false)
+    private String imageFilePath;
+
+
 
 }
