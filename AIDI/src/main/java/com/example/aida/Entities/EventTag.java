@@ -7,11 +7,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.SequenceGenerator;
+import lombok.*;
+
 import java.time.LocalDate;
 import java.util.Set;
 
 
 @Entity
+@Setter
+@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class EventTag {
 
     @Id
@@ -39,45 +46,5 @@ public class EventTag {
 
     @OneToMany(mappedBy = "eid")
     private Set<ProductEventTag> eidProductEventTags;
-
-    public Integer getTagId() {
-        return tagId;
-    }
-
-    public void setTagId(final Integer tagId) {
-        this.tagId = tagId;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(final String name) {
-        this.name = name;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(final LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(final LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public Set<ProductEventTag> getEidProductEventTags() {
-        return eidProductEventTags;
-    }
-
-    public void setEidProductEventTags(final Set<ProductEventTag> eidProductEventTags) {
-        this.eidProductEventTags = eidProductEventTags;
-    }
 
 }

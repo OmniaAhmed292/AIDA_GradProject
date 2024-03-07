@@ -9,10 +9,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import lombok.*;
+
 import java.math.BigDecimal;
 
 
 @Entity
+@Setter
+@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class OrderItem {
 
     @Id
@@ -47,61 +54,4 @@ public class OrderItem {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id")
     private Product product;
-
-    public Integer getOrderId() {
-        return orderId;
-    }
-
-    public void setOrderId(final Integer orderId) {
-        this.orderId = orderId;
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(final Integer quantity) {
-        this.quantity = quantity;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(final String status) {
-        this.status = status;
-    }
-
-    public BigDecimal getTaxes() {
-        return taxes;
-    }
-
-    public void setTaxes(final BigDecimal taxes) {
-        this.taxes = taxes;
-    }
-
-    public BigDecimal getProductPrice() {
-        return productPrice;
-    }
-
-    public void setProductPrice(final BigDecimal productPrice) {
-        this.productPrice = productPrice;
-    }
-
-    public BigDecimal getDiscountPrice() {
-        return discountPrice;
-    }
-
-    public void setDiscountPrice(final BigDecimal discountPrice) {
-        this.discountPrice = discountPrice;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(final Product product) {
-        this.product = product;
-    }
-
 }

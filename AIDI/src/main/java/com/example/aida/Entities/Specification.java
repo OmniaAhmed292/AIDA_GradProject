@@ -27,28 +27,4 @@ public class Specification {
     @Column(nullable = false, length = 100, name = "attribute_value")
     private String attributeValue;
 
-    public Integer getSpecId() {
-        return specId;
-    }
-
-    public void setSpecId(final Integer specId) {
-        this.specId = specId;
-    }
-
-    public String getAttributeName() {
-        return attributeName;
-    }
-
-    public void setAttributeName(final String attributeName) {
-        this.attributeName = attributeName;
-    }
-
-    public String getAttributeValue() {
-        return attributeValue;
-    }
-
-    public void setAttributeValue(final String attributeValue) {
-        this.attributeValue = attributeValue;
-    }
-
 }

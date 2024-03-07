@@ -1,11 +1,17 @@
 package com.example.aida.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Set;
 
 
 @Entity
+@Setter
+@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "tags")
 public class Tag {
 
@@ -28,29 +34,5 @@ public class Tag {
 
     @ManyToMany(mappedBy = "productTagTags")
     private Set<Product> productTagProducts;
-
-    public Integer getTagId() {
-        return tagId;
-    }
-
-    public void setTagId(final Integer tagId) {
-        this.tagId = tagId;
-    }
-
-    public String getTagName() {
-        return tagName;
-    }
-
-    public void setTagName(final String tagName) {
-        this.tagName = tagName;
-    }
-
-    public Set<Product> getProductTagProducts() {
-        return productTagProducts;
-    }
-
-    public void setProductTagProducts(final Set<Product> productTagProducts) {
-        this.productTagProducts = productTagProducts;
-    }
 
 }

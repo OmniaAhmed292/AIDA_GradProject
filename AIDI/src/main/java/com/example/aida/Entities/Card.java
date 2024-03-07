@@ -1,11 +1,17 @@
 package com.example.aida.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Set;
 
 
 @Entity
+@Setter
+@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "cards")
 public class Card {
 
@@ -36,55 +42,7 @@ public class Card {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "card")
-    private Set<Order> cardOrders;
-
-    public Integer getCardId() {
-        return cardId;
-    }
-
-    public void setCardId(final Integer cardId) {
-        this.cardId = cardId;
-    }
-
-    public String getCardNumber() {
-        return cardNumber;
-    }
-
-    public void setCardNumber(final String cardNumber) {
-        this.cardNumber = cardNumber;
-    }
-
-    public Integer getYear() {
-        return year;
-    }
-
-    public void setYear(final Integer year) {
-        this.year = year;
-    }
-
-    public Integer getMonth() {
-        return month;
-    }
-
-    public void setMonth(final Integer month) {
-        this.month = month;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(final User user) {
-        this.user = user;
-    }
-
-    public Set<Order> getCardOrders() {
-        return cardOrders;
-    }
-
-    public void setCardOrders(final Set<Order> cardOrders) {
-        this.cardOrders = cardOrders;
-    }
+    @OneToOne(mappedBy = "card")
+    private Order cardOrders;
 
 }

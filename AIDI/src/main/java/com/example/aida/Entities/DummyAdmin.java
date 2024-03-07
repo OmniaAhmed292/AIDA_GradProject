@@ -1,18 +1,17 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.math.BigDecimal;
 
 
 @Entity
+@Setter
+@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DummyAdmin {
 
     @Id
@@ -41,56 +40,5 @@ public class DummyAdmin {
     @Column(precision = 14, scale = 2)
     private BigDecimal bannerPrice;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "dummy_admin_id")
-    private User dummyAdmin;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(final Long id) {
-        this.id = id;
-    }
-
-    public BigDecimal getServiceFees() {
-        return serviceFees;
-    }
-
-    public void setServiceFees(final BigDecimal serviceFees) {
-        this.serviceFees = serviceFees;
-    }
-
-    public BigDecimal getPointsToDiscountRatio() {
-        return pointsToDiscountRatio;
-    }
-
-    public void setPointsToDiscountRatio(final BigDecimal pointsToDiscountRatio) {
-        this.pointsToDiscountRatio = pointsToDiscountRatio;
-    }
-
-    public BigDecimal getShipmentFees() {
-        return shipmentFees;
-    }
-
-    public void setShipmentFees(final BigDecimal shipmentFees) {
-        this.shipmentFees = shipmentFees;
-    }
-
-    public BigDecimal getBannerPrice() {
-        return bannerPrice;
-    }
-
-    public void setBannerPrice(final BigDecimal bannerPrice) {
-        this.bannerPrice = bannerPrice;
-    }
-
-    public User getDummyAdmin() {
-        return dummyAdmin;
-    }
-
-    public void setDummyAdmin(final User dummyAdmin) {
-        this.dummyAdmin = dummyAdmin;
-    }
 
 }
