@@ -43,7 +43,7 @@ public class DummyAdmin {
 
 
     @Column(length = 100,name = "bank_acount")
-    private String bankAcount;
+    private String bankAccount;
 
 
 }
