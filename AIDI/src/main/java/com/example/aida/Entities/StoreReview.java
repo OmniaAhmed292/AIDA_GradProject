@@ -1,11 +1,17 @@
 package com.example.aida.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
 
 
 @Entity
+@Setter
+@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "store_reviews")
 public class StoreReview {
 
@@ -39,53 +45,4 @@ public class StoreReview {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vendor_id")
     private Vendor vendor;
-
-    public Integer getReviewId() {
-        return reviewId;
-    }
-
-    public void setReviewId(final Integer reviewId) {
-        this.reviewId = reviewId;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(final String body) {
-        this.body = body;
-    }
-
-    public Integer getRate() {
-        return rate;
-    }
-
-    public void setRate(final Integer rate) {
-        this.rate = rate;
-    }
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(final LocalDate date) {
-        this.date = date;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(final Customer customer) {
-        this.customer = customer;
-    }
-
-    public Vendor getVendor() {
-        return vendor;
-    }
-
-    public void setVendor(final Vendor vendor) {
-        this.vendor = vendor;
-    }
-
 }

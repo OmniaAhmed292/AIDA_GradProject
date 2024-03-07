@@ -1,11 +1,17 @@
 package com.example.aida.Entities;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.Set;
 
 
 @Entity
+@Setter
+@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "shelfs")
 public class Shelf {
 
@@ -32,37 +38,4 @@ public class Shelf {
 
     @OneToMany(mappedBy = "shelf")
     private Set<Product> shelfProducts;
-
-    public Integer getShelfId() {
-        return shelfId;
-    }
-
-    public void setShelfId(final Integer shelfId) {
-        this.shelfId = shelfId;
-    }
-
-    public String getShelfName() {
-        return shelfName;
-    }
-
-    public void setShelfName(final String shelfName) {
-        this.shelfName = shelfName;
-    }
-
-    public Vendor getVendor() {
-        return vendor;
-    }
-
-    public void setVendor(final Vendor vendor) {
-        this.vendor = vendor;
-    }
-
-    public Set<Product> getShelfProducts() {
-        return shelfProducts;
-    }
-
-    public void setShelfProducts(final Set<Product> shelfProducts) {
-        this.shelfProducts = shelfProducts;
-    }
-
 }

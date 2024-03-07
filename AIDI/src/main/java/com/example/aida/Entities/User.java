@@ -1,5 +1,6 @@
 package com.example.aida.Entities;
 import jakarta.persistence.*;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -12,7 +13,14 @@ import static org.apache.catalina.realm.UserDatabaseRealm.getRoles;
 
 
 @Entity
+@Setter
+@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "User_type", discriminatorType = DiscriminatorType.STRING)
 public class User {
 
     @Id
@@ -29,182 +37,50 @@ public class User {
     )
     private Integer userId;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, name="Fname")
     private String fname;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, name = "Lname")
     private String lname;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, name = "email")
     private String email;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "hashed_password")
     private String hashedPassword;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "user_type")
     private String userType;
 
-    @Column(nullable = false, length = 15)
+    @Column(nullable = false, length = 15, name = "phone_number")
     private String phoneNumber;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, name = "address_city")
     private String addressCity;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100, name = "address_street")
     private String addressStreet;
 
-    @Column(length = 10)
+    @Column(length = 10, name = "address_apartment_no")
     private String addressApartmentNo;
 
-    @Column(length = 10)
+    @Column(length = 10, name = "address_building_no")
     private String addressBuildingNo;
 
 
-    @Column(length = 255)
+    @Column(length = 255, name = "image_file_path")
     private String image_file_path;
 
-    @OneToMany(mappedBy = "customer")
-    private Set<Customer> customerCustomers;
+    @OneToOne(mappedBy = "customer")
+    private Customer cutomer;
 
     @OneToOne(mappedBy = "vendor")
-    private Vendor vendorVendors;
-
-    @OneToMany(mappedBy = "dummyAdmin")
-    private Set<DummyAdmin> dummyAdminDummyAdmins;
+    private Vendor vendor;
 
     @OneToMany(mappedBy = "user")
     private Set<Card> userCards;
 
 
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(final Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getFname() {
-        return fname;
-    }
-
-    public void setFname(final String fname) {
-        this.fname = fname;
-    }
-
-    public String getLname() {
-        return lname;
-    }
-
-    public void setLname(final String lname) {
-        this.lname = lname;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(final String email) {
-        this.email = email;
-    }
-
-    public String getHashedPassword() {
-        return hashedPassword;
-    }
-
-    public void setHashedPassword(final String hashedPassword) {
-        this.hashedPassword = hashedPassword;
-    }
-
-    public String getUserType() {
-        return userType;
-    }
-
-    public void setUserType(final String userType) {
-        this.userType = userType;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(final String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getAddressCity() {
-        return addressCity;
-    }
-
-    public void setAddressCity(final String addressCity) {
-        this.addressCity = addressCity;
-    }
-
-    public String getAddressStreet() {
-        return addressStreet;
-    }
-
-    public void setAddressStreet(final String addressStreet) {
-        this.addressStreet = addressStreet;
-    }
-
-    public String getAddressApartmentNo() {
-        return addressApartmentNo;
-    }
-
-    public void setAddressApartmentNo(final String addressApartmentNo) {
-        this.addressApartmentNo = addressApartmentNo;
-    }
-
-    public String getAddressBuildingNo() {
-        return addressBuildingNo;
-    }
-
-    public void setAddressBuildingNo(final String addressBuildingNo) {
-        this.addressBuildingNo = addressBuildingNo;
-    }
-
-    public Set<Customer> getCustomerCustomers() {
-        return customerCustomers;
-    }
-
-    public void setCustomerCustomers(final Set<Customer> customerCustomers) {
-        this.customerCustomers = customerCustomers;
-    }
-
-    public Vendor getVendorVendors() {
-        return vendorVendors;
-    }
-
-    public void setVendorVendors(final Vendor vendorVendors) {
-        this.vendorVendors = vendorVendors;
-    }
-
-    public Set<DummyAdmin> getDummyAdminDummyAdmins() {
-        return dummyAdminDummyAdmins;
-    }
-
-    public void setDummyAdminDummyAdmins(final Set<DummyAdmin> dummyAdminDummyAdmins) {
-        this.dummyAdminDummyAdmins = dummyAdminDummyAdmins;
-    }
-
-    public Set<Card> getUserCards() {
-        return userCards;
-    }
-
-    public void setUserCards(final Set<Card> userCards) {
-        this.userCards = userCards;
-    }
-
-    public void setImage_file_path(String image_file_path) {
-        this.image_file_path = image_file_path;
-    }
-
-
-    public String getImage_file_path() {
-        return image_file_path;
-    }
 
     public Collection<String> getRoles() {
 

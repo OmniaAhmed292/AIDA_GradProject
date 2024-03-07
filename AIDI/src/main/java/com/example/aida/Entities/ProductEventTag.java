@@ -8,9 +8,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.SequenceGenerator;
+import lombok.*;
 
 
 @Entity
+@Setter
+@Getter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ProductEventTag {
 
     @Id
@@ -40,45 +46,5 @@ public class ProductEventTag {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "eid_id", nullable = false)
     private EventTag eid;
-
-    public Integer getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(final Integer imageId) {
-        this.imageId = imageId;
-    }
-
-    public String getImageName() {
-        return imageName;
-    }
-
-    public void setImageName(final String imageName) {
-        this.imageName = imageName;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(final String filePath) {
-        this.filePath = filePath;
-    }
-
-    public Product getPid() {
-        return pid;
-    }
-
-    public void setPid(final Product pid) {
-        this.pid = pid;
-    }
-
-    public EventTag getEid() {
-        return eid;
-    }
-
-    public void setEid(final EventTag eid) {
-        this.eid = eid;
-    }
 
 }
