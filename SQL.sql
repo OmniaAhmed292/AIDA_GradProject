@@ -1,5 +1,5 @@
-CREATE SCHEMA AIDI;
-use AIDI;
+CREATE SCHEMA AIDA;
+use AIDA;
 CREATE TABLE users (
     user_id INT AUTO_INCREMENT PRIMARY KEY,
     Fname VARCHAR(50) NOT NULL,
@@ -7,12 +7,15 @@ CREATE TABLE users (
     email VARCHAR(100) UNIQUE NOT NULL,
     Hashed_Password VARCHAR(255) NOT NULL,
     User_type ENUM('admin', 'customer', 'vendor') NOT NULL,
-    phone_number VARCHAR(15) NOT NULL,
-    address_city VARCHAR(100) NOT NULL,
-    address_street VARCHAR(100) NOT NULL,
+    phone_number VARCHAR(15) ,
+    address_city VARCHAR(100) ,
+    address_street VARCHAR(100) ,
     address_apartment_no VARCHAR(10),
     address_Building_no VARCHAR(10),
     image_file_path VARCHAR(255),
+    image_file_name VARCHAR(255),
+    balance DECIMAL(10,2),
+	CONSTRAINT CHK_Balance CHECK (balance >= 0),
     CONSTRAINT CHK_User_Type CHECK (User_type IN ('admin', 'customer', 'vendor')),
     CONSTRAINT CHK_Phone_Number CHECK (LENGTH(phone_number) > 5), -- Assuming minimum length
     CONSTRAINT CHK_Email_Format CHECK (email REGEXP '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$')
@@ -20,39 +23,33 @@ CREATE TABLE users (
 
 CREATE TABLE customers (
     customer_id INT PRIMARY KEY,
-    balance DECIMAL(10,2),
     birthdate DATE,
     Gender ENUM('Male', 'Female', 'Other'),
     Last_Modified_Time TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    settings_Deactivated BOOLEAN,
-    settings_Email_Subscribed BOOLEAN,
-    settings_Email_Cart_Recovery BOOLEAN,
-    settings_Collect_information TEXT,
+    allow_Deactivated BOOLEAN,
+    allow_email_subscribed BOOLEAN,
+    allow_Email_Cart_Recovery BOOLEAN,
+    allow_Collect_information BOOLEAN,
     FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CHECK (balance >= 0),
     CHECK (Gender IN ('Male', 'Female', 'Other')),
-    CHECK (settings_Deactivated IN (0, 1)),
-    CHECK (settings_Email_Subscribed IN (0, 1)),
-    CHECK (settings_Email_Cart_Recovery IN (0, 1))
+    CHECK (allow_Deactivated IN (0, 1)),
+    CHECK (allow_Email_Subscribed IN (0, 1)),
+    CHECK (allow_Email_Cart_Recovery IN (0, 1))
 );
 CREATE TABLE vendors (
     vendor_id INT,
-    balance DECIMAL(10,2),
-    About_us_info TEXT,
+	About_us_info TEXT,
     business_type VARCHAR(50),
     business_name VARCHAR(100),
     exp_day DATE,
     exo_month ENUM('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'),
-    settings_Late_emails INT,
-    settings_new_emails INT,
+    allow_Late_emails BOOLEAN,
+    allow_new_emails BOOLEAN,
     Application_files_path VARCHAR(255),
     CONSTRAINT PK_Vendor PRIMARY KEY (vendor_id),
     CONSTRAINT FK_Vendor_User FOREIGN KEY (vendor_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
-    CONSTRAINT CHK_Exo_Month CHECK (exo_month IN ('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December')),
-    CONSTRAINT CHK_Balance CHECK (balance >= 0),
-    CONSTRAINT CHK_Late_Emails CHECK (settings_Late_emails >= 0),
-    CONSTRAINT CHK_New_Emails CHECK (settings_new_emails >= 0)
-);
+    CONSTRAINT CHK_Exo_Month CHECK (exo_month IN ('January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'))
+  );
 CREATE TABLE Dummy_Admin (
     Dummy_Admin_id INT PRIMARY KEY,
     service_fees DECIMAL(10, 2), /* Service fees for the admin (percentage) */
@@ -70,7 +67,22 @@ CREATE TABLE shelfs(
     CONSTRAINT fk_vendor FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id) ON DELETE CASCADE,
     CONSTRAINT chk_shelf_name_length CHECK (LENGTH(shelf_name) <= 50)
 );
-CREATE TABLE Products(
+CREATE TABLE discounts (
+    discount_id INT AUTO_INCREMENT,
+    percentage DECIMAL(5,2) NOT NULL,
+    discount_type ENUM('time_limited', 'number_limited') NOT NULL,
+    EndDate DATE NOT NULL,
+    max_purchase DECIMAL(10,2),
+    current_purchase DECIMAL(10,2),
+    Code VARCHAR(20) NOT NULL,
+    PRIMARY KEY (discount_id),
+    CHECK (percentage >= 0 AND percentage <= 100), -- Ensuring percentage is within valid range
+    CHECK (max_purchase IS NULL OR max_purchase >= 0), -- Ensuring max_purchase is positive or NULL
+    CHECK (current_purchase >= 0), -- Ensuring current_purchase is positive
+    UNIQUE (Code) -- Ensuring Code is unique
+);
+
+CREATE TABLE products(
     product_id INT PRIMARY KEY AUTO_INCREMENT,
     product_name VARCHAR(50) NOT NULL,
     quantity INT NOT NULL,
@@ -86,6 +98,9 @@ CREATE TABLE Products(
     category_name VARCHAR(50) NOT NULL,
     purchases_no INT NOT NULL,
     shelf_id INT NOT NULL, 
+    is_in_event BOOLEAN ,
+    discount_id INT,
+    FOREIGN KEY (discount_id) REFERENCES discounts(discount_id),
     FOREIGN KEY (shelf_id) REFERENCES shelfs(shelf_id),
     CONSTRAINT chk_discount CHECK (discount >= 0),
     CONSTRAINT chk_quantity CHECK (quantity >= 0),
@@ -100,7 +115,9 @@ CREATE TABLE Products(
 CREATE TABLE Specifications (
     spec_id INT PRIMARY KEY AUTO_INCREMENT,
     attribute_name VARCHAR(50) NOT NULL,
-    attribute_value VARCHAR(100) NOT NULL
+    attribute_value VARCHAR(100) NOT NULL,
+    product_id INT,
+	FOREIGN KEY (product_id) REFERENCES products(shelf_id)
 );
 
 CREATE TABLE tags (
@@ -110,7 +127,8 @@ CREATE TABLE tags (
 CREATE TABLE product_images(
     image_id INT PRIMARY KEY AUTO_INCREMENT,
     image_name VARCHAR(50) NOT NULL,
-    file_path TEXT NOT NULL,
+    image_description VARCHAR(255),
+    file_path TEXT ,
     product_id INT NOT NULL,
 	FOREIGN KEY (product_id) REFERENCES products(product_id) ON DELETE CASCADE
 
@@ -129,6 +147,7 @@ CREATE TABLE cards(
 CREATE TABLE orders (
     order_id INT PRIMARY KEY AUTO_INCREMENT,
     customer_id INT NOT NULL,
+    percentage_discount DECIMAL(5,2),
     shipment_price DECIMAL(10, 2) NOT NULL,
     order_date DATE NOT NULL,
     card_id INT NOT NULL,
@@ -138,6 +157,7 @@ CREATE TABLE orders (
     address_street VARCHAR(100) NOT NULL,
     FOREIGN KEY (customer_id) REFERENCES customers(customer_id) ON DELETE CASCADE,
     FOREIGN KEY (card_id) REFERENCES cards(card_id) ON DELETE CASCADE,
+    CONSTRAINT chk_order_discount CHECK (percentage_discount >= 0),
     CONSTRAINT chk_shipment_price CHECK (shipment_price >= 0),
     CONSTRAINT chk_address_city_length CHECK (LENGTH(address_city) <= 50),
     CONSTRAINT chk_address_apartment_no_length CHECK (LENGTH(address_apartment_no) <= 10),
@@ -192,7 +212,10 @@ CREATE TABLE event_tags(
     name VARCHAR(50) NOT NULL,
     start_date DATE NOT NULL,
     end_date DATE NOT NULL,
-    CONSTRAINT chk_end_after_start_date CHECK (end_date >= start_date),
+    event_description VARCHAR(255),
+	image_name VARCHAR(255),
+    image_filepath VARCHAR(255),
+	CONSTRAINT chk_end_after_start_date CHECK (end_date >= start_date),
     CONSTRAINT chk_name_length CHECK (LENGTH(name) <= 50)
 );
 CREATE TABLE subscriptions (
@@ -220,19 +243,3 @@ CREATE TABLE product_event_tags(
     FOREIGN KEY (EID) REFERENCES event_tags(tag_id) ON DELETE CASCADE,
     CONSTRAINT chk_image_name_length CHECK (LENGTH(image_name) <= 50)
 );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
