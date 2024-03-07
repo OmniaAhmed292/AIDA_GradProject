@@ -27,8 +27,13 @@ public class CustomUserDetailsService  implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String Email) throws UsernameNotFoundException {
-        com.example.aida.Entities.User user = userRepository.findByEmail(Email)
-                .orElseThrow(() -> new UsernameNotFoundException("Email " + Email + " not found"));
+        com.example.aida.Entities.User user = null;
+        try {
+            user = (com.example.aida.Entities.User) userRepository.findByEmail(Email)
+                    .orElseThrow(() -> new UsernameNotFoundException("Email " + Email + " not found"));
+        } catch (Throwable e) {
+            throw new RuntimeException(e);
+        }
         //Opject represntaion of an Actual user
         return new User(user.getEmail(), user.getHashedPassword(), user.getAuthorities());
     }

@@ -15,6 +15,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@DiscriminatorValue("customer")
 public class Customer extends User {
 
     @Id

@@ -15,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "vendors")
+@DiscriminatorValue("vendor")
 public class Vendor extends User {
 
     @Id
