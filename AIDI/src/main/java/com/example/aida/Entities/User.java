@@ -20,7 +20,7 @@ import static org.apache.catalina.realm.UserDatabaseRealm.getRoles;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "users")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DiscriminatorColumn(name = "User_type", discriminatorType = DiscriminatorType.STRING)
 public class User {
 
@@ -38,7 +38,7 @@ public class User {
     )
     private Integer userId;
 
-    @Column(precision = 12, scale = 2)
+    @Column(precision = 12, scale = 2,name = "balance")
     private BigDecimal balance;
 
 

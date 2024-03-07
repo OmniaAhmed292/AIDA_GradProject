@@ -37,6 +37,6 @@ public class ProductImage {
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
 
-    @Column(nullable = true, columnDefinition = "text", name = "description")
+    @Column(nullable = true, columnDefinition = "text", name = "image_description")
     private String Description;
 }

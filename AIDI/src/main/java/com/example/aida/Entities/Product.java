@@ -15,10 +15,11 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "products")
 public class Product {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "product_id")
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
@@ -31,43 +32,43 @@ public class Product {
     )
     private Integer productId;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, name = "product_name")
     private String productName;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name = "quantity")
     private Integer quantity;
 
-    @Column(precision = 12, scale = 2)
+    @Column(precision = 12, scale = 2, name="discount")
     private BigDecimal discount;
 
-    @Column(length = 100)
+    @Column(length = 100, name = "description")
     private String description;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name = "is_used")
     private Boolean isUsed;
 
-    @Column
+    @Column(name="deletion_date")
     private LocalDate deletionDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name="time_since_restocking")
     private LocalDate timeSinceRestocking;
 
-    @Column(nullable = false, precision = 12, scale = 2)
+    @Column(nullable = false, precision = 12, scale = 2,name="price")
     private BigDecimal price;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name = "subscription_date")
     private LocalDate subscriptionDate;
 
-    @Column(nullable = false, precision = 12, scale = 2)
+    @Column(nullable = false, precision = 12, scale = 2,name = "taxes")
     private BigDecimal taxes;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name="is_shown")
     private Boolean isShown;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, name = "category_name")
     private String categoryName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "purchases_no")
     private Integer purchasesNo;
 
     @ManyToOne(fetch = FetchType.LAZY)

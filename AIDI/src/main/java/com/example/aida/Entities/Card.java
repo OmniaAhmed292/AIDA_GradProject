@@ -16,7 +16,7 @@ import java.util.Set;
 public class Card {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "card_id")
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
@@ -29,13 +29,13 @@ public class Card {
     )
     private Integer cardId;
 
-    @Column(nullable = false, length = 20)
+    @Column(nullable = false, length = 20, name = "card_number")
     private String cardNumber;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name="year")
     private Integer year;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name="month")
     private Integer month;
 
     @ManyToOne(fetch = FetchType.LAZY)

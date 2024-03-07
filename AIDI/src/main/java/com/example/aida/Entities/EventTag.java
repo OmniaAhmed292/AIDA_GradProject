@@ -1,18 +1,12 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Set;
 
-
+@Table(name = "event_tags")
 @Entity
 @Setter
 @Getter
@@ -22,7 +16,7 @@ import java.util.Set;
 public class EventTag {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "tag_id")
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
@@ -35,22 +29,22 @@ public class EventTag {
     )
     private Integer tagId;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, name = "name")
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "start_date")
     private LocalDate startDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "end_date")
     private LocalDate endDate;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100, name = "event_description")
     private String eventDescription;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name = "image_name")
     private String imageName;
 
-    @Column(nullable = false)
+    @Column(nullable = false,name = "image_filepath")
     private String imageFilePath;
 
 

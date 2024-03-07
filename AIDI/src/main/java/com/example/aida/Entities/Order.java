@@ -17,7 +17,7 @@ import java.time.LocalDate;
 public class Order {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "order_id")
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
@@ -30,29 +30,29 @@ public class Order {
     )
     private Integer orderId;
 
-    @Column(nullable = false, precision = 12, scale = 2)
+    @Column(nullable = false, precision = 12, scale = 2, name = "Shipment_price")
     private BigDecimal shipmentPrice;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "order_date")
     private LocalDate orderDate;
 
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50,name="address_city")
     private String addressCity;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 10,name="address_apartment_no")
     private String addressApartmentNo;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 10,name="address_building_no")
     private String addressBuildingNo;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 100,name="address_street")
     private String addressStreet;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     private Customer customer;
 
-    @Column(nullable = false, length = 10)
+    @Column(nullable = false, length = 10, name = "percentage_discount")
     private float pointDiscountPercentage;
 
     @OneToOne(fetch = FetchType.LAZY)

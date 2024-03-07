@@ -30,6 +30,7 @@ CREATE TABLE customers (
     allow_email_subscribed BOOLEAN,
     allow_Email_Cart_Recovery BOOLEAN,
     allow_Collect_information BOOLEAN,
+    points INT NOT NULL DEFAULT 0,
     FOREIGN KEY (customer_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE,
     CHECK (Gender IN ('Male', 'Female', 'Other')),
     CHECK (allow_Deactivated IN (0, 1)),
@@ -56,7 +57,8 @@ CREATE TABLE Dummy_Admin (
     points_to_discount_ratio DECIMAL(5, 2), /* points conversion to discount ratio (percentage) */
     Shipment_fees DECIMAL(8, 2), 
     Banner_price DECIMAL(12, 2), /*maximum Price for the banner of the budget concious customers*/
-	CONSTRAINT FK_Admin_User FOREIGN KEY (Dummy_Admin_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
+	bank_acount VARCHAR(50) NOT NULL, /*Represents the account at which system money will be transferred*/
+    CONSTRAINT FK_Admin_User FOREIGN KEY (Dummy_Admin_id) REFERENCES users(user_id) ON DELETE CASCADE ON UPDATE CASCADE
     
 );
 CREATE TABLE shelfs(

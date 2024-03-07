@@ -9,7 +9,7 @@ import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.Set;
 
-
+@Table(name = "customers")
 @Entity
 @Setter
 @Getter
@@ -33,7 +33,7 @@ public class Customer extends User {
     )
     private Long id;
 
-    @Column
+    @Column(name = "birthdate")
     private LocalDate birthdate;
 
     @Column

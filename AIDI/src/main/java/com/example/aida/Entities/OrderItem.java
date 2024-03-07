@@ -1,14 +1,6 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.SequenceGenerator;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
@@ -20,10 +12,11 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Table(name = "order_items")
 public class OrderItem {
 
     @Id
-    @Column(nullable = false, updatable = false)
+    @Column(nullable = false, updatable = false, name = "order_id")
     @SequenceGenerator(
             name = "primary_sequence",
             sequenceName = "primary_sequence",
@@ -36,19 +29,19 @@ public class OrderItem {
     )
     private Integer orderId;
 
-    @Column
+    @Column(nullable = false, name = "quantity")
     private Integer quantity;
 
-    @Column
+    @Column(nullable = false, name = "status")
     private String status;
 
-    @Column(precision = 12, scale = 2)
+    @Column(precision = 12, scale = 2,name = "Taxes")
     private BigDecimal taxes;
 
-    @Column(precision = 12, scale = 2)
+    @Column(precision = 12, scale = 2, name = "Product_price")
     private BigDecimal productPrice;
 
-    @Column(precision = 12, scale = 2)
+    @Column(precision = 12, scale = 2, name = "Discount_price")
     private BigDecimal discountPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
