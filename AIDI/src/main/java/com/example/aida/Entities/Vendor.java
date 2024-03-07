@@ -9,7 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "vendors")
-public class Vendor {
+public class Vendor extends User {
 
     @Id
     @Column(nullable = false, updatable = false, name = "vendor_id")

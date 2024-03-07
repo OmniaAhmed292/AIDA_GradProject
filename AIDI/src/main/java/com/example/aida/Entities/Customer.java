@@ -19,7 +19,7 @@ import java.util.Set;
 
 
 @Entity
-public class Customer {
+public class Customer extends User {
 
     @Id
     @Column(nullable = false, updatable = false)
