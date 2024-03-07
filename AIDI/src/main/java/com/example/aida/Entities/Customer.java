@@ -73,7 +73,7 @@ public class Customer extends User {
 
     @ManyToMany
     @JoinTable(
-            name = "subscription",
+            name = "subscriptions",
             joinColumns = @JoinColumn(name = "customer_id"),
             inverseJoinColumns = @JoinColumn(name = "product_id")
     )
