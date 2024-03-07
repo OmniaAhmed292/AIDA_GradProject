@@ -41,4 +41,8 @@ public class DummyAdmin {
     private BigDecimal bannerPrice;
 
 
+    @Column(length = 100)
+    private String bankAcount;
+
+
 }

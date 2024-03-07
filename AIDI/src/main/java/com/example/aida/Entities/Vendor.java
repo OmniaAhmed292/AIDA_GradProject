@@ -32,8 +32,6 @@ public class Vendor extends User {
     )
     private Long id;
 
-    @Column(precision = 12, scale = 2, name = "balance")
-    private BigDecimal balance;
 
     @Column(columnDefinition = "text", name = "About_us_info")
     private String aboutUsInfo;
@@ -50,11 +48,11 @@ public class Vendor extends User {
     @Column(name="exo_month")
     private String exoMonth;
 
-    @Column(name = "settings_late_emails")
-    private Integer settingsLateEmails;
+    @Column(name = "allow_late_emails")
+    private boolean AllowLateEmails;
 
-    @Column(name = "settings_new_emails")
-    private Integer settingsNewEmails;
+    @Column(name = "allow_new_emails")
+    private boolean AllowNewEmails;
 
     @Column(name = "application_files_path")
     private String applicationFilesPath;

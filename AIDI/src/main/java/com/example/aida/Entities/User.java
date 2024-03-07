@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
@@ -37,6 +38,10 @@ public class User {
     )
     private Integer userId;
 
+    @Column(precision = 12, scale = 2)
+    private BigDecimal balance;
+
+
     @Column(nullable = false, length = 50, name="Fname")
     private String fname;
 
@@ -69,7 +74,10 @@ public class User {
 
 
     @Column(length = 255, name = "image_file_path")
-    private String image_file_path;
+    private String imageFilePath;
+
+    @Column(length = 255, name = "image_file_name")
+    private String imageFileName;
 
     @OneToOne(mappedBy = "customer")
     private Customer cutomer;

@@ -27,4 +27,8 @@ public class Specification {
     @Column(nullable = false, length = 100, name = "attribute_value")
     private String attributeValue;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "product_id")
+    private Product product;
+
 }
