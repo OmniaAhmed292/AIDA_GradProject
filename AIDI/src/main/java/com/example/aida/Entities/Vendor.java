@@ -2,6 +2,7 @@ package com.example.aida.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,6 +15,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @Table(name = "vendors")
 @DiscriminatorValue("vendor")
 public class Vendor extends User {
@@ -57,9 +59,9 @@ public class Vendor extends User {
     @Column(name = "application_files_path")
     private String applicationFilesPath;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vendor_id")
-    private User vendor;
+   /* @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "vendor_id",referencedColumnName = "user_id")
+    private User vendor; */
 
     @OneToMany(mappedBy = "vendor")
     private Set<Shelf> vendorShelves;

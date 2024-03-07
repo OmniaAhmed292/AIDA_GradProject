@@ -1,6 +1,7 @@
 package com.example.aida.Entities;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -19,6 +20,7 @@ import static org.apache.catalina.realm.UserDatabaseRealm.getRoles;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DiscriminatorColumn(name = "User_type", discriminatorType = DiscriminatorType.STRING)
@@ -79,11 +81,11 @@ public class User {
     @Column(length = 255, name = "image_file_name")
     private String imageFileName;
 
-    @OneToOne(mappedBy = "customer")
+   /* @OneToOne(mappedBy = "customer")
     private Customer cutomer;
 
     @OneToOne(mappedBy = "vendor")
-    private Vendor vendor;
+    private Vendor vendor; */
 
     @OneToMany(mappedBy = "user")
     private Set<Card> userCards;

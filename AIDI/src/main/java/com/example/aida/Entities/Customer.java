@@ -2,6 +2,7 @@ package com.example.aida.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
 
 import java.math.BigDecimal;
@@ -16,6 +17,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @DiscriminatorValue("customer")
 public class Customer extends User {
 
@@ -57,11 +59,11 @@ public class Customer extends User {
 
     @Column(columnDefinition = "text")
     private String AllowInformationCollection;
-
+/*
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="customer_id", referencedColumnName = "user_id")
     private User customer;
-
+ */
     @OneToMany(mappedBy = "customer")
     private Set<Order> customerOrders;
 
