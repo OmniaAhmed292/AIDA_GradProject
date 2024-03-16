@@ -62,18 +62,8 @@ public class User {
     @Column(nullable = false, length = 15, name = "phone_number")
     private String phoneNumber;
 
-    @Column(nullable = false, length = 100, name = "address_city")
-    private String addressCity;
-
-    @Column(nullable = false, length = 100, name = "address_street")
-    private String addressStreet;
-
-    @Column(length = 10, name = "address_apartment_no")
-    private String addressApartmentNo;
-
-    @Column(length = 10, name = "address_building_no")
-    private String addressBuildingNo;
-
+    @Embedded
+    private Address address;
 
     @Column(length = 255, name = "image_file_path")
     private String imageFilePath;
