@@ -21,12 +21,22 @@ db.createCollection("users", {
            bsonType: "string",
            pattern: ".{6,}", // Minimum length for phone number 
          },
-         address_city: { bsonType: "string" },
-         address_street: { bsonType: "string" },
-         address_apartment_no: { bsonType: "string" },
-         address_Building_no: { bsonType: "string" },
-         image_file_path: { bsonType: "string" },
-         image_file_name: { bsonType: "string" },
+         address:{
+          bsonType: "object",
+          properties:{
+            address_city: { bsonType: "string" },
+            address_street: { bsonType: "string" },
+            address_apartment_no: { bsonType: "string" },
+            address_Building_no: { bsonType: "string" }
+          }
+        },
+         image:{ 
+          bsonType: "object",
+          properties: {
+            image_file_path: { bsonType: "string" },
+            image_file_name: { bsonType: "string" }
+          }
+         },
          balance: { bsonType: "decimal" },
          //Cards saved by the user
          cards: {
@@ -57,22 +67,16 @@ db.createCollection("users", {
          birthdate: { bsonType: "date" },
          Gender: { bsonType: "string", enum: ["Male", "Female", "Other"] },
          Last_Modified_Time: { bsonType: "date", default: ISODate() }, //ISODate used for timestamps
-         allow_Deactivated: { bsonType: "bool" },
-         allow_email_subscribed: { bsonType: "bool" },
-         allow_Email_Cart_Recovery: { bsonType: "bool" },
-         allow_Collect_information: { bsonType: "bool" },
+         Settings:{
+          bsonType: "object", 
+          properties: {
+            allow_Deactivated: { bsonType: "bool" },
+            allow_email_subscribed: { bsonType: "bool" },
+            allow_Email_Cart_Recovery: { bsonType: "bool" },
+            allow_Collect_information: { bsonType: "bool" }
+          }
+         },
          points: { bsonType: "int", default: 0 },
-         subscribed_products: {
-            bsonType: "array",
-            items: {
-              bsonType: "object",
-              properties: {
-                product_id: { bsonType: "int" }, // References products collection (FK)
-                subscription_start_date: { bsonType: "date" }, // Optional for tracking start time
-                subscription_end_date: { bsonType: "date" }, // Optional for tracking end time (if applicable)
-              },
-            },
-          },
         },
      },
    },
@@ -92,8 +96,14 @@ db.createCollection("users", {
          business_name: { bsonType: "string", maxLength: 100 },
          exp_day: { bsonType: "date" },
          exo_month: { bsonType: "string", enum: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] },
-         allow_Late_emails: { bsonType: "bool" },
-         allow_new_emails: { bsonType: "bool" },
+         settings:{
+          bsonType: "object",
+          properties:{
+            allow_Late_emails: { bsonType: "bool" },
+            allow_new_emails: { bsonType: "bool" }
+          }
+         },
+        
          Application_files_path: { bsonType: "string", maxLength: 255 },
          shelves: {
             bsonType: "array",
@@ -139,31 +149,22 @@ db.createCollection("users", {
          Shipment_fees: { bsonType: "decimal" },
          Banner_price: { bsonType: "decimal" }, //maximum Price for the banner of the budget concious customers
          bank_acount: { bsonType: "string", maxLength: 50 }, //Represents the account at which system money will be transferred
+         Event_tag: {
+          bsonType: "object", 
+          properties: {
+            name: { bsonType: "string", maxLength: 50 },
+            start_date: { bsonType: "date" },
+            end_date: { bsonType: "date" },
+            event_description: { bsonType: "string", maxLength: 255 },
+            image_name: { bsonType: "string", maxLength: 255 },
+            image_filepath: { bsonType: "string", maxLength: 255 }
+          }
+         } 
        },
      },
    },
  });
 
-
-
- //Discount codes collection
- db.createCollection("discounts", {
-   validator: {
-     $jsonSchema: {
-       bsonType: "object",
-       required: ["percentage", "discount_type", "EndDate", "Code"],
-       properties: {
-         discount_id: { bsonType: "int", autoincrement: true },
-         percentage: { bsonType: "decimal", minimum: 0.0, maximum: 100.0 },
-         discount_type: { bsonType: "string", enum: ["time_limited", "number_limited"] },
-         EndDate: { bsonType: "date" },
-         max_purchase: { bsonType: "decimal", minimum: 0.0 }, // Can be null
-         current_purchase: { bsonType: "decimal", minimum: 0.0 },
-         Code: { bsonType: "string", maxLength: 20, unique: true },
-       },
-     },
-   },
- });
 
  //Tags collection
  db.createCollection("tags", {
@@ -178,6 +179,22 @@ db.createCollection("users", {
      },
    },
  });
+
+  //subscription collection
+  db.createCollection("subscriptions", {
+    validator: {
+      $jsonSchema: {
+        bsonType: "object",
+        required: ["product_id","customer_id","subscription_start_date"],
+        properties: {
+                product_id: { bsonType: "int" }, // References products collection (FK)
+                customer_id: {bsonType: "int"},  // References customer collection (FK)
+                subscription_start_date: { bsonType: "date" }, 
+                subscription_end_date: { bsonType: "date" }, // Optional for tracking end time (if applicable)
+              },
+            },
+          },
+  });
 
  //Products collection with embedded specifications and images
  db.createCollection("products", {
@@ -252,7 +269,19 @@ db.createCollection("users", {
          vendor_id: { bsonType: "int" }, // References vendor document (FK)
          // Reference to specific shelf within vendor document (FK)
          shelf_id: { bsonType: "int" }, // References shelf object inside vendor.shelves
-        
+
+         //Embedded discount
+         discount: {
+          bsonType: "object",
+          properties: {
+            percentage: { bsonType: "decimal", minimum: 0.0, maximum: 100.0 },
+            discount_type: { bsonType: "string", enum: ["time_limited", "number_limited"] },
+            EndDate: { bsonType: "date" },
+            max_purchase: { bsonType: "decimal", minimum: 0.0 }, // Can be null
+            current_purchase: { bsonType: "decimal", minimum: 0.0 },
+            Code: { bsonType: "string", maxLength: 20, unique: true },
+          }
+         }
        },
      },
    },
