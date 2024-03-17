@@ -271,7 +271,7 @@ db.createCollection("users", {
           properties: {
             percentage: { bsonType: "decimal", minimum: 0.0, maximum: 100.0 },
             EndDate: { bsonType: "date" },
-            Code: { bsonType: "string", maxLength: 20, unique: true },
+            Code: { bsonType: "string", maxLength: 20 },
           }
          }
        },
