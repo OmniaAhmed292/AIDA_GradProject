@@ -1,50 +1,40 @@
 package com.example.aida.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.math.BigDecimal;
 
 
-@Entity
 @Setter
 @Getter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "order_items")
+@Embeddable
 public class OrderItem {
-
-    @Id
-    @Column(nullable = false, updatable = false, name = "order_id")
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
-    )
-    private Integer orderId;
-
-    @Column(nullable = false, name = "quantity")
+    
+    @Field(name = "quantity")
+    @NotNull
     private Integer quantity;
 
-    @Column(nullable = false, name = "status")
+    @Field(name = "status")
+    @NotNull
     private String status;
 
-    @Column(precision = 12, scale = 2,name = "Taxes")
+    @Field(name = "Taxes")
     private BigDecimal taxes;
 
-    @Column(precision = 12, scale = 2, name = "Product_price")
+    @Field(name = "Product_price")
     private BigDecimal productPrice;
 
-    @Column(precision = 12, scale = 2, name = "Discount_price")
+    @Field(name = "Discount_price")
     private BigDecimal discountPrice;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @DBRef
+    @Field(name = "product_id")
     private Product product;
 }

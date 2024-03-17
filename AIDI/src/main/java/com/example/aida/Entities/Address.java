@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import org.springframework.data.mongodb.core.mapping.Field;
 @Setter
 @Getter
 @AllArgsConstructor
@@ -14,15 +15,15 @@ import lombok.Setter;
 @Embeddable
 public class Address {
 
-    @Column(length = 100, name = "address_street")
+    @Field(name = "address_street")
     private String street;
 
-    @Column(length = 100, name = "address_city")
+    @Field(name = "address_city")
     private String city;
 
-    @Column(length = 10, name = "address_apartment_no")
+    @Field(name = "address_apartment_no")
     private String apartmentNo;
 
-    @Column(length = 10, name = "address_building_no")
+    @Field(name = "address_building_no")
     private String BuildingNo;
 }
