@@ -1,48 +1,30 @@
 package com.example.aida.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.util.Set;
 
 
-@Entity
+
 @Setter
 @Getter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "cards")
+@Embeddable
 public class Card {
-
-    @Id
-    @Column(nullable = false, updatable = false, name = "card_id")
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
-    )
-    private Integer cardId;
-
-    @Column(nullable = false, length = 20, name = "card_number")
+    @Field(name = "card_number")
+    @NotNull
     private String cardNumber;
 
-    @Column(nullable = false,name="year")
+    @Field(name="year")
+    @NotNull
     private Integer year;
 
-    @Column(nullable = false,name="month")
+    @Field(name="month")
+    @NotNull
     private Integer month;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-
-    @OneToOne(mappedBy = "card")
-    private Order cardOrders;
-
 }

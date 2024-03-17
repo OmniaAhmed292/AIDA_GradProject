@@ -1,19 +1,25 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.DiscriminatorValue;
-import jakarta.persistence.Entity;
+import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
-@Entity
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Field;
+
 @Setter
 @Getter
 @Data
+@EqualsAndHashCode(callSuper = false) //TODO: add them for other inheritence classes
 @AllArgsConstructor
 @NoArgsConstructor
-@DiscriminatorValue("number_limited")
+@TypeAlias("number_limited")
+@Embeddable
 public class NumberLimitedDiscount extends Discount{
-    @Column(nullable = false, name = "max_purchase")
+    @Field(name = "max_purchase")
+    @NotNull
     private Integer maxPurchase;
-    @Column(nullable = false, name = "current_purchase")
+
+    @Field(name = "current_purchase")
+    @NotNull
     private Integer currentPurchase;
 }
