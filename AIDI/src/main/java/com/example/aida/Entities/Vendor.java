@@ -3,70 +3,55 @@ package com.example.aida.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
 
-@Entity
+
 @Setter
 @Getter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-@Table(name = "vendors")
-@DiscriminatorValue("vendor")
+@Document
 public class Vendor extends User {
-
-    @Id
-    @Column(nullable = false, updatable = false, name = "vendor_id")
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
-    )
+   @Id
     private Long id;
-
-
-    @Column(columnDefinition = "text", name = "About_us_info")
+    @Field("about_us_info")
     private String aboutUsInfo;
 
-    @Column(length = 50, name = "business_type")
+    @Field("business_type")
     private String businessType;
 
-    @Column(length = 100, name = "business_name")
+    @Field("business_name")
     private String businessName;
 
-    @Column(name = "exp_day")
+   @Field("exp_day")
     private LocalDate expDay;
 
-    @Column(name="exo_month")
+    @Field("exp_month")
     private String exoMonth;
 
-    @Column(name = "allow_late_emails")
-    private boolean AllowLateEmails;
 
-    @Column(name = "allow_new_emails")
-    private boolean AllowNewEmails;
+    @Embedded
+    @Field("vendor_settings")
+    private VendorSettings vendorSettings;
 
-    @Column(name = "application_files_path")
+    @Field("application_files_path")
     private String applicationFilesPath;
 
-   /* @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "vendor_id",referencedColumnName = "user_id")
-    private User vendor; */
 
-    @OneToMany(mappedBy = "vendor")
+    @Embedded
+    @Field("shelves")
     private Set<Shelf> vendorShelves;
 
-    @OneToMany(mappedBy = "vendor")
+    @Embedded
+    @Field("reviews")
     private Set<StoreReview> vendorStoreReviews;
 
 

@@ -2,9 +2,12 @@ package com.example.aida.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import java.lang.annotation.Documented;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Collection;
@@ -14,73 +17,50 @@ import java.util.stream.Collectors;
 import static org.apache.catalina.realm.UserDatabaseRealm.getRoles;
 
 
-@Entity
 @Setter
 @Getter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-@Table(name = "users")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@DiscriminatorColumn(name = "User_type", discriminatorType = DiscriminatorType.STRING)
+@Document
 public class User {
-
     @Id
-    @Column(nullable = false, updatable = false, name = "user_id")
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
-    )
+    @Field("user_id")
     private Integer userId;
 
-    @Column(precision = 12, scale = 2,name = "balance")
+    @Field("balance")
     private BigDecimal balance;
 
-
-    @Column(nullable = false, length = 50, name="Fname")
+   @Field("fname")
     private String fname;
 
-    @Column(nullable = false, length = 50, name = "Lname")
+    @Field("lname")
     private String lname;
 
-    @Column(nullable = false, length = 100, name = "email")
+    @Field("email")
     private String email;
 
-    @Column(nullable = false, name = "hashed_password")
+    @Field("hashed_password")
     private String hashedPassword;
 
-    @Column(nullable = false, name = "user_type")
+    @Field("user_type")
     private String userType;
 
-    @Column(nullable = false, length = 15, name = "phone_number")
+    @Field("phone_number")
     private String phoneNumber;
 
     @Embedded
+    @Field("address")
     private Address address;
 
-    @Column(length = 255, name = "image_file_path")
-    private String imageFilePath;
+    @Embedded
+    @Field("image")
+    private UserImage userImage;
 
-    @Column(length = 255, name = "image_file_name")
-    private String imageFileName;
-
-   /* @OneToOne(mappedBy = "customer")
-    private Customer cutomer;
-
-    @OneToOne(mappedBy = "vendor")
-    private Vendor vendor; */
-
-    @OneToMany(mappedBy = "user")
+    @Embedded
+    @Field("cards")
     private Set<Card> userCards;
-
-
 
     public Collection<String> getRoles() {
 

@@ -188,7 +188,7 @@ db.createCollection("users", {
         required: ["product_id","customer_id","subscription_start_date"],
         properties: {
                 product_id: { bsonType: "int" }, // References products collection (FK)
-                customer_id: {bsonType: "int"},  // References customer collection (FK)
+                customer_id: {bsonType: "int"},  //References customer collection (FK)
                 subscription_start_date: { bsonType: "date" }, 
                 subscription_end_date: { bsonType: "date" }, // Optional for tracking end time (if applicable)
               },
@@ -220,7 +220,6 @@ db.createCollection("users", {
          product_id: { bsonType: "int", autoincrement: true }, // Use counters instead
          product_name: { bsonType: "string", maxLength: 50 },
          quantity: { bsonType: "int", minimum: 0 },
-         discount: { bsonType: "decimal", minimum: 0.0 }, // Moved from separate table
          description: { bsonType: "string", maxLength: 100 },
          is_used: { bsonType: "bool" },
          deletion_date: { bsonType: "date" }, // Can be embedded if needed
@@ -231,18 +230,14 @@ db.createCollection("users", {
          is_shown: { bsonType: "bool" },
          category_name: { bsonType: "string", maxLength: 50 },
          purchases_no: { bsonType: "int", minimum: 0.0 },
-         discount_id: { bsonType: "int" }, // References discount document (FK) (optional)
          is_in_event: { bsonType: "bool" }, // Embedded event information if needed
          // Embedded specifications
          specifications: {
-           bsonType: "array",
-           items: {
-             bsonType: "object",
+           bsonType: "object",
              properties: {
                attribute_name: { bsonType: "string", maxLength: 50 },
                attribute_value: { bsonType: "string", maxLength: 100 },
              },
-           },
          },
          // Reference to tags using a separate collection (not embedded)
          tags: {
@@ -275,10 +270,7 @@ db.createCollection("users", {
           bsonType: "object",
           properties: {
             percentage: { bsonType: "decimal", minimum: 0.0, maximum: 100.0 },
-            discount_type: { bsonType: "string", enum: ["time_limited", "number_limited"] },
             EndDate: { bsonType: "date" },
-            max_purchase: { bsonType: "decimal", minimum: 0.0 }, // Can be null
-            current_purchase: { bsonType: "decimal", minimum: 0.0 },
             Code: { bsonType: "string", maxLength: 20, unique: true },
           }
          }
@@ -314,11 +306,9 @@ db.createCollection("orders", {
          "customer_id",
          "shipment_price",
          "order_date",
-         "card_id",
-         "address_city",
-         "address_apartment_no",
-         "address_building_no",
-         "address_street"
+         "address",
+          "order_items",
+          "card"
        ],
        properties: {
          order_id: { bsonType: "int", autoincrement: true }, // Use counters instead
@@ -326,11 +316,25 @@ db.createCollection("orders", {
          percentage_discount: { bsonType: "decimal", minimum: 0.0, maximum: 1.0 }, // Assuming percentage is between 0 and 1
          shipment_price: { bsonType: "decimal", minimum: 0.0 },
          order_date: { bsonType: "date" },
-         card_id: { bsonType: "int" }, // References cards collection (FK) or not
-         address_city: { bsonType: "string", maxLength: 50 },
-         address_apartment_no: { bsonType: "string", maxLength: 10 },
-         address_building_no: { bsonType: "string", maxLength: 10 },
-         address_street: { bsonType: "string", maxLength: 100 },
+         //Embedded address
+         address:{
+          bsonType: "object",
+          properties:{
+            address_city: { bsonType: "string" },
+            address_street: { bsonType: "string" },
+            address_apartment_no: { bsonType: "string" },
+            address_Building_no: { bsonType: "string" }
+          }
+        },
+        //Embedded card
+          card:{
+          bsonType: "object",
+          properties:{
+            card_number: { bsonType: "string" },
+            year: { bsonType: "int" },
+            month: { bsonType: "int" }
+          }},
+
          order_items: {
            bsonType: "array",
            items: {
