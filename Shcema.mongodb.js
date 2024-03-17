@@ -66,7 +66,7 @@ db.createCollection("users", {
          customer_id: { bsonType: "objectId" }, // Inherits user_id from users
          birthdate: { bsonType: "date" },
          Gender: { bsonType: "string", enum: ["Male", "Female", "Other"] },
-         Last_Modified_Time: { bsonType: "date", default: ISODate() }, //ISODate used for timestamps
+         Last_Modified_Time: { bsonType: "date"}, //ISODate used for timestamps
          Settings:{
           bsonType: "object", 
           properties: {
@@ -76,7 +76,7 @@ db.createCollection("users", {
             allow_Collect_information: { bsonType: "bool" }
           }
          },
-         points: { bsonType: "int", default: 0 },
+         points: { bsonType: "int"},
         },
      },
    },
@@ -109,7 +109,7 @@ db.createCollection("users", {
             bsonType: "array",
             properties: {
               shelf_name: { bsonType: "string", maxLength: 50 },
-              shelf_id: { bsonType: "objectId", autoincrement:true }, // Unique identifier for the shelf
+              shelf_id: { bsonType: "objectId"}, // Unique identifier for the shelf
             },
        },
        // Embedded reviews information
