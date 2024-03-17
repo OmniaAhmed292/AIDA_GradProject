@@ -1,46 +1,43 @@
 package com.example.aida.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-@Entity
-@Table(name = "discounts")
+
+
+@Embeddable
 @Setter
 @Getter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "discount_type", discriminatorType = DiscriminatorType.STRING)
+@TypeAlias("discount_type")
 public class Discount {
-    @Id
-    @Column(nullable = false, updatable = false)
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
-    )
-    private Integer discountId;
+    /**
+     * The percentage of the discount
+     * 0% by default
+     * 25.5f for 25.5%
+     */
+    @Field(name = "percentage")
+    @NotNull
+    private float percentage = 0;
 
-    @ColumnDefault("0")
-    @Column(nullable = false, precision = 10, scale = 2,name = "percentage")
-    private float percentage;
-
-    @Column(nullable = true, length = 10,name = "Code")
+    /**
+     * The amount of the discount
+     */
+    @Field(name = "Code")
     private String code;
 
-    @Column(nullable = false, length = 10, name = "discount_type")
+    /**
+     * The type of the discount
+     * can be time_limited or number_limited
+     */
+    @Field(name = "discount_type")
     private String type;
-
-
-
-
-
 }
 
