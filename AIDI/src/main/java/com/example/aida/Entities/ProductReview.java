@@ -2,6 +2,8 @@ package com.example.aida.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
 
@@ -12,37 +14,23 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "product_reviews")
+@Document(collection = "product_reviews")
 public class ProductReview {
 
     @Id
-    @Column(nullable = false, updatable = false, name = "review_id")
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
-    )
+    @Field(name = "review_id")
     private Integer reviewId;
-
-    @Column(columnDefinition = "text", name = "body")
+    @Field(name = "body")
     private String body;
-
-    @Column(name = "rate")
+    @Field(name = "rate")
     private Integer rate;
 
-    @Column(name = "Date")
+   @Field(name = "date")
     private LocalDate date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id")
+    @Field(name = "customer_id")
     private Customer customer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_id")
+    @Field(name = "product_id")
     private Product product;
 }

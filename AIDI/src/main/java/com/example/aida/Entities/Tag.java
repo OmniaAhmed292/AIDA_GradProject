@@ -2,7 +2,10 @@ package com.example.aida.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.lang.annotation.Documented;
 import java.util.Set;
 
 
@@ -12,27 +15,11 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tags")
+@Document(collection = "tags")
 public class Tag {
-
     @Id
-    @Column(nullable = false, updatable = false, name = "tag_id")
-    @SequenceGenerator(
-            name = "primary_sequence",
-            sequenceName = "primary_sequence",
-            allocationSize = 1,
-            initialValue = 10000
-    )
-    @GeneratedValue(
-            strategy = GenerationType.SEQUENCE,
-            generator = "primary_sequence"
-    )
+    @Field("tag_id")
     private Integer tagId;
-
-    @Column(nullable = false, length = 50, name = "tag_name")
+    @Field("tag_name")
     private String tagName;
-
-    @ManyToMany(mappedBy = "productTagTags")
-    private Set<Product> productTagProducts;
-
 }

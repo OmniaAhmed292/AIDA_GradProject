@@ -235,14 +235,11 @@ db.createCollection("users", {
          is_in_event: { bsonType: "bool" }, // Embedded event information if needed
          // Embedded specifications
          specifications: {
-           bsonType: "array",
-           items: {
-             bsonType: "object",
+           bsonType: "object",
              properties: {
                attribute_name: { bsonType: "string", maxLength: 50 },
                attribute_value: { bsonType: "string", maxLength: 100 },
              },
-           },
          },
          // Reference to tags using a separate collection (not embedded)
          tags: {
