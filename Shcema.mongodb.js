@@ -8,7 +8,7 @@ db.createCollection("users", {
        bsonType: "object",
        required: ["Fname", "Lname", "email", "Hashed_Password", "User_type"],
        properties: {
-         user_id: { bsonType: "int" },
+         user_id: { bsonType: "objectId" },
          Fname: { bsonType: "string" },
          Lname: { bsonType: "string" },
          email: {
@@ -63,7 +63,7 @@ db.createCollection("users", {
        bsonType: "object",
        required: ["birthdate", "Gender", "points"],
        properties: {
-         customer_id: { bsonType: "int" }, // Inherits user_id from users
+         customer_id: { bsonType: "objectId" }, // Inherits user_id from users
          birthdate: { bsonType: "date" },
          Gender: { bsonType: "string", enum: ["Male", "Female", "Other"] },
          Last_Modified_Time: { bsonType: "date", default: ISODate() }, //ISODate used for timestamps
@@ -90,7 +90,7 @@ db.createCollection("users", {
        bsonType: "object",
        required: ["About_us_info", "business_type", "business_name", "exp_day", "exo_month", "allow_Late_emails", "allow_new_emails"],
        properties: {
-         vendor_id: { bsonType: "int" }, // Inherits user_id from users
+         vendor_id: { bsonType: "objectId" }, // Inherits user_id from users
          About_us_info: { bsonType: "string" },
          business_type: { bsonType: "string", maxLength: 50 },
          business_name: { bsonType: "string", maxLength: 100 },
@@ -109,7 +109,7 @@ db.createCollection("users", {
             bsonType: "array",
             properties: {
               shelf_name: { bsonType: "string", maxLength: 50 },
-              shelf_id: { bsonType: "int", autoincrement:true }, // Unique identifier for the shelf
+              shelf_id: { bsonType: "objectId", autoincrement:true }, // Unique identifier for the shelf
             },
        },
        // Embedded reviews information
@@ -118,7 +118,7 @@ db.createCollection("users", {
          items: {
            bsonType: "object",
            properties: {
-             customer_id: { bsonType: "int" }, // Can reference customers collection (optional)
+             customer_id: { bsonType: "objectId" }, // Can reference customers collection (optional)
              body: { bsonType: "string" },
              rate: { bsonType: "int", minimum: 1, maximum: 5 },
              date: { bsonType: "date" },
@@ -143,7 +143,7 @@ db.createCollection("users", {
          "bank_acount",
        ],
        properties: {
-         Dummy_Admin_id: { bsonType: "int" }, // doesn't inherit user_id from users
+         Dummy_Admin_id: { bsonType: "objectId" }, // doesn't inherit user_id from users
          service_fees: { bsonType: "decimal", maximum: 100.0, minimum: 0.0 }, // Percentage (max 100.0)
          points_to_discount_ratio: { bsonType: "decimal", maximum: 100.0, minimum: 0.0 }, // Percentage (max 100.0)
          Shipment_fees: { bsonType: "decimal" },
@@ -173,7 +173,7 @@ db.createCollection("users", {
        bsonType: "object",
        required: ["tag_name"],
        properties: {
-         tag_id: { bsonType: "int", autoincrement: true }, // Use counters instead
+         tag_id: { bsonType: "objectId", autoincrement: true }, // Use counters instead
          tag_name: { bsonType: "string", maxLength: 50, unique: true },
        },
      },
@@ -187,8 +187,8 @@ db.createCollection("users", {
         bsonType: "object",
         required: ["product_id","customer_id","subscription_start_date"],
         properties: {
-                product_id: { bsonType: "int" }, // References products collection (FK)
-                customer_id: {bsonType: "int"},  //References customer collection (FK)
+                product_id: { bsonType: "objectId" }, // References products collection (FK)
+                customer_id: {bsonType: "objectId"},  //References customer collection (FK)
                 subscription_start_date: { bsonType: "date" }, 
                 subscription_end_date: { bsonType: "date" }, // Optional for tracking end time (if applicable)
               },
@@ -217,7 +217,7 @@ db.createCollection("users", {
          "vendor_id",
        ],
        properties: {
-         product_id: { bsonType: "int", autoincrement: true }, // Use counters instead
+         product_id: { bsonType: "objectId"}, // Use counters instead
          product_name: { bsonType: "string", maxLength: 50 },
          quantity: { bsonType: "int", minimum: 0 },
          description: { bsonType: "string", maxLength: 100 },
@@ -245,7 +245,7 @@ db.createCollection("users", {
            items: {
              bsonType: "object",
              properties: {
-               tag_id: { bsonType: "int" }, // Reference to tags collection
+               tag_id: { bsonType: "objectId"}, // Reference to tags collection
              },
            },
          },
@@ -261,9 +261,9 @@ db.createCollection("users", {
              },
            },
          },
-         vendor_id: { bsonType: "int" }, // References vendor document (FK)
+         vendor_id: { bsonType: "objectId" }, // References vendor document (FK)
          // Reference to specific shelf within vendor document (FK)
-         shelf_id: { bsonType: "int" }, // References shelf object inside vendor.shelves
+         shelf_id: { bsonType: "objectId" }, // References shelf object inside vendor.shelves
 
          //Embedded discount
          discount: {
@@ -286,9 +286,9 @@ db.createCollection("users", {
        bsonType: "object",
        required: ["customer_id", "product_id", "body", "rate", "date"],
        properties: {
-         review_id: { bsonType: "int", autoincrement: true }, // Use counters instead
-         customer_id: { bsonType: "int" }, // References customers collection (FK)
-         product_id: { bsonType: "int" }, // References products collection (FK)
+         review_id: { bsonType: "objectId"}, // Use counters instead
+         customer_id: { bsonType: "objectId" }, // References customers collection (FK)
+         product_id: { bsonType: "objectId" }, // References products collection (FK)
          body: { bsonType: "string" },
          rate: { bsonType: "int", minimum: 1, maximum: 5 },
          date: { bsonType: "date" }, 
@@ -311,8 +311,8 @@ db.createCollection("orders", {
           "card"
        ],
        properties: {
-         order_id: { bsonType: "int", autoincrement: true }, // Use counters instead
-         customer_id: { bsonType: "int" }, // References customers collection (FK)
+         order_id: { bsonType: "objectId" }, // Use counters instead
+         customer_id: { bsonType: "objectId" }, // References customers collection (FK)
          percentage_discount: { bsonType: "decimal", minimum: 0.0, maximum: 1.0 }, // Assuming percentage is between 0 and 1
          shipment_price: { bsonType: "decimal", minimum: 0.0 },
          order_date: { bsonType: "date" },
@@ -341,7 +341,7 @@ db.createCollection("orders", {
              bsonType: "object",
              required: ["product_id", "quantity", "Status", "Taxes", "Product_price", "Discount_price"],
              properties: {
-               product_id: { bsonType: "int" }, // References products collection (FK)
+               product_id: { bsonType: "objectId" }, // References products collection (FK)
                quantity: { bsonType: "int", minimum: 1 },
                Status: { bsonType: "string", enum: ["pending", "shipped", "delivered"] },
                Taxes: { bsonType: "decimal", minimum: 0.0 },
@@ -362,7 +362,7 @@ db.createCollection("event_tags", {
        bsonType: "object",
        required: ["name", "start_date", "end_date"],
        properties: {
-         tag_id: { bsonType: "int", autoincrement: true }, // Use counters instead
+         tag_id: { bsonType: "objectId"}, // Use counters instead
          name: { bsonType: "string", maxLength: 50 },
          start_date: { bsonType: "date" },
          end_date: { bsonType: "date" },
@@ -381,13 +381,12 @@ db.createCollection("event_tags", {
        bsonType: "object",
        required: ["PID", "EID"],
        properties: {
-         PID: { bsonType: "int" }, // References products collection (FK)
-         EID: { bsonType: "int" }, // References event_tags collection (FK)
+         PID: { bsonType: "objectId" }, // References products collection (FK)
+         EID: { bsonType: "objectId" }, // References event_tags collection (FK)
          image_name: { bsonType: "string", maxLength: 50 },
          file_path: { bsonType: "string" }, // Optional for storing image path (if needed)
        },
        additionalProperties: false, // Enforce schema validation
      },
    },
-   primaryKey: { _id: false, PID: 1, EID: 1 }, // Define compound primary key
  });
