@@ -6,6 +6,7 @@ import lombok.*;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -21,8 +22,8 @@ import java.util.List;
 public class Order {
 
     @Id
-    @Field(name = "order_id")
-    private Integer orderId;
+    @Field(name = "order_id", targetType = FieldType.OBJECT_ID)
+    private String orderId;
 
     @Field(name = "Shipment_price")
     @NotNull

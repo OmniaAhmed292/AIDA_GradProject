@@ -2,13 +2,14 @@ package com.example.aida.Entities;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDate;
 
 
-@Entity
 @Setter
 @Getter
 @Data
@@ -18,8 +19,8 @@ import java.time.LocalDate;
 public class ProductReview {
 
     @Id
-    @Field(name = "review_id")
-    private Integer reviewId;
+    @Field(name = "review_id", targetType = FieldType.OBJECT_ID)
+    private String reviewId;
     @Field(name = "body")
     private String body;
     @Field(name = "rate")
@@ -29,8 +30,10 @@ public class ProductReview {
     private LocalDate date;
 
     @Field(name = "customer_id")
+    @DBRef
     private Customer customer;
 
     @Field(name = "product_id")
+    @DBRef
     private Product product;
 }

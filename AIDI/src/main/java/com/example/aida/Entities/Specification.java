@@ -3,8 +3,6 @@ package com.example.aida.Entities;
 import jakarta.persistence.*;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-
-@Entity
 @Embeddable
 public class Specification {
     @Field("attribute_name")

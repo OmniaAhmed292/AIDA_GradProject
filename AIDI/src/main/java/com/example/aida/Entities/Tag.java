@@ -4,12 +4,12 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.lang.annotation.Documented;
 import java.util.Set;
 
 
-@Entity
 @Setter
 @Getter
 @Data
@@ -18,7 +18,7 @@ import java.util.Set;
 @Document(collection = "tags")
 public class Tag {
     @Id
-    @Field("tag_id")
+    @Field(name = "tag_id", targetType = FieldType.OBJECT_ID)
     private Integer tagId;
     @Field("tag_name")
     private String tagName;

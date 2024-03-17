@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
 
@@ -17,8 +18,8 @@ import java.math.BigDecimal;
 public class DummyAdmin {
 
     @Id
-    @Field(name = "Dummy_Admin_id")
-    private Long id;
+    @Field(name = "Dummy_Admin_id", targetType = FieldType.OBJECT_ID)
+    private String id;
 
     @Field(name = "service_fees")
     private BigDecimal serviceFees;

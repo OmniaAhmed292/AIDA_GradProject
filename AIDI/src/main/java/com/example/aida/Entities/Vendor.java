@@ -5,6 +5,7 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -15,13 +16,15 @@ import java.util.Set;
 @Setter
 @Getter
 @Data
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-@Document
+@Document(collection = "vendors")
 public class Vendor extends User {
-   @Id
-    private Long id;
+    @Id
+    @Field(name = "vendor_id", targetType = FieldType.OBJECT_ID)
+    private String id;
     @Field("about_us_info")
     private String aboutUsInfo;
 
