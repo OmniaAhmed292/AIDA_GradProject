@@ -174,7 +174,7 @@ db.createCollection("users", {
        required: ["tag_name"],
        properties: {
          tag_id: { bsonType: "objectId"}, // Use counters instead
-         tag_name: { bsonType: "string", maxLength: 50, unique: true },
+         tag_name: { bsonType: "string", maxLength: 50},
        },
      },
    },
