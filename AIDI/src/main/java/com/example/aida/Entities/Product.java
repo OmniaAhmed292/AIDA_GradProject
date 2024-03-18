@@ -4,25 +4,27 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
 
-@Entity
+
 @Setter
 @Getter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "products")
+@Document(collection = "products")
 public class Product {
 
     @Id
-    @Field("product_id")
-    private Integer productId;
+    @Field(name ="product_id", targetType = FieldType.OBJECT_ID)
+    private String productId;
 
     @Field(name = "product_name")
     @NotNull

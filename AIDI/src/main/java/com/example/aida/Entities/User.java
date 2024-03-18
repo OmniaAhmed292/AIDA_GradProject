@@ -2,8 +2,10 @@ package com.example.aida.Entities;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -23,11 +25,12 @@ import static org.apache.catalina.realm.UserDatabaseRealm.getRoles;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
-@Document
+@Document(collection = "users")
+@TypeAlias("user_type")
 public class User {
     @Id
-    @Field("user_id")
-    private Integer userId;
+    @Field(name = "user_id", targetType = FieldType.OBJECT_ID)
+    private String userId;
 
     @Field("balance")
     private BigDecimal balance;

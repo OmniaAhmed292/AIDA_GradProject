@@ -15,13 +15,14 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 
 @Document(collection = "customers")
 @Setter
 @Getter
 @Data
+@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
 @SuperBuilder
@@ -29,8 +30,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class Customer extends User {
 
     @Id
-    @Field(name = "customer_id")
-    private Long id;
+    @Field(name = "customer_id", targetType = FieldType.OBJECT_ID)
+    private String id;
 
     @Field(name = "birthdate")
     private LocalDate birthdate;

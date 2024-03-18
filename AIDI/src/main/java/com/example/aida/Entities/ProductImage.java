@@ -5,7 +5,6 @@ import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 
-@Entity
 @Setter
 @Getter
 @Data
