@@ -6,8 +6,7 @@ import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 
 import java.lang.annotation.Documented;
 import java.math.BigDecimal;
@@ -69,10 +68,5 @@ public class User {
 
         return Arrays.asList("ADMIN", "Customer","Vendor");
     }
-    public Collection<GrantedAuthority> getAuthorities() {
-        // Convert roles to GrantedAuthority instances
-        return getRoles().stream()
-                .map(SimpleGrantedAuthority::new)
-                .collect(Collectors.toList());
-    }
+
 }
