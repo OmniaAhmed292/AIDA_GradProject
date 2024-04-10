@@ -18,7 +18,6 @@ import java.math.BigDecimal;
 public class DummyAdmin {
 
     @Id
-    @Field(name = "Dummy_Admin_id", targetType = FieldType.OBJECT_ID)
     private String id;
 
     @Field(name = "service_fees")
@@ -34,8 +33,7 @@ public class DummyAdmin {
     @Field(name = "Banner_price")
     private BigDecimal bannerPrice;
 
-    //TODO: fix bank account typo
-    @Field(name = "bank_acount")
+    @Field(name = "bank_account")
     private String bankAccount;
 
     @Field(name = "Event_tag")

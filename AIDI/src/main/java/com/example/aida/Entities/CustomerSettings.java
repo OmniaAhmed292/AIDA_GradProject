@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Settings {
+public class CustomerSettings {
 
     @Field(name = "allow_Deactivated")
     private Boolean AllowDeactivated;

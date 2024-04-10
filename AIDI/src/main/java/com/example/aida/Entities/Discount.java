@@ -7,6 +7,7 @@ import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.time.LocalDate;
 
 
 @Embeddable
@@ -33,11 +34,8 @@ public class Discount {
     @Field(name = "Code")
     private String code;
 
-    /**
-     * The type of the discount
-     * can be time_limited or number_limited
-     */
-    @Field(name = "discount_type")
-    private String type;
+
+    @Field(name = "end_date")
+    private LocalDate endDate;
 }
 

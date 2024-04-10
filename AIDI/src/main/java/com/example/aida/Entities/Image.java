@@ -10,10 +10,10 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-public class UserImage {
-    @Field("image_file_path")
-    private String imageFilePath;
+public class Image {
+    @Field("file_path")
+    private String filePath;
 
-    @Field("image_file_name")
-    private String imageFileName;
+    @Field("file_name")
+    private String fileName;
 }
