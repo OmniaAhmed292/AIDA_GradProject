@@ -3,6 +3,8 @@ package com.example.aida.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -10,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 
@@ -23,27 +26,21 @@ import java.util.Set;
 public class Product {
 
     @Id
-    @Field(name ="product_id", targetType = FieldType.OBJECT_ID)
     private String productId;
 
+    //--------------------
+    // product details
+    //--------------------
     @Field(name = "product_name")
     @NotNull
     private String productName;
 
     @Field(name = "quantity")
     @NotNull
-    private Integer quantity;
-
+    private Integer quantity = 1;
 
     @Field(name = "description")
     private String description;
-
-    @Field(name = "is_used")
-    @NotNull
-    private Boolean isUsed;
-
-    @Field(name="deletion_date")
-    private LocalDate deletionDate;
 
     @Field(name="time_since_restocking")
     @NotNull
@@ -53,55 +50,54 @@ public class Product {
     @NotNull
     private BigDecimal price;
 
-    @Field(name = "subscription_date")
-    @NotNull
-    private LocalDate subscriptionDate;
-
     @Field(name = "taxes")
     @NotNull
     private BigDecimal taxes;
-
-    @Field(name="is_shown")
-    @NotNull
-    private Boolean isShown;
 
     @Field(name = "category_name")
     @NotNull
     private String categoryName;
 
-    @Field(name = "purchases_no")
-    @NotNull
-    private Integer purchasesNo;
 
-    @DBRef
-    @Field(name = "shelf_id")
-    private Shelf shelf;
+    //--------------------
+    // flags
+    //--------------------
+
+    @Field(name = "is_used")
+    @NotNull
+    private Boolean isUsed;
+
+    @Field(name = "is_in_event")
+    @NotNull
+    private boolean isInEvent = false;
+
+    @Field(name="is_shown")
+    @NotNull
+    private Boolean isShown;
+
+
+    //--------------------
+    // Timestamps
+    //--------------------
+
+    @Field(name = "created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Field(name = "updated_at")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    @Field(name="deleted_at")
+    private LocalDateTime deletedAt;
 
     @Embedded
     @Field(name = "images")
     private Set<ProductImage> images;
 
-    /*
-    @OneToMany(mappedBy = "product")
-    private Set<OrderItem> productOrderItems;
-
-
-    @OneToMany(mappedBy = "product")
-    private Set<ProductReview> productProductReviews;
-
-    @ManyToMany(mappedBy = "subscriptionProducts")
-    private Set<Customer> subscriptionCustomers;
-
-     */
-
-    @DBRef
     @Field(name = "tags")
-    private Set<Tag> tags;
-
-
-    @Field(name = "is_in_event")
-    @NotNull
-    private boolean isInEvent = false;
+    @Embedded
+    private Set<ProductTags> tags;
 
     @Field(name = "discount")
     @Embedded
@@ -111,7 +107,13 @@ public class Product {
     @Embedded
     private Set<Specification> specifications;
 
-    @DBRef
+    @Field(name = "reviews")
+    @Embedded
+    private Set<Reviews> reviews;
+
     @Field(name = "vendor_id")
     private Vendor vendor;
+
+    @Field(name = "shelf_id")
+    private Shelf shelf;
 }

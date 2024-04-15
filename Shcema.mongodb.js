@@ -1,169 +1,261 @@
 //CREATE AND USE DATABASE AIDA
 use (AIDA)
 
-// Collection for users with card embedded
-db.createCollection("users", {
-   validator: {
-     $jsonSchema: {
-       bsonType: "object",
-       required: ["Fname", "Lname", "email", "Hashed_Password", "User_type"],
-       properties: {
-         user_id: { bsonType: "objectId" },
-         Fname: { bsonType: "string" },
-         Lname: { bsonType: "string" },
-         email: {
-           bsonType: "string",
-           pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", // Email format regex
-         },
-         Hashed_Password: { bsonType: "string" },
-         User_type: { bsonType: "string", enum: ["customer", "vendor"] },
-         phone_number: {
-           bsonType: "string",
-           pattern: ".{6,}", // Minimum length for phone number 
-         },
-         address:{
-          bsonType: "object",
-          properties:{
-            address_city: { bsonType: "string" },
-            address_street: { bsonType: "string" },
-            address_apartment_no: { bsonType: "string" },
-            address_Building_no: { bsonType: "string" }
-          }
-        },
-         image:{ 
-          bsonType: "object",
-          properties: {
-            image_file_path: { bsonType: "string" },
-            image_file_name: { bsonType: "string" }
-          }
-         },
-         balance: { bsonType: "decimal" },
-         //Cards saved by the user
-         cards: {
-            bsonType: "array",
-            items: {
-              bsonType: "object",
-              properties: {
-                card_number: { bsonType: "string", maxLength: 20 },
-                year: { bsonType: "int" },
-                month: { bsonType: "int", minimum: 1, maximum: 12 },
-              },
-            },
-          },
-
-       },
-     },
-   },
- });
- 
- // Collection for customers wit subscriped products embedded
- db.createCollection("customers", {
-   validator: {
-     $jsonSchema: {
-       bsonType: "object",
-       required: ["birthdate", "Gender", "points"],
-       properties: {
-         customer_id: { bsonType: "objectId" }, // Inherits user_id from users
-         birthdate: { bsonType: "date" },
-         Gender: { bsonType: "string", enum: ["Male", "Female", "Other"] },
-         Last_Modified_Time: { bsonType: "date"}, //ISODate used for timestamps
-         Settings:{
-          bsonType: "object", 
-          properties: {
-            allow_Deactivated: { bsonType: "bool" },
-            allow_email_subscribed: { bsonType: "bool" },
-            allow_Email_Cart_Recovery: { bsonType: "bool" },
-            allow_Collect_information: { bsonType: "bool" }
-          }
-         },
-         points: { bsonType: "int"},
-        },
-     },
-   },
- });
- 
- 
- // Collection for vendors
- db.createCollection("vendors", {
-   validator: {
-     $jsonSchema: {
-       bsonType: "object",
-       required: ["About_us_info", "business_type", "business_name", "exp_day", "exo_month", "allow_Late_emails", "allow_new_emails"],
-       properties: {
-         vendor_id: { bsonType: "objectId" }, // Inherits user_id from users
-         About_us_info: { bsonType: "string" },
-         business_type: { bsonType: "string", maxLength: 50 },
-         business_name: { bsonType: "string", maxLength: 100 },
-         exp_day: { bsonType: "date" },
-         exo_month: { bsonType: "string", enum: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"] },
-         settings:{
-          bsonType: "object",
-          properties:{
-            allow_Late_emails: { bsonType: "bool" },
-            allow_new_emails: { bsonType: "bool" }
-          }
-         },
-        
-         Application_files_path: { bsonType: "string", maxLength: 255 },
-         shelves: {
-            bsonType: "array",
+// Collection for customers
+db.createCollection("customers", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["Fname", "Lname", "email", "Hashed_Password", "birthdate", "Gender", "points"],
             properties: {
-              shelf_name: { bsonType: "string", maxLength: 50 },
-              shelf_id: { bsonType: "objectId"}, // Unique identifier for the shelf
+                // User identification and authentication information
+                _id: { bsonType: "objectId" },
+                first_name: { bsonType: "string", description: "First name of the customer" },
+                last_name: { bsonType: "string", description: "Last name of the customer" },
+                email: {
+                    bsonType: "string",
+                    pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", // Email format regex
+                    description: "Email address of the customer"
+                },
+                hashed_password: { bsonType: "string", description: "Hashed password for the customer's account" },
+
+                // Personal information
+                birthdate: { bsonType: "date", description: "Birthdate of the customer" },
+                gender: { bsonType: "string", enum: ["Male", "Female", "Other"], description: "Gender of the customer" },
+
+                // Other attributes
+                points: { bsonType: "int", description: "Points accumulated by the customer" },
+
+                // Timestamps
+                created_at: { bsonType: "date", description: "Timestamp for when the document was created" },
+                updated_at: { bsonType: "date", description: "Timestamp for when the document was last updated" },
+
+                // Settings
+                settings:{
+                    bsonType: "object",
+                    properties: {
+                        allow_Deactivated: { bsonType: "bool", description: "Flag to allow deactivation" },
+                        allow_email_subscribed: { bsonType: "bool", description: "Flag to allow email subscription" },
+                        allow_Email_Cart_Recovery: { bsonType: "bool", description: "Flag to allow email cart recovery" },
+                        allow_Collect_information: { bsonType: "bool", description: "Flag to allow information collection" }
+                    },
+                    description: "Settings related to the customer's account"
+                },
+
+                // Contact information
+                phone_number: {
+                    bsonType: "string",
+                    pattern: ".{6,}", // Minimum length for phone number
+                    description: "Phone number of the customer"
+                },
+                address:{
+                    bsonType: "object",
+                    properties:{
+                        address_city: { bsonType: "string", description: "City of the customer's address" },
+                        address_street: { bsonType: "string", description: "Street of the customer's address" },
+                        address_apartment_no: { bsonType: "string", description: "Apartment number of the customer's address" },
+                        address_Building_no: { bsonType: "string", description: "Building number of the customer's address" }
+                    },
+                    description: "Address of the customer"
+                },
+
+                // Financial information
+                balance: { bsonType: "decimal", description: "Balance of the customer's account" },
+                cards: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        properties: {
+                            card_number: { bsonType: "string", maxLength: 20, description: "Card number of the customer's card" },
+                            year: { bsonType: "int", description: "Expiry year of the customer's card" },
+                            month: { bsonType: "int", minimum: 1, maximum: 12, description: "Expiry month of the customer's card" },
+                        },
+                        description: "Cards saved by the customer"
+                    },
+                },
+
+                // Image information
+                image:{
+                    bsonType: "object",
+                    properties: {
+                        file_path: { bsonType: "string", description: "File path of the customer's image" },
+                        file_name: { bsonType: "string", description: "File name of the customer's image" }
+                    },
+                    description: "Image of the customer"
+                },
             },
-       },
-       // Embedded reviews information
-       reviews: {
-         bsonType: "array",
-         items: {
-           bsonType: "object",
-           properties: {
-             customer_id: { bsonType: "objectId" }, // Can reference customers collection (optional)
-             body: { bsonType: "string" },
-             rate: { bsonType: "int", minimum: 1, maximum: 5 },
-             date: { bsonType: "date" },
-           },
-         },
-       },
-     },
-   },
-   },
- });
- 
- //Dummy admin (doesn't inherit from users)
- db.createCollection("Dummy_Admin", {
-   validator: {
-     $jsonSchema: {
-       bsonType: "object",
-       required: [
-         "service_fees",
-         "points_to_discount_ratio",
-         "Shipment_fees",
-         "Banner_price",
-         "bank_acount",
-       ],
-       properties: {
-         Dummy_Admin_id: { bsonType: "objectId" }, // doesn't inherit user_id from users
-         service_fees: { bsonType: "decimal", maximum: 100.0, minimum: 0.0 }, // Percentage (max 100.0)
-         points_to_discount_ratio: { bsonType: "decimal", maximum: 100.0, minimum: 0.0 }, // Percentage (max 100.0)
-         Shipment_fees: { bsonType: "decimal" },
-         Banner_price: { bsonType: "decimal" }, //maximum Price for the banner of the budget concious customers
-         bank_acount: { bsonType: "string", maxLength: 50 }, //Represents the account at which system money will be transferred
-         Event_tag: {
-          bsonType: "object", 
-          properties: {
-            name: { bsonType: "string", maxLength: 50 },
-            start_date: { bsonType: "date" },
-            end_date: { bsonType: "date" },
-            event_description: { bsonType: "string", maxLength: 255 },
-            image_name: { bsonType: "string", maxLength: 255 },
-            image_filepath: { bsonType: "string", maxLength: 255 }
-          }
-         } 
-       },
-     },
-   },
- });
+        },
+    },
+});
+
+// Collection for vendors with user embedded
+db.createCollection("vendors", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["About_us_info", "business_type", "business_name", "exp_day", "exo_month", "allow_Late_emails", "allow_new_emails", "Fname", "Lname", "email", "Hashed_Password"],
+            properties: {
+                // Vendor identification and authentication information
+                _id: { bsonType: "objectId" },
+                first_name: { bsonType: "string", description: "First name of the vendor" },
+                last_name: { bsonType: "string", description: "Last name of the vendor" },
+                email: {
+                    bsonType: "string",
+                    pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", // Email format regex
+                    description: "Email address of the vendor"
+                },
+                hashed_password: { bsonType: "string", description: "Hashed password for the vendor's account" },
+
+                // Vendor business information
+                business_info: {
+                    bsonType: "object",
+                    properties: {
+                        About_us_info: { bsonType: "string", description: "Information about the vendor's business" },
+                        business_type: { bsonType: "string", maxLength: 50, description: "Type of the vendor's business" },
+                        business_name: { bsonType: "string", maxLength: 100, description: "Name of the vendor's business" },
+                        application_files_path: { bsonType: "string", maxLength: 255, description: "Path to the vendor's application files" },
+                        exp_day: { bsonType: "date", description: "Expiration day of the vendor's business license" },
+                        exp_month: { bsonType: "string", enum: ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], description: "Expiration month of the vendor's business license" },
+                        is_verified: { bsonType: "bool", description: "Flag to indicate if the vendor is verified" },
+                    },
+                    description: "Business related information of the vendor"
+                },
+
+                // Vendor settings
+                settings:{
+                    bsonType: "object",
+                    properties:{
+                        allow_Late_emails: { bsonType: "bool", description: "Flag to allow emails for late orders" },
+                        allow_new_emails: { bsonType: "bool", description: "Flag to allow emails for new orders" }
+                    },
+                    description: "Settings related to the vendor's account"
+                },
+
+
+                // Vendor shelves
+                shelves: {
+                    bsonType: "array",
+                    properties: {
+                        shelf_name: { bsonType: "string", maxLength: 50, description: "Name of the shelf" },
+                        created_at: { bsonType: "date" },
+                        productIds: {
+                            bsonType: "array",
+                            items: { bsonType: "objectId", description: "Unique identifier for the product" },
+                            description: "Array of product IDs in the shelf"
+                        },
+                    },
+                    description: "Shelves owned by the vendor"
+                },
+
+                // Vendor contact information
+                phone_number: {
+                    bsonType: "string",
+                    pattern: ".{6,}", // Minimum length for phone number
+                    description: "Phone number of the vendor"
+                },
+                address:{
+                    bsonType: "object",
+                    properties:{
+                        address_city: { bsonType: "string", description: "City of the vendor's address" },
+                        address_street: { bsonType: "string", description: "Street of the vendor's address" },
+                        address_apartment_no: { bsonType: "string", description: "Apartment number of the vendor's address" },
+                        address_Building_no: { bsonType: "string", description: "Building number of the vendor's address" }
+                    },
+                    description: "Address of the vendor"
+                },
+
+                // Vendor financial information
+                balance: { bsonType: "decimal", description: "Balance of the vendor's account" },
+                cards: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        properties: {
+                            card_number: { bsonType: "string", maxLength: 20, description: "Card number of the vendor's card" },
+                            year: { bsonType: "int", description: "Expiry year of the vendor's card" },
+                            month: { bsonType: "int", minimum: 1, maximum: 12, description: "Expiry month of the vendor's card" },
+                        },
+                        description: "Cards saved by the vendor"
+                    },
+                },
+
+                // Vendor image information
+                image:{
+                    bsonType: "object",
+                    properties: {
+                        file_path: { bsonType: "string", description: "File path of the vendor's image" },
+                        file_name: { bsonType: "string", description: "File name of the vendor's image" }
+                    },
+                    description: "Image of the vendor"
+                },
+
+                // Embedded reviews
+                reviews: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        required: ["customerId", "body", "rate", "created_at"],
+                        properties: {
+                            reviewId: { bsonType: "objectId" },
+                            customerId: { bsonType: "objectId" },
+                            body: { bsonType: "string" },
+                            rate: { bsonType: "int", minimum: 1, maximum: 5 },
+                            created_at: { bsonType: "date" },
+                            updated_at: { bsonType: "date" },
+                        },
+                    },
+                },
+
+                // Timestamps
+                created_at: { bsonType: "date", description: "Timestamp for when the document was created" },
+                updated_at: { bsonType: "date", description: "Timestamp for when the document was last updated" },
+            },
+        },
+    },
+});
+
+db.createCollection("Dummy_Admin", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: [
+                "serviceFees",
+                "pointsToDiscountRatio",
+                "shipmentFees",
+                "bannerPrice",
+                "bankAccount",
+            ],
+            properties: {
+                // Admin identification
+                _id: { bsonType: "objectId" },
+
+                // Financial settings
+                service_fees: { bsonType: "decimal", maximum: 100.0, minimum: 0.0, description: "Service fees percentage (max 100.0)" },
+                points_to_discount_ratio: { bsonType: "decimal", maximum: 100.0, minimum: 0.0, description: "Points to discount ratio percentage (max 100.0)" },
+                shipment_fees: { bsonType: "decimal", description: "Shipment fees" },
+                banner_price: { bsonType: "decimal", description: "Maximum price for the banner for budget conscious customers" },
+
+                // Bank account information
+                bank_account: { bsonType: "string", maxLength: 50, description: "Account at which system money will be transferred" },
+
+                // Embedded event tags
+                event: {
+                    bsonType: "object",
+                    required: ["name", "startDate", "endDate"],
+                    properties: {
+                        name: { bsonType: "string", maxLength: 50, description: "Name of the event" },
+                        start_date: { bsonType: "date", description: "Start date of the event" },
+                        end_date: { bsonType: "date", description: "End date of the event" },
+                        event_description: { bsonType: "string", maxLength: 255, description: "Description of the event" },
+                        image_name: { bsonType: "string", maxLength: 255, description: "Name of the event image" },
+                        image_filepath: { bsonType: "string", maxLength: 255, description: "File path of the event image" },
+                    },
+                    description: "Event tags associated with the admin"
+                },
+            },
+        },
+    },
+});
 
 
  //Tags collection
@@ -173,129 +265,127 @@ db.createCollection("users", {
        bsonType: "object",
        required: ["tag_name"],
        properties: {
-         tag_id: { bsonType: "objectId"}, // Use counters instead
+         _id: { bsonType: "objectId" },
          tag_name: { bsonType: "string", maxLength: 50},
+         created_at: { bsonType: "date", description: "Timestamp for when the document was created" },
        },
      },
    },
  });
 
-  //subscription collection
-  db.createCollection("subscriptions", {
-    validator: {
-      $jsonSchema: {
-        bsonType: "object",
-        required: ["product_id","customer_id","subscription_start_date"],
-        properties: {
-                product_id: { bsonType: "objectId" }, // References products collection (FK)
-                customer_id: {bsonType: "objectId"},  //References customer collection (FK)
-                subscription_start_date: { bsonType: "date" }, 
-                subscription_end_date: { bsonType: "date" }, // Optional for tracking end time (if applicable)
-              },
-            },
-          },
-  });
 
- //Products collection with embedded specifications and images
- db.createCollection("products", {
+db.createCollection("products", {
    validator: {
      $jsonSchema: {
        bsonType: "object",
        required: [
-         "product_name",
+         "productName",
          "quantity",
          "description",
-         "is_used",
-         "time_since_restocking",
+         "isUsed",
+         "timeSinceRestocking",
          "price",
-         "subscription_date",
+         "subscriptionDate",
          "taxes",
-         "is_shown",
-         "category_name",
-         "purchases_no",
-         "shelf_id",
-         "vendor_id",
+         "isShown",
+         "categoryName",
+         "purchasesNumber",
+         "shelfId",
+         "vendorId",
        ],
        properties: {
-         product_id: { bsonType: "objectId"}, // Use counters instead
-         product_name: { bsonType: "string", maxLength: 50 },
+         // Product identification
+         _id: { bsonType: "objectId" },
+
+         // Product details
+         productName: { bsonType: "string", maxLength: 50 },
          quantity: { bsonType: "int", minimum: 0 },
          description: { bsonType: "string", maxLength: 100 },
-         is_used: { bsonType: "bool" },
-         deletion_date: { bsonType: "date" }, // Can be embedded if needed
-         time_since_restocking: { bsonType: "date" },
+         timeSinceRestocking: { bsonType: "date" },
          price: { bsonType: "decimal", minimum: 0.0 },
-         subscription_date: { bsonType: "date" },
          taxes: { bsonType: "decimal", minimum: 0.0 },
-         is_shown: { bsonType: "bool" },
-         category_name: { bsonType: "string", maxLength: 50 },
-         purchases_no: { bsonType: "int", minimum: 0.0 },
-         is_in_event: { bsonType: "bool" }, // Embedded event information if needed
-         // Embedded specifications
+         categoryName: { bsonType: "string", maxLength: 50 },
+
+         // Flags
+         allowSubscription: { bsonType: "bool" },
+         isInEvent: { bsonType: "bool" },
+         isShown: { bsonType: "bool" },
+         isUsed: { bsonType: "bool" },
+
+         // Timestamps
+         created_at: { bsonType: "date", description: "Timestamp for when the document was created" },
+         updated_at: { bsonType: "date", description: "Timestamp for when the document was last updated" },
+         deleted_at: { bsonType: "date", description: "Timestamp for when the document was deleted" },
+
+
+           // Product specifications
          specifications: {
            bsonType: "object",
              properties: {
-               attribute_name: { bsonType: "string", maxLength: 50 },
-               attribute_value: { bsonType: "string", maxLength: 100 },
+               attributeName: { bsonType: "string", maxLength: 50 },
+               attributeValue: { bsonType: "string", maxLength: 100 },
              },
          },
-         // Reference to tags using a separate collection (not embedded)
+
+         // Product tags
          tags: {
            bsonType: "array",
            items: {
              bsonType: "object",
              properties: {
-               tag_id: { bsonType: "objectId"}, // Reference to tags collection
+               tagId: { bsonType: "objectId"}, // Reference to tags collection
+               tagName: { bsonType: "string", maxLength: 50 }, // Name of the tag
              },
            },
          },
-         // Embedded images
+
+         // Product images
          images: {
            bsonType: "array",
            items: {
              bsonType: "object",
              properties: {
-               image_name: { bsonType: "string", maxLength: 50 },
-               image_description: { bsonType: "string", maxLength: 255 },
-               file_path: { bsonType: "string" },
+               imageName: { bsonType: "string", maxLength: 50 },
+               imageDescription: { bsonType: "string", maxLength: 255 },
+               filePath: { bsonType: "string" },
              },
            },
          },
-         vendor_id: { bsonType: "objectId" }, // References vendor document (FK)
-         // Reference to specific shelf within vendor document (FK)
-         shelf_id: { bsonType: "objectId" }, // References shelf object inside vendor.shelves
 
-         //Embedded discount
+         // Embedded reviews
+         reviews: {
+             bsonType: "array",
+             items: {
+                 bsonType: "object",
+                 required: ["customerId", "body", "rate", "created_at"],
+                 properties: {
+                     customer_id: { bsonType: "objectId" },
+                     body: { bsonType: "string" },
+                     rate: { bsonType: "int", minimum: 1, maximum: 5 },
+                     created_at: { bsonType: "date" },
+                     updated_at: { bsonType: "date" },
+                 },
+             },
+         },
+
+         // Vendor and shelf information
+         vendorId: { bsonType: "objectId" },
+         shelfId: { bsonType: "objectId" },
+
+         // Product discount
          discount: {
           bsonType: "object",
           properties: {
             percentage: { bsonType: "decimal", minimum: 0.0, maximum: 100.0 },
-            EndDate: { bsonType: "date" },
-            Code: { bsonType: "string", maxLength: 20 },
+            endDate: { bsonType: "date" },
+            code: { bsonType: "string", maxLength: 20 },
           }
          }
        },
      },
    },
  });
- 
- //Reviews collection (with the original products schema without reviews)
- db.createCollection("product_reviews", {
-   validator: {
-     $jsonSchema: {
-       bsonType: "object",
-       required: ["customer_id", "product_id", "body", "rate", "date"],
-       properties: {
-         review_id: { bsonType: "objectId"}, // Use counters instead
-         customer_id: { bsonType: "objectId" }, // References customers collection (FK)
-         product_id: { bsonType: "objectId" }, // References products collection (FK)
-         body: { bsonType: "string" },
-         rate: { bsonType: "int", minimum: 1, maximum: 5 },
-         date: { bsonType: "date" }, 
-      },
-   },
-},
- }); 
+
 
 //Order with order-items embedded
 db.createCollection("orders", {
@@ -311,11 +401,12 @@ db.createCollection("orders", {
           "card"
        ],
        properties: {
-         order_id: { bsonType: "objectId" }, // Use counters instead
+         _id: { bsonType: "objectId" },
          customer_id: { bsonType: "objectId" }, // References customers collection (FK)
          percentage_discount: { bsonType: "decimal", minimum: 0.0, maximum: 1.0 }, // Assuming percentage is between 0 and 1
          shipment_price: { bsonType: "decimal", minimum: 0.0 },
-         order_date: { bsonType: "date" },
+         created_at: { bsonType: "date" },
+
          //Embedded address
          address:{
           bsonType: "object",
@@ -351,42 +442,6 @@ db.createCollection("orders", {
            },
          },
        },
-     },
-   },
- });
- 
-//Events tags collection
-db.createCollection("event_tags", {
-   validator: {
-     $jsonSchema: {
-       bsonType: "object",
-       required: ["name", "start_date", "end_date"],
-       properties: {
-         tag_id: { bsonType: "objectId"}, // Use counters instead
-         name: { bsonType: "string", maxLength: 50 },
-         start_date: { bsonType: "date" },
-         end_date: { bsonType: "date" },
-         event_description: { bsonType: "string", maxLength: 255 },
-         image_name: { bsonType: "string", maxLength: 255 },
-         image_filepath: { bsonType: "string", maxLength: 255 },
-       },
-     },
-   },
- });
-
-//Product_tag relations
- db.createCollection("product_event_tags", {
-   validator: {
-     $jsonSchema: {
-       bsonType: "object",
-       required: ["PID", "EID"],
-       properties: {
-         PID: { bsonType: "objectId" }, // References products collection (FK)
-         EID: { bsonType: "objectId" }, // References event_tags collection (FK)
-         image_name: { bsonType: "string", maxLength: 50 },
-         file_path: { bsonType: "string" }, // Optional for storing image path (if needed)
-       },
-       additionalProperties: false, // Enforce schema validation
      },
    },
  });
