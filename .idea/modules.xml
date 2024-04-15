@@ -3,7 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/AIDA_GradProject.iml" filepath="$PROJECT_DIR$/.idea/AIDA_GradProject.iml" />
-      <module fileurl="file://$PROJECT_DIR$/AIDI/AIDI.iml" filepath="$PROJECT_DIR$/AIDI/AIDI.iml" />
     </modules>
   </component>
 </project>
