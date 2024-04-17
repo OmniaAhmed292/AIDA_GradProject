@@ -1,12 +1,43 @@
-//CREATE AND USE DATABASE AIDA
-use (AIDA)
+db.createCollection("users", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["Fname", "Lname", "email", "User_type"],
+            properties: {
+                user_id: { bsonType: "objectId" },
+                Fname: { bsonType: "string" },
+                Lname: { bsonType: "string" },
+                email: {
+                    bsonType: "string",
+                    pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" // Email format regex
+                },
+                Hashed_Password: { bsonType: "string" },
+                User_type: { bsonType: "string", enum: ["customer", "vendor"] },
+                is_enabled: { bsonType: "bool" },
+                is_account_locked: { bsonType: "bool" },
 
-// Collection for customers
+                confirmation_tokens: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        properties: {
+                            token: { bsonType: "string" },
+                            creation_date: { bsonType: "date" },
+                            expiration_date: { bsonType: "date" },
+                            confirmed_date: { bsonType: "date" }
+                        }
+                    }
+                }
+            }
+        }
+    }
+});
+
 db.createCollection("customers", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["Fname", "Lname", "email", "Hashed_Password", "birthdate", "Gender", "points"],
+            required: ["first_name", "last_name", "email", "hashed_password","gender"],
             properties: {
                 // User identification and authentication information
                 _id: { bsonType: "objectId" },
@@ -93,7 +124,7 @@ db.createCollection("vendors", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["About_us_info", "business_type", "business_name", "exp_day", "exo_month", "allow_Late_emails", "allow_new_emails", "Fname", "Lname", "email", "Hashed_Password"],
+            required: ["first_name", "last_name", "email", "hashed_password"],
             properties: {
                 // Vendor identification and authentication information
                 _id: { bsonType: "objectId" },
@@ -258,190 +289,190 @@ db.createCollection("Dummy_Admin", {
 });
 
 
- //Tags collection
- db.createCollection("tags", {
-   validator: {
-     $jsonSchema: {
-       bsonType: "object",
-       required: ["tag_name"],
-       properties: {
-         _id: { bsonType: "objectId" },
-         tag_name: { bsonType: "string", maxLength: 50},
-         created_at: { bsonType: "date", description: "Timestamp for when the document was created" },
-       },
-     },
-   },
- });
+//Tags collection
+db.createCollection("tags", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["tag_name"],
+            properties: {
+                _id: { bsonType: "objectId" },
+                tag_name: { bsonType: "string", maxLength: 50},
+                created_at: { bsonType: "date", description: "Timestamp for when the document was created" },
+            },
+        },
+    },
+});
 
 
 db.createCollection("products", {
-   validator: {
-     $jsonSchema: {
-       bsonType: "object",
-       required: [
-         "productName",
-         "quantity",
-         "description",
-         "isUsed",
-         "timeSinceRestocking",
-         "price",
-         "subscriptionDate",
-         "taxes",
-         "isShown",
-         "categoryName",
-         "purchasesNumber",
-         "shelfId",
-         "vendorId",
-       ],
-       properties: {
-         // Product identification
-         _id: { bsonType: "objectId" },
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: [
+                "productName",
+                "quantity",
+                "description",
+                "isUsed",
+                "timeSinceRestocking",
+                "price",
+                "subscriptionDate",
+                "taxes",
+                "isShown",
+                "categoryName",
+                "purchasesNumber",
+                "shelfId",
+                "vendorId",
+            ],
+            properties: {
+                // Product identification
+                _id: { bsonType: "objectId" },
 
-         // Product details
-         productName: { bsonType: "string", maxLength: 50 },
-         quantity: { bsonType: "int", minimum: 0 },
-         description: { bsonType: "string", maxLength: 100 },
-         timeSinceRestocking: { bsonType: "date" },
-         price: { bsonType: "decimal", minimum: 0.0 },
-         taxes: { bsonType: "decimal", minimum: 0.0 },
-         categoryName: { bsonType: "string", maxLength: 50 },
+                // Product details
+                productName: { bsonType: "string", maxLength: 50 },
+                quantity: { bsonType: "int", minimum: 0 },
+                description: { bsonType: "string", maxLength: 100 },
+                timeSinceRestocking: { bsonType: "date" },
+                price: { bsonType: "decimal", minimum: 0.0 },
+                taxes: { bsonType: "decimal", minimum: 0.0 },
+                categoryName: { bsonType: "string", maxLength: 50 },
 
-         // Flags
-         allowSubscription: { bsonType: "bool" },
-         isInEvent: { bsonType: "bool" },
-         isShown: { bsonType: "bool" },
-         isUsed: { bsonType: "bool" },
+                // Flags
+                allowSubscription: { bsonType: "bool" },
+                isInEvent: { bsonType: "bool" },
+                isShown: { bsonType: "bool" },
+                isUsed: { bsonType: "bool" },
 
-         // Timestamps
-         created_at: { bsonType: "date", description: "Timestamp for when the document was created" },
-         updated_at: { bsonType: "date", description: "Timestamp for when the document was last updated" },
-         deleted_at: { bsonType: "date", description: "Timestamp for when the document was deleted" },
+                // Timestamps
+                created_at: { bsonType: "date", description: "Timestamp for when the document was created" },
+                updated_at: { bsonType: "date", description: "Timestamp for when the document was last updated" },
+                deleted_at: { bsonType: "date", description: "Timestamp for when the document was deleted" },
 
 
-           // Product specifications
-         specifications: {
-           bsonType: "object",
-             properties: {
-               attributeName: { bsonType: "string", maxLength: 50 },
-               attributeValue: { bsonType: "string", maxLength: 100 },
-             },
-         },
+                // Product specifications
+                specifications: {
+                    bsonType: "object",
+                    properties: {
+                        attributeName: { bsonType: "string", maxLength: 50 },
+                        attributeValue: { bsonType: "string", maxLength: 100 },
+                    },
+                },
 
-         // Product tags
-         tags: {
-           bsonType: "array",
-           items: {
-             bsonType: "object",
-             properties: {
-               tagId: { bsonType: "objectId"}, // Reference to tags collection
-               tagName: { bsonType: "string", maxLength: 50 }, // Name of the tag
-             },
-           },
-         },
+                // Product tags
+                tags: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        properties: {
+                            tagId: { bsonType: "objectId"}, // Reference to tags collection
+                            tagName: { bsonType: "string", maxLength: 50 }, // Name of the tag
+                        },
+                    },
+                },
 
-         // Product images
-         images: {
-           bsonType: "array",
-           items: {
-             bsonType: "object",
-             properties: {
-               imageName: { bsonType: "string", maxLength: 50 },
-               imageDescription: { bsonType: "string", maxLength: 255 },
-               filePath: { bsonType: "string" },
-             },
-           },
-         },
+                // Product images
+                images: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        properties: {
+                            imageName: { bsonType: "string", maxLength: 50 },
+                            imageDescription: { bsonType: "string", maxLength: 255 },
+                            filePath: { bsonType: "string" },
+                        },
+                    },
+                },
 
-         // Embedded reviews
-         reviews: {
-             bsonType: "array",
-             items: {
-                 bsonType: "object",
-                 required: ["customerId", "body", "rate", "created_at"],
-                 properties: {
-                     customer_id: { bsonType: "objectId" },
-                     body: { bsonType: "string" },
-                     rate: { bsonType: "int", minimum: 1, maximum: 5 },
-                     created_at: { bsonType: "date" },
-                     updated_at: { bsonType: "date" },
-                 },
-             },
-         },
+                // Embedded reviews
+                reviews: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        required: ["customerId", "body", "rate", "created_at"],
+                        properties: {
+                            customer_id: { bsonType: "objectId" },
+                            body: { bsonType: "string" },
+                            rate: { bsonType: "int", minimum: 1, maximum: 5 },
+                            created_at: { bsonType: "date" },
+                            updated_at: { bsonType: "date" },
+                        },
+                    },
+                },
 
-         // Vendor and shelf information
-         vendorId: { bsonType: "objectId" },
-         shelfId: { bsonType: "objectId" },
+                // Vendor and shelf information
+                vendorId: { bsonType: "objectId" },
+                shelfId: { bsonType: "objectId" },
 
-         // Product discount
-         discount: {
-          bsonType: "object",
-          properties: {
-            percentage: { bsonType: "decimal", minimum: 0.0, maximum: 100.0 },
-            endDate: { bsonType: "date" },
-            code: { bsonType: "string", maxLength: 20 },
-          }
-         }
-       },
-     },
-   },
- });
+                // Product discount
+                discount: {
+                    bsonType: "object",
+                    properties: {
+                        percentage: { bsonType: "decimal", minimum: 0.0, maximum: 100.0 },
+                        endDate: { bsonType: "date" },
+                        code: { bsonType: "string", maxLength: 20 },
+                    }
+                }
+            },
+        },
+    },
+});
 
 
 //Order with order-items embedded
 db.createCollection("orders", {
-   validator: {
-     $jsonSchema: {
-       bsonType: "object",
-       required: [
-         "customer_id",
-         "shipment_price",
-         "order_date",
-         "address",
-          "order_items",
-          "card"
-       ],
-       properties: {
-         _id: { bsonType: "objectId" },
-         customer_id: { bsonType: "objectId" }, // References customers collection (FK)
-         percentage_discount: { bsonType: "decimal", minimum: 0.0, maximum: 1.0 }, // Assuming percentage is between 0 and 1
-         shipment_price: { bsonType: "decimal", minimum: 0.0 },
-         created_at: { bsonType: "date" },
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: [
+                "customer_id",
+                "shipment_price",
+                "order_date",
+                "address",
+                "order_items",
+                "card"
+            ],
+            properties: {
+                _id: { bsonType: "objectId" },
+                customer_id: { bsonType: "objectId" }, // References customers collection (FK)
+                percentage_discount: { bsonType: "decimal", minimum: 0.0, maximum: 1.0 }, // Assuming percentage is between 0 and 1
+                shipment_price: { bsonType: "decimal", minimum: 0.0 },
+                created_at: { bsonType: "date" },
 
-         //Embedded address
-         address:{
-          bsonType: "object",
-          properties:{
-            address_city: { bsonType: "string" },
-            address_street: { bsonType: "string" },
-            address_apartment_no: { bsonType: "string" },
-            address_Building_no: { bsonType: "string" }
-          }
+                //Embedded address
+                address:{
+                    bsonType: "object",
+                    properties:{
+                        address_city: { bsonType: "string" },
+                        address_street: { bsonType: "string" },
+                        address_apartment_no: { bsonType: "string" },
+                        address_Building_no: { bsonType: "string" }
+                    }
+                },
+                //Embedded card
+                card:{
+                    bsonType: "object",
+                    properties:{
+                        card_number: { bsonType: "string" },
+                        year: { bsonType: "int" },
+                        month: { bsonType: "int" }
+                    }},
+
+                order_items: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        required: ["product_id", "quantity", "Status", "Taxes", "Product_price", "Discount_price"],
+                        properties: {
+                            product_id: { bsonType: "objectId" }, // References products collection (FK)
+                            quantity: { bsonType: "int", minimum: 1 },
+                            Status: { bsonType: "string", enum: ["pending", "shipped", "delivered"] },
+                            Taxes: { bsonType: "decimal", minimum: 0.0 },
+                            Product_price: { bsonType: "decimal", minimum: 0.0 },
+                            Discount_price: { bsonType: "decimal", minimum: 0.0 },
+                        },
+                    },
+                },
+            },
         },
-        //Embedded card
-          card:{
-          bsonType: "object",
-          properties:{
-            card_number: { bsonType: "string" },
-            year: { bsonType: "int" },
-            month: { bsonType: "int" }
-          }},
-
-         order_items: {
-           bsonType: "array",
-           items: {
-             bsonType: "object",
-             required: ["product_id", "quantity", "Status", "Taxes", "Product_price", "Discount_price"],
-             properties: {
-               product_id: { bsonType: "objectId" }, // References products collection (FK)
-               quantity: { bsonType: "int", minimum: 1 },
-               Status: { bsonType: "string", enum: ["pending", "shipped", "delivered"] },
-               Taxes: { bsonType: "decimal", minimum: 0.0 },
-               Product_price: { bsonType: "decimal", minimum: 0.0 },
-               Discount_price: { bsonType: "decimal", minimum: 0.0 },
-             },
-           },
-         },
-       },
-     },
-   },
- });
+    },
+});
