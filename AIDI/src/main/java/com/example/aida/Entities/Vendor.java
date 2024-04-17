@@ -21,6 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+
 @Document(collection = "vendors")
 public class Vendor{
     @Id

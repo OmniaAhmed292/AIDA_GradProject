@@ -15,6 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+
 @Setter
 @Getter
 @Data
@@ -29,11 +30,13 @@ public class Customer {
 
     @Field(name = "first_name")
     @NotNull
+
     private String fname;
 
     @Field(name = "last_name")
     @NotNull
     private String lname;
+
 
     @Field(name = "email")
     @NotNull
@@ -43,6 +46,7 @@ public class Customer {
     @Field(name = "hashed_password")
     @NotNull
     private String password;
+
 
     @Field(name = "birthdate")
     private LocalDate birthdate;

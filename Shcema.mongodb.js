@@ -1,12 +1,45 @@
-//CREATE AND USE DATABASE AIDA
 use (AIDA)
 
-// Collection for customers
+db.createCollection("users", {
+    validator: {
+        $jsonSchema: {
+            bsonType: "object",
+            required: ["Fname", "Lname", "email", "User_type"],
+            properties: {
+                user_id: { bsonType: "objectId" },
+                Fname: { bsonType: "string" },
+                Lname: { bsonType: "string" },
+                email: {
+                    bsonType: "string",
+                    pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$" // Email format regex
+                },
+                Hashed_Password: { bsonType: "string" },
+                User_type: { bsonType: "string", enum: ["customer", "vendor"] },
+                is_enabled: { bsonType: "bool" },
+                is_account_locked: { bsonType: "bool" },
+
+                confirmation_tokens: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        properties: {
+                            token: { bsonType: "string" },
+                            creation_date: { bsonType: "date" },
+                            expiration_date: { bsonType: "date" },
+                            confirmed_date: { bsonType: "date" }
+                        }
+                    }
+                }
+            }
+        }
+    }
+});
+
 db.createCollection("customers", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["Fname", "Lname", "email", "Hashed_Password", "birthdate", "Gender", "points"],
+            required: ["first_name", "last_name", "email", "hashed_password","gender"],
             properties: {
                 // User identification and authentication information
                 _id: { bsonType: "objectId" },
@@ -94,6 +127,7 @@ db.createCollection("vendors", {
         $jsonSchema: {
             bsonType: "object",
             required: ["About_us_info", "business_type", "business_name", "exp_day", "exo_month", "allow_Late_emails", "allow_new_emails", "Fname", "Lname", "email", "Hashed_Password"],
+
             properties: {
                 // Vendor identification and authentication information
                 _id: { bsonType: "objectId" },
@@ -445,3 +479,4 @@ db.createCollection("orders", {
         },
     },
 });
+
