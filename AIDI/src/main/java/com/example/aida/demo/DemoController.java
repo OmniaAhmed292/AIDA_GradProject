@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DemoController {
     @GetMapping
     public ResponseEntity<String> getDemo() {
+        System.out.println("Hello from AIDA!");
         return ResponseEntity.ok("Hello from AIDA!");
     }
 }

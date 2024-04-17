@@ -1,25 +1,21 @@
 package com.example.aida.Entities;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-
-import java.lang.annotation.Documented;
-import java.math.BigDecimal;
+import java.security.Principal;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
-
-import static org.apache.catalina.realm.UserDatabaseRealm.getRoles;
 
 
 @Setter
@@ -30,43 +26,33 @@ import static org.apache.catalina.realm.UserDatabaseRealm.getRoles;
 @SuperBuilder
 @Document(collection = "users")
 @TypeAlias("user_type")
-public class User implements UserDetails {
+public class User implements UserDetails, Principal {
     @Id
-    @Field(name = "user_id", targetType = FieldType.OBJECT_ID)
+    @Field(name = "_id")
     private String userId;
 
-    @Field("balance")
-    private BigDecimal balance;
-
-   @Field("fname")
+    @Field("Fname")
     private String fname;
 
-    @Field("lname")
+    @Field("Lname")
     private String lname;
 
     @Field("email")
     private String email;
 
-    @Field("hashed_password")
+    @Field("Hashed_Password")
     private String password;
 
-    @Field("user_type")
+    @Field("User_type")
     private String userType;
 
-    @Field("phone_number")
-    private String phoneNumber;
-
+    @Field("is_enabled")
+    private boolean isEnabled;
+    @Field("is_account_locked")
+    private boolean isAccountLocked;
     @Embedded
-    @Field("address")
-    private Address address;
-
-    @Embedded
-    @Field("image")
-    private UserImage userImage;
-
-    @Embedded
-    @Field("cards")
-    private Set<Card> userCards;
+    @Field("confirmation_tokens")
+    private List<ConfirmationToken> confirmationTokens = new ArrayList<>();
 
 
 
@@ -107,5 +93,10 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    @Override
+    public String getName() {
+        return email;
     }
 }

@@ -3,6 +3,7 @@ package com.example.aida.Entities;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -10,6 +11,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -22,32 +24,19 @@ import java.util.List;
 public class Order {
 
     @Id
-    @Field(name = "order_id", targetType = FieldType.OBJECT_ID)
     private String orderId;
 
     @Field(name = "Shipment_price")
     @NotNull
     private BigDecimal shipmentPrice;
 
-    @Field(name = "order_date")
-    @NotNull
-    private LocalDate orderDate;
+    @Field(name = "created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
 
-    @Field(name="address_city")
+    @Field(name="address")
     @NotNull
-    private String addressCity;
-
-    @Field(name="address_apartment_no")
-    @NotNull
-    private String addressApartmentNo;
-
-    @Field(name="address_building_no")
-    @NotNull
-    private String addressBuildingNo;
-
-    @Field(name="address_street")
-    @NotNull
-    private String addressStreet;
+    private Address address;
 
     @Embedded
     @Field(name = "order_items")

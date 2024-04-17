@@ -1,14 +1,16 @@
 package com.example.aida.Entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 
@@ -16,37 +18,54 @@ import java.util.Set;
 @Setter
 @Getter
 @Data
-@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
+@Builder
 @Document(collection = "vendors")
-public class Vendor extends User {
+public class Vendor{
     @Id
-    @Field(name = "vendor_id", targetType = FieldType.OBJECT_ID)
     private String id;
-    @Field("about_us_info")
-    private String aboutUsInfo;
+    @Field(name = "first_name")
+    @NotNull
+    private String fname;
 
-    @Field("business_type")
-    private String businessType;
+    @Field(name = "last_name")
+    @NotNull
+    private String lname;
 
-    @Field("business_name")
-    private String businessName;
+    @Field(name = "email")
+    @NotNull
+    @Indexed(unique = true)
+    private String email;
 
-   @Field("exp_day")
-    private LocalDate expDay;
+    @Field(name = "hashed_password")
+    @NotNull
+    private String password;
 
-    @Field("exp_month")
-    private String exoMonth;
+    @Field(name = "business_info")
+    private BusinessInfo businessInfo;
 
+    @Field(name = "phone_number")
+    private String phoneNumber;
 
+    @Field(name = "address")
     @Embedded
-    @Field("vendor_settings")
-    private VendorSettings vendorSettings;
+    private Address address;
 
-    @Field("application_files_path")
-    private String applicationFilesPath;
+    @Field(name = "balance")
+    private BigDecimal balance;
+
+    @Field(name = "cards")
+    @Embedded
+    private Set<Card> cards;
+
+    @Field(name = "image")
+    @Embedded
+    private Image image;
+
+    @Field(name = "settings")
+    @Embedded
+    private VendorSettings settings;
 
 
     @Embedded
@@ -55,7 +74,14 @@ public class Vendor extends User {
 
     @Embedded
     @Field("reviews")
-    private Set<StoreReview> vendorStoreReviews;
+    private Set<Reviews> vendorReviews;
 
+    @Field(name = "created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
+
+    @Field(name = "updated_at")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
 }

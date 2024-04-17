@@ -1,81 +1,87 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.ColumnDefault;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 import java.util.Set;
 
-import org.springframework.data.annotation.TypeAlias;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
-
-
-@Document(collection = "customers")
 @Setter
 @Getter
 @Data
-@EqualsAndHashCode(callSuper = false)
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
-@TypeAlias("customer")
-public class Customer extends User {
+@Builder
+@Document(collection = "customers")
+public class Customer {
 
     @Id
-    @Field(name = "customer_id", targetType = FieldType.OBJECT_ID)
     private String id;
+
+    @Field(name = "first_name")
+    @NotNull
+    private String fname;
+
+    @Field(name = "last_name")
+    @NotNull
+    private String lname;
+
+    @Field(name = "email")
+    @NotNull
+    @Indexed(unique = true)
+    private String email;
+
+    @Field(name = "hashed_password")
+    @NotNull
+    private String password;
 
     @Field(name = "birthdate")
     private LocalDate birthdate;
 
-    @Field
+    @Field(name="gender")
     private String gender;
-
-    @Field
-    private OffsetDateTime lastModifiedTime;
-
-    @Field(name = "Settings")
-    @Embedded
-    private Settings settings;
 
     @Field(name="points")
     @NotNull
     private int points = 0;
 
-/*
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="customer_id", referencedColumnName = "user_id")
-    private User customer;
+    @Field(name = "created_at")
+    @CreatedDate
+    private LocalDateTime createdAt;
 
+    @Field(name = "updated_at")
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
 
-    @DBRef(lazy = true)
-    @Field(name = "orders")
-    private Set<Order> customerOrders;
+    @Field(name = "settings")
+    @Embedded
+    private CustomerSettings customerSettings;
 
-    @DBRef(lazy = true)
-    private Set<StoreReview> customerStoreReviews;
+    @Field(name = "phone_number")
+    private String phoneNumber;
 
-    @DBRef(lazy = true)
-    private Set<ProductReview> customerProductReviews;
+    @Field(name = "address")
+    @Embedded
+    private Address address;
 
+    @Field(name = "balance")
+    private BigDecimal balance;
 
+    @Field(name = "cards")
+    @Embedded
+    private Set<Card> cards;
 
-    //TODO: fix annotation to fit mongodb
-    @ManyToMany
-    @JoinTable(
-            name = "subscriptions",
-            joinColumns = @JoinColumn(name = "customer_id"),
-            inverseJoinColumns = @JoinColumn(name = "product_id")
-    )
-    private Set<Product> subscriptionProducts;
-    */
+    @Field(name = "image")
+    @Embedded
+    private Image image;
 
 }
