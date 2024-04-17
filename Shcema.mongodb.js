@@ -1,3 +1,5 @@
+use (AIDA)
+
 db.createCollection("users", {
     validator: {
         $jsonSchema: {
@@ -124,7 +126,8 @@ db.createCollection("vendors", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["first_name", "last_name", "email", "hashed_password"],
+            required: ["About_us_info", "business_type", "business_name", "exp_day", "exo_month", "allow_Late_emails", "allow_new_emails", "Fname", "Lname", "email", "Hashed_Password"],
+
             properties: {
                 // Vendor identification and authentication information
                 _id: { bsonType: "objectId" },
@@ -476,3 +479,4 @@ db.createCollection("orders", {
         },
     },
 });
+

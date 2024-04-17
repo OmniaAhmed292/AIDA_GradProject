@@ -1,25 +1,27 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.Set;
-
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Set;
+
+
 @Setter
 @Getter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Document(collection = "customers")
 public class Customer {
 
@@ -28,11 +30,13 @@ public class Customer {
 
     @Field(name = "first_name")
     @NotNull
-    private String firstName;
+
+    private String fname;
 
     @Field(name = "last_name")
     @NotNull
-    private String lastName;
+    private String lname;
+
 
     @Field(name = "email")
     @NotNull
@@ -41,12 +45,13 @@ public class Customer {
 
     @Field(name = "hashed_password")
     @NotNull
-    private String hashedPassword;
+    private String password;
+
 
     @Field(name = "birthdate")
     private LocalDate birthdate;
 
-    @Field
+    @Field(name="gender")
     private String gender;
 
     @Field(name="points")
@@ -66,7 +71,7 @@ public class Customer {
     private CustomerSettings customerSettings;
 
     @Field(name = "phone_number")
-    private int phoneNumber;
+    private String phoneNumber;
 
     @Field(name = "address")
     @Embedded

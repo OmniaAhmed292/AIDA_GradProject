@@ -20,18 +20,19 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
+
 @Document(collection = "vendors")
 public class Vendor{
     @Id
     private String id;
-
     @Field(name = "first_name")
     @NotNull
-    private String firstName;
+    private String fname;
 
     @Field(name = "last_name")
     @NotNull
-    private String lastName;
+    private String lname;
 
     @Field(name = "email")
     @NotNull
@@ -40,7 +41,7 @@ public class Vendor{
 
     @Field(name = "hashed_password")
     @NotNull
-    private String hashedPassword;
+    private String password;
 
     @Field(name = "business_info")
     private BusinessInfo businessInfo;
