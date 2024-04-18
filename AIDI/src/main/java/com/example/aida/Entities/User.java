@@ -7,6 +7,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -28,7 +29,7 @@ import java.util.List;
 @TypeAlias("user_type")
 public class User implements UserDetails, Principal {
     @Id
-    @Field(name = "_id")
+    //@Field(name = "_id", targetType = FieldType.OBJECT_ID)
     private String userId;
 
     @Field("Fname")
@@ -53,7 +54,7 @@ public class User implements UserDetails, Principal {
     private boolean isAccountLocked;
     @Embedded
     @Field("confirmation_tokens")
-    private List<ConfirmationToken> confirmationTokens = new ArrayList<>();
+    private ConfirmationToken confirmationToken;
 
 
 

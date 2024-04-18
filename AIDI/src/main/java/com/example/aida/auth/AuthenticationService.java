@@ -174,25 +174,25 @@ public class AuthenticationService {
         String  generatedToken = generatreActivationCode(6);
 //        System.out.println(userRepository.findByEmail(user.getEmail()));
         userRepository.findByEmail(user.getEmail()).ifPresentOrElse(
-                        existingUser -> {
-                            System.out.println("User found");
-                            ConfirmationToken confirmationToken = new ConfirmationToken(
-                                    generatedToken,
-                                    LocalDateTime.now(),
-                                    LocalDateTime.now().plusMinutes(15)
-                            );
-                            User user1 = (User) existingUser;
-                            System.out.println(existingUser);
-                            userRepository.deleteById(user1.getUserId());
-                            user1.setConfirmationTokens(Arrays.asList(confirmationToken));
-                            userRepository.save(user1);
-                            confirmationTokenRepository.save(confirmationToken);
+                existingUser -> {
+                    System.out.println("User found");
+                    ConfirmationToken confirmationToken = new ConfirmationToken(
+                            generatedToken,
+                            LocalDateTime.now(),
+                            LocalDateTime.now().plusMinutes(15)
+                    );
+                    User user1 = (User) existingUser;
+                    System.out.println(existingUser);
+                    //userRepository.deleteById(user1.getUserId());
+                    user1.setConfirmationToken(confirmationToken);
+                    userRepository.save(user1);
+                    //confirmationTokenRepository.save(confirmationToken);
 
-                        },
-                        () -> {
-                            throw new IllegalStateException("User not found");
-                        }
-                );
+                },
+                () -> {
+                    throw new IllegalStateException("User not found");
+                }
+        );
         return generatedToken;
     }
 

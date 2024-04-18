@@ -7,7 +7,7 @@ db.createCollection("users", {
             bsonType: "object",
             required: ["Fname", "Lname", "email", "User_type"],
             properties: {
-                user_id: { bsonType: "objectId" },
+                _id: { bsonType: "objectId" },
                 Fname: { bsonType: "string" },
                 Lname: { bsonType: "string" },
                 email: {
@@ -20,8 +20,6 @@ db.createCollection("users", {
                 is_account_locked: { bsonType: "bool" },
 
                 confirmation_tokens: {
-                    bsonType: "array",
-                    items: {
                         bsonType: "object",
                         properties: {
                             token: { bsonType: "string" },
@@ -29,7 +27,7 @@ db.createCollection("users", {
                             expiration_date: { bsonType: "date" },
                             confirmed_date: { bsonType: "date" }
                         }
-                    }
+
                 }
             }
         }

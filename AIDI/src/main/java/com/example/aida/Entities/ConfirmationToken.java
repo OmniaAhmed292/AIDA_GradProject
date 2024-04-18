@@ -14,9 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Embeddable
 public class ConfirmationToken {
-    @Id
-    @Field(name = "token_id", targetType = FieldType.OBJECT_ID)
-    private Long id;
+
     @Field("token")
     private String token;
     @Field("creation_date")
