@@ -61,6 +61,7 @@ public class AuthenticationService {
                 .userType(request.getUser_type())
                 .isEnabled(true) //TODO: change to false when email verification is implemented
                 .isAccountLocked(false)
+                .confirmationToken(null)
                 .build();
         if(userRepository.findByEmail(request.getEmail()).isPresent()) {
             System.out.println("User already exists");
@@ -151,56 +152,39 @@ public class AuthenticationService {
 
         }
         var jwtToken = jwtService.generateToken(user);
-        System.out.println(user);
+        //System.out.println(user);
+        String emailToken = generatreActivationCode(6);
+
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                emailToken,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(15)
+        );
+        user.setConfirmationToken(confirmationToken);
         userRepository.save(user);
-        SendValidationEmail(user);
+        SendValidationEmail(user, emailToken);
         return AuthenticationResponse.builder()
                 .token(jwtToken)
                 .build();
     }
 
-    private void SendValidationEmail(User user) throws MessagingException {
-        String newToken = generareAndSaveActivationToken(user);
+    private void SendValidationEmail(User user, String Token) throws MessagingException {
+
 //        send email
         emailServiceImpl.sendMail(
                 user.getEmail(),
                 "Activate your account",
                 "Hello "+user.getFname()+" "+user.getLname()+"\n"+
-                        "Thank you for signing up! Please use the following activation code to activate your account: \n"+newToken
+                        "Thank you for signing up! Please use the following activation code to activate your account: \n"+Token
                 );
     }
 
-    private String generareAndSaveActivationToken(User user) {
-        String  generatedToken = generatreActivationCode(6);
-//        System.out.println(userRepository.findByEmail(user.getEmail()));
-        userRepository.findByEmail(user.getEmail()).ifPresentOrElse(
-                existingUser -> {
-                    System.out.println("User found");
-                    ConfirmationToken confirmationToken = new ConfirmationToken(
-                            generatedToken,
-                            LocalDateTime.now(),
-                            LocalDateTime.now().plusMinutes(15)
-                    );
-                    User user1 = (User) existingUser;
-                    System.out.println(existingUser);
-                    //userRepository.deleteById(user1.getUserId());
-                    user1.setConfirmationToken(confirmationToken);
-                    userRepository.save(user1);
-                    //confirmationTokenRepository.save(confirmationToken);
 
-                },
-                () -> {
-                    throw new IllegalStateException("User not found");
-                }
-        );
-        return generatedToken;
-    }
-
-    private String generatreActivationCode(int lenght) {
+    private String generatreActivationCode(int length) {
         String chars ="0123456789";
         StringBuilder codeBuilder = new StringBuilder();
         SecureRandom random = new SecureRandom();
-        for(int i=0;i<lenght;i++) {
+        for(int i=0;i<length;i++) {
             int randomIndex = random.nextInt(chars.length());
             codeBuilder.append(chars.charAt(randomIndex));
         }

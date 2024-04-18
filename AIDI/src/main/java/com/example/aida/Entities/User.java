@@ -4,7 +4,9 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
@@ -29,7 +31,7 @@ import java.util.List;
 @TypeAlias("user_type")
 public class User implements UserDetails, Principal {
     @Id
-    //@Field(name = "_id", targetType = FieldType.OBJECT_ID)
+    @Field(name = "_id", targetType = FieldType.OBJECT_ID)
     private String userId;
 
     @Field("Fname")
@@ -39,6 +41,7 @@ public class User implements UserDetails, Principal {
     private String lname;
 
     @Field("email")
+    @Indexed(unique = true)
     private String email;
 
     @Field("Hashed_Password")
