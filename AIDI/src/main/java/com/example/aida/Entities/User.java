@@ -47,7 +47,8 @@ public class User implements UserDetails, Principal {
     private String userType;
 
     @Field("is_enabled")
-    private boolean isEnabled;
+    private boolean isEnabled = true;
+
     @Field("is_account_locked")
     private boolean isAccountLocked;
     @Embedded

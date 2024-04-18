@@ -4,6 +4,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.bson.types.Decimal128;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -78,7 +79,7 @@ public class Customer {
     private Address address;
 
     @Field(name = "balance")
-    private BigDecimal balance;
+    private Decimal128 balance;
 
     @Field(name = "cards")
     @Embedded

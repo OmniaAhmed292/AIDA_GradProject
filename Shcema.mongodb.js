@@ -40,7 +40,7 @@ db.createCollection("customers", {
     validator: {
         $jsonSchema: {
             bsonType: "object",
-            required: ["first_name", "last_name", "email", "hashed_password","gender"],
+            required: ["first_name", "last_name", "email", "hashed_password"],
             properties: {
                 // User identification and authentication information
                 _id: { bsonType: "objectId" },
@@ -145,7 +145,7 @@ db.createCollection("vendors", {
                     bsonType: "object",
                     properties: {
                         About_us_info: { bsonType: "string", description: "Information about the vendor's business" },
-                        business_type: { bsonType: "string", maxLength: 50, description: "Type of the vendor's business" },
+                        business_type: { bsonType: "string", maxLength: 50, enum: ["Sole Proprietorship", "Partnership", "LLC", "Corporation"], description: "Type of the vendor's business" },
                         business_name: { bsonType: "string", maxLength: 100, description: "Name of the vendor's business" },
                         application_files_path: { bsonType: "string", maxLength: 255, description: "Path to the vendor's application files" },
                         exp_day: { bsonType: "date", description: "Expiration day of the vendor's business license" },
