@@ -1,7 +1,6 @@
 package com.example.aida.auth;
 
 import com.example.aida.Entities.*;
-import com.example.aida.Repositories.ConfirmationTokenRepository;
 import com.example.aida.Repositories.CustomerRepository;
 import com.example.aida.Repositories.UserRepository;
 import com.example.aida.Repositories.VendorRepository;
@@ -9,11 +8,8 @@ import com.example.aida.config.JwtService;
 import com.example.aida.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
-import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.bson.types.Decimal128;
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,7 +20,7 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+
 
 @Service
 @RequiredArgsConstructor
@@ -32,13 +28,12 @@ public class AuthenticationService {
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
     private final VendorRepository vendorRepository;
-
-    private final ConfirmationTokenRepository confirmationTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final EmailValidator emailValidator;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailServiceImpl;
+    private static final int TOKEN_LENGTH = 6;
 //    private final EmailService emailService;
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) throws MessagingException {
@@ -59,7 +54,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .userType(request.getUser_type())
-                .isEnabled(true) //TODO: change to false when email verification is implemented
+                .isEnabled(false)
                 .isAccountLocked(false)
                 .confirmationToken(null)
                 .build();
@@ -153,7 +148,7 @@ public class AuthenticationService {
         }
         var jwtToken = jwtService.generateToken(user);
         //System.out.println(user);
-        String emailToken = generatreActivationCode(6);
+        String emailToken = generateActivationCode(user.getEmail(),TOKEN_LENGTH);
 
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 emailToken,
@@ -168,22 +163,28 @@ public class AuthenticationService {
                 .build();
     }
 
-    private void SendValidationEmail(User user, String Token) throws MessagingException {
-
+    private void SendValidationEmail(User user, String token) throws MessagingException {
+        String activationLink = "http://localhost:8080/api/v1/auth/activate-account/" + token; // replace with your server URL and endpoint
 //        send email
         emailServiceImpl.sendMail(
                 user.getEmail(),
                 "Activate your account",
                 "Hello "+user.getFname()+" "+user.getLname()+"\n"+
-                        "Thank you for signing up! Please use the following activation code to activate your account: \n"+Token
+                        "Thank you for signing up! Please use the following activation code to activate your account: \n"+activationLink
                 );
     }
 
 
-    private String generatreActivationCode(int length) {
+    private String generateActivationCode(String email,int length) {
         String chars ="0123456789";
         StringBuilder codeBuilder = new StringBuilder();
+        String uniqueEmail = email + System.currentTimeMillis();
+        // append current time in milliseconds to the email, since the email is unique the token is unique,
+        // and the random part (currentTime) ensures that the token is not predictable and varies each time
+        long seed = uniqueEmail.hashCode(); // use the uniqueEmail's hashcode as a seed
+
         SecureRandom random = new SecureRandom();
+        random.setSeed(seed);
         for(int i=0;i<length;i++) {
             int randomIndex = random.nextInt(chars.length());
             codeBuilder.append(chars.charAt(randomIndex));
@@ -209,8 +210,23 @@ public class AuthenticationService {
     }
 
     @Transactional
-    public void activateAccount(String token) throws Throwable {
+    public void activateAccount(String token) throws IllegalStateException {
 
+        User user = userRepository.findByConfirmationTokenToken(token)
+                .orElseThrow(() -> new IllegalStateException("Token not found"));
+        ConfirmationToken confirmationToken = user.getConfirmationToken();
+        if(confirmationToken.getConfirmedDate() != null) {
+            throw new IllegalStateException("Email already confirmed");
+        }
+        LocalDateTime expiredAt = confirmationToken.getExpiredDate();
+        if(expiredAt.isBefore(LocalDateTime.now())) {
+            throw new IllegalStateException("Token expired");
+        }
+        confirmationToken.setConfirmedDate(LocalDateTime.now());
+
+
+        user.setEnabled(true);
+        userRepository.save(user);
     }
 }
 

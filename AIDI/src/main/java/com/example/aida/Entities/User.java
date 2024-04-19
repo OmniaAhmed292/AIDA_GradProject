@@ -4,18 +4,15 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
-import org.bson.types.ObjectId;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -30,9 +27,10 @@ import java.util.List;
 @Document(collection = "users")
 @TypeAlias("user_type")
 public class User implements UserDetails, Principal {
+
     @Id
-    @Field(name = "_id", targetType = FieldType.OBJECT_ID)
-    private String userId;
+    private String id;
+
 
     @Field("Fname")
     private String fname;

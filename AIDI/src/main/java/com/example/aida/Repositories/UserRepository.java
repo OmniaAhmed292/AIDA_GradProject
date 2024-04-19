@@ -1,10 +1,9 @@
 package com.example.aida.Repositories;
 
-import com.example.aida.Entities.ConfirmationToken;
 import com.example.aida.Entities.User;
-import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
-import org.springframework.data.mongodb.repository.Update;
+import org.springframework.data.mongodb.repository.Query;
+
 
 import java.util.Optional;
 
@@ -12,7 +11,10 @@ import java.util.Optional;
 public interface UserRepository  extends MongoRepository<User, String> {
 
     Optional<User> findByEmail(String email);
-    Optional<User> findByUserId(String userId);
+    Optional<User> findById(String userId);
+
+    @Query("{ 'confirmationToken.token' : ?0 }")
+    Optional<User> findByConfirmationTokenToken(String token);
 
 //todo: update by email
 

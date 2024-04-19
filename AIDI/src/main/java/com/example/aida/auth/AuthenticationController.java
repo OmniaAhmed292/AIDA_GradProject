@@ -25,7 +25,17 @@ public class AuthenticationController {
         return ResponseEntity.ok(service.authenticate(request));
     }
 
-//    @GetMapping("/activate-account")
+    @GetMapping("/activate-account/{token}")
+    public ResponseEntity<String> activateAccount(@PathVariable String token) {
+        try {
+            service.activateAccount(token);
+            return ResponseEntity.ok("Account activated successfully");
+        } catch (Throwable throwable) {
+
+            System.out.println(throwable.getMessage());
+            return ResponseEntity.badRequest().body("Error activating account");
+        }
+    }
 //    public void confirm(
 //            @RequestParam String token
 //    ) {
