@@ -1,5 +1,7 @@
 package com.example.aida.auth;
 
+import com.example.aida.Entities.Address;
+import com.example.aida.Entities.BusinessInfo;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -32,14 +34,11 @@ public class RegisterRequest {
     @NotEmpty(message = "First name is required")
     @NotBlank(message = "First name is required")
     private String User_type;
-    private String DateOfBirth;
+    private String birthdate;
     private String phoneNumber;
     private String Gender;
-    private String City;
-    private String Street;
-    private String BuildingNumber;
-    private String FloorNumber;
-    private String storeName;
+    private Address address;
+    private BusinessInfo businessInfo;
 
 
 

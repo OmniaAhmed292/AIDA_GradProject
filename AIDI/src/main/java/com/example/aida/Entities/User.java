@@ -5,6 +5,7 @@ import jakarta.persistence.Id;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
@@ -12,7 +13,6 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.security.Principal;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
@@ -27,9 +27,10 @@ import java.util.List;
 @Document(collection = "users")
 @TypeAlias("user_type")
 public class User implements UserDetails, Principal {
+
     @Id
-    @Field(name = "_id")
-    private String userId;
+    private String id;
+
 
     @Field("Fname")
     private String fname;
@@ -38,6 +39,7 @@ public class User implements UserDetails, Principal {
     private String lname;
 
     @Field("email")
+    @Indexed(unique = true)
     private String email;
 
     @Field("Hashed_Password")
@@ -47,12 +49,13 @@ public class User implements UserDetails, Principal {
     private String userType;
 
     @Field("is_enabled")
-    private boolean isEnabled;
+    private boolean isEnabled = true;
+
     @Field("is_account_locked")
     private boolean isAccountLocked;
     @Embedded
     @Field("confirmation_tokens")
-    private List<ConfirmationToken> confirmationTokens = new ArrayList<>();
+    private ConfirmationToken confirmationToken;
 
 
 

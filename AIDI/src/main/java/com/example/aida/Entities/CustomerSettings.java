@@ -19,5 +19,5 @@ public class CustomerSettings {
     @Field(name = "allow_Email_Cart_recovery")
     private Boolean AllowEmailCartRecovery;
     @Field(name = "allow_Collect_information")
-    private String AllowInformationCollection;
+    private Boolean AllowInformationCollection;
 }
