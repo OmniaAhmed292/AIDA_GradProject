@@ -69,7 +69,7 @@ public class Product {
 
     @Field(name = "is_in_event")
     @NotNull
-    private boolean isInEvent = false;
+    private Boolean isInEvent = false;
 
     @Field(name="is_shown")
     @NotNull
@@ -116,4 +116,7 @@ public class Product {
 
     @Field(name = "shelf_id")
     private Shelf shelf;
+
+    @Transient
+    private Double rating;
 }

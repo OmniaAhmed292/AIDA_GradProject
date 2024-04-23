@@ -9,6 +9,7 @@ import com.example.aida.service.EmailService;
 import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.bson.types.Decimal128;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,7 +21,7 @@ import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-
+import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
 @RequiredArgsConstructor
@@ -33,8 +34,11 @@ public class AuthenticationService {
     private final EmailValidator emailValidator;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailServiceImpl;
-    private static final int TOKEN_LENGTH = 6;
-//    private final EmailService emailService;
+
+    @Value("#{systemProperties['TOKEN_LENGTH']}")
+    private int tokenLength;
+
+    //    private final EmailService emailService;
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) throws MessagingException {
         //-----------------------------
@@ -148,7 +152,7 @@ public class AuthenticationService {
         }
         var jwtToken = jwtService.generateToken(user);
         //System.out.println(user);
-        String emailToken = generateActivationCode(user.getEmail(),TOKEN_LENGTH);
+        String emailToken = generateActivationCode(user.getEmail(),tokenLength);
 
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 emailToken,
