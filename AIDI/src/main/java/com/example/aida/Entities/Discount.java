@@ -22,11 +22,11 @@ public class Discount {
     /**
      * The percentage of the discount
      * 0% by default
-     * 25.5f for 25.5%
+     * 25.5 for 25.5%
      */
     @Field(name = "percentage")
     @NotNull
-    private float percentage = 0;
+    private Double percentage = 0.0;
 
     /**
      * The amount of the discount
