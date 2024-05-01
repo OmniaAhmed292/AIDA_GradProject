@@ -26,7 +26,7 @@ public class Order {
     @Id
     private String orderId;
 
-    @Field(name = "Shipment_price")
+    @Field(name = "Shipment_price", targetType = FieldType.DECIMAL128)
     @NotNull
     private BigDecimal shipmentPrice;
 
@@ -48,7 +48,7 @@ public class Order {
 
     @Field(name = "percentage_discount")
     @NotNull
-    private float pointDiscountPercentage;
+    private Double pointDiscountPercentage;
 
     @Embedded
     @Field(name = "card") //TODO: add card to the order in mongoDB schema

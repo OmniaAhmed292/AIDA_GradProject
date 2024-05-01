@@ -46,11 +46,11 @@ public class Product {
     @NotNull
     private LocalDate timeSinceRestocking;
 
-    @Field(name="price")
+    @Field(name="price", targetType = FieldType.DECIMAL128)
     @NotNull
     private BigDecimal price;
 
-    @Field(name = "taxes")
+    @Field(name = "taxes", targetType = FieldType.DECIMAL128)
     @NotNull
     private BigDecimal taxes;
 
