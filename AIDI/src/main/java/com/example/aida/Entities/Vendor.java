@@ -9,6 +9,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -54,8 +55,8 @@ public class Vendor{
     @Embedded
     private Address address;
 
-    @Field(name = "balance")
-    private Decimal128 balance = new Decimal128(BigDecimal.valueOf(0.0));
+    @Field(name = "balance", targetType = FieldType.DECIMAL128)
+    private BigDecimal balance = BigDecimal.valueOf(0.0);
 
     @Field(name = "cards")
     @Embedded

@@ -20,17 +20,17 @@ public class DummyAdmin {
     @Id
     private String id;
 
-    @Field(name = "service_fees")
+    @Field(name = "service_fees" , targetType = FieldType.DECIMAL128)
     private BigDecimal serviceFees;
 
-    @Field(name = "points_to_discount_ratio")
+    @Field(name = "points_to_discount_ratio", targetType = FieldType.DECIMAL128)
     private BigDecimal pointsToDiscountRatio;
 
 
-    @Field(name = "Shipment_fees")
+    @Field(name = "Shipment_fees", targetType = FieldType.DECIMAL128)
     private BigDecimal shipmentFees;
 
-    @Field(name = "Banner_price")
+    @Field(name = "Banner_price", targetType = FieldType.DECIMAL128)
     private BigDecimal bannerPrice;
 
     @Field(name = "bank_account")

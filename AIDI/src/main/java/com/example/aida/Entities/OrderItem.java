@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.math.BigDecimal;
 
@@ -25,13 +26,13 @@ public class OrderItem {
     @NotNull
     private String status;
 
-    @Field(name = "Taxes")
+    @Field(name = "Taxes", targetType = FieldType.DECIMAL128)
     private BigDecimal taxes;
 
-    @Field(name = "Product_price")
+    @Field(name = "Product_price", targetType = FieldType.DECIMAL128)
     private BigDecimal productPrice;
 
-    @Field(name = "Discount_price")
+    @Field(name = "Discount_price", targetType = FieldType.DECIMAL128)
     private BigDecimal discountPrice;
 
     @DBRef

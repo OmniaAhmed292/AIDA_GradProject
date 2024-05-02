@@ -14,8 +14,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Embeddable
 public class VendorSettings {
     @Field("allow_late_emails")
-    private boolean AllowLateEmails = true;
+    private Boolean AllowLateEmails = true;
 
     @Field("allow_new_emails")
-    private boolean AllowNewEmails = true;
+    private Boolean AllowNewEmails = true;
 }

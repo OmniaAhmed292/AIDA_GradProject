@@ -36,5 +36,5 @@ public class BusinessInfo {
     private String expMonth;
 
     @Field(name = "is_verified")
-    private boolean isVerified = true;
+    private Boolean isVerified = true;
 }

@@ -77,7 +77,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .customerSettings(new CustomerSettings(true, true, true, true))
-                .balance(new Decimal128(BigDecimal.valueOf(0.0)))
+                .balance(BigDecimal.valueOf(0.0))
                 .points(0);
             if (request.getBirthdate() != null) {
                 customerBuilder.birthdate(LocalDate.parse(request.getBirthdate()));
@@ -115,7 +115,7 @@ public class AuthenticationService {
                     .lname(request.getLname())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .balance(new Decimal128(BigDecimal.valueOf(0.0)))
+                    .balance(BigDecimal.valueOf(0.0))
                     .settings(new VendorSettings(true,true));
 
             //TODO: this is required data, to be removed from IF statement When File Storage is implemented
@@ -229,7 +229,7 @@ public class AuthenticationService {
         confirmationToken.setConfirmedDate(LocalDateTime.now());
 
 
-        user.setEnabled(true);
+        user.setIsEnabled(true);
         userRepository.save(user);
     }
 }

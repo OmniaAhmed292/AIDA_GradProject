@@ -49,10 +49,10 @@ public class User implements UserDetails, Principal {
     private String userType;
 
     @Field("is_enabled")
-    private boolean isEnabled = true;
+    private Boolean isEnabled = true;
 
     @Field("is_account_locked")
-    private boolean isAccountLocked;
+    private Boolean isAccountLocked;
     @Embedded
     @Field("confirmation_tokens")
     private ConfirmationToken confirmationToken;
