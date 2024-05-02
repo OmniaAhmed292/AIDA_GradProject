@@ -11,11 +11,13 @@ import org.springframework.data.mongodb.core.aggregation.*;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Repository;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
-
-public abstract class ProductRepositoryImpl implements ProductRepository{
+@Repository
+public class ProductRepositoryImpl {
     private final MongoTemplate mongoTemplate;
 
     @Autowired
@@ -23,7 +25,6 @@ public abstract class ProductRepositoryImpl implements ProductRepository{
         this.mongoTemplate = mongoTemplate;
     }
 
-    @Override
     public List<Product> productSearch(String search, Double minRating, Double minPrice,
                                 Double maxPrice, Boolean available, Boolean is_used, SortFeild sortFeild, Boolean discount, Pageable pageable){
 

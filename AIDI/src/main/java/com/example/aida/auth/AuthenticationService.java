@@ -11,6 +11,8 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.bson.types.Decimal128;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +27,7 @@ import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
 @RequiredArgsConstructor
+@DependsOn("envConfig")
 public class AuthenticationService {
     private final UserRepository userRepository;
     private final CustomerRepository customerRepository;
