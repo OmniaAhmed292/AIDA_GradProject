@@ -24,11 +24,23 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+
+
     @GetMapping("/{id}")
     public ResponseEntity<Order> getOrderById(@PathVariable(name = "id") String id){
         Order order = orderService.getOrderById(id);
         if (order != null) {
             return ResponseEntity.ok(order);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable(name = "userId") String userId){
+        List<Order> orders = orderService.getOrdersByUser(userId);
+        if (orders != null) {
+            return ResponseEntity.ok(orders);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -40,16 +52,13 @@ public class OrderController {
         return ResponseEntity.ok(createdOrder);
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<Order> updateOrder(@PathVariable(name = "id") String id, @RequestBody Order order){
-        Order updatedOrder = orderService.updateOrder(id, order);
-        return ResponseEntity.ok(updatedOrder);
-    }
-
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<Void> deleteOrder(@PathVariable(name = "id") String id){
         orderService.deleteOrder(id);
         return ResponseEntity.noContent().build();
     }
+
+
+
 
 }

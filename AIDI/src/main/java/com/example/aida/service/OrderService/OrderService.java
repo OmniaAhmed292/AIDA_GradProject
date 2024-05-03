@@ -41,4 +41,9 @@ public class OrderService {
         List<Order> orders = orderRepository.findAll();
         return orders.isEmpty() ? null : orders;
     }
+
+    public List<Order> getOrdersByUser(String userId) {
+        List<Order> orders = orderRepository.findByUserId(userId);
+        return orders.isEmpty() ? null : orders;
+    }
 }
