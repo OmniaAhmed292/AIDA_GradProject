@@ -43,7 +43,7 @@ public class OrderService {
     }
 
     public List<Order> getOrdersByUser(String userId) {
-        List<Order> orders = orderRepository.findByUserId(userId);
+        List<Order> orders = orderRepository.findByCustomer(userId);
         return orders.isEmpty() ? null : orders;
     }
 }
