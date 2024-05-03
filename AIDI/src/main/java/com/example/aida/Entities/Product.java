@@ -1,11 +1,12 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Id;
+import jakarta.persistence.Transient;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
@@ -31,7 +32,7 @@ public class Product {
     //--------------------
     // product details
     //--------------------
-    @Field(name = "product_name")
+    @Field(name = "productName")
     @NotNull
     private String productName;
 
@@ -54,7 +55,7 @@ public class Product {
     @NotNull
     private BigDecimal taxes;
 
-    @Field(name = "category_name")
+    @Field(name = "categoryName")
     @NotNull
     private String categoryName;
 
@@ -63,7 +64,7 @@ public class Product {
     // flags
     //--------------------
 
-    @Field(name = "is_used")
+    @Field(name = "isUsed")
     @NotNull
     private Boolean isUsed;
 
@@ -71,7 +72,7 @@ public class Product {
     @NotNull
     private Boolean isInEvent = false;
 
-    @Field(name="is_shown")
+    @Field(name="isShown")
     @NotNull
     private Boolean isShown;
 

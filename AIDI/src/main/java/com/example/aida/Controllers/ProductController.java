@@ -15,6 +15,20 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
+
+    @PostMapping
+    public ResponseEntity<Product> saveProduct(@RequestBody Product product){
+        return ResponseEntity.ok(productService.save(product));
+    }
+    @GetMapping
+    public ResponseEntity<List<Product>> getAllProducts(){
+        return ResponseEntity.ok(productService.findAll());
+    }
+    @DeleteMapping ("/delete/{id}")
+    public ResponseEntity<Void> deleteProduct(@PathVariable(name = "id") String id) {
+        productService.deleteById(id);
+        return ResponseEntity.accepted().build();
+    }
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable(name = "id") String id){
         return ResponseEntity.ok(productService.getProductById(id));

@@ -4,20 +4,18 @@ import com.example.aida.Entities.Product;
 import com.example.aida.Enums.SortFeild;
 import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.Repositories.ProductRepositoryImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import reactor.util.function.Tuple2;
-
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService {
     private final ProductRepositoryImpl searchRep;
     private final ProductRepository repository;
@@ -30,13 +28,25 @@ public class ProductService {
     private float SYSTEM_PRICE_BANNER;
 
 
-    public ProductService(ProductRepositoryImpl searchRep, ProductRepository repository) {
-        this.searchRep = searchRep;
-        this.repository = repository;
-    }
 
     public Product getProductById(String id){
         return repository.findById(id).orElse(null);
+    }
+
+
+    public Product save(Product product) {
+        return repository.save(product);
+    }
+
+    public Product findById(String id) {
+           return repository.findById(id).orElse(null);
+    }
+
+    public List<Product> findAll() {
+        return repository.findAll();
+    }
+    public void deleteById(String id) {
+        repository.deleteById(id);
     }
 
     public List<Product> productSearch(String search, Double minRating, Double minPrice,
