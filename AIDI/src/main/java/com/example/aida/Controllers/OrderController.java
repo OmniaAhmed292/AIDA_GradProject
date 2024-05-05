@@ -58,16 +58,13 @@ public class OrderController {
         return ResponseEntity.noContent().build();
     }
 
-    //Update order status
-    @PutMapping("/updateStatus/{id}")
-    public ResponseEntity<Order> updateOrderStatus(@PathVariable(name = "id") String id, @RequestParam(name = "status") String status){
-        Order updatedOrder = orderService.updatestatus(id, status);
+
+    //Update order status (single item)
+    @PutMapping("/updateItemStatus/{id}")
+    public ResponseEntity<Order> updateItemStatus(@PathVariable(name = "id") String id, @RequestParam(name = "itemId") String itemId, @RequestParam(name = "status") String status){
+        Order updatedOrder = orderService.updateItemStatus(id, itemId, status);
         return ResponseEntity.ok(updatedOrder);
     }
-
-
-
-
 
 
 }

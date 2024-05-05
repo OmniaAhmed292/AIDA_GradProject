@@ -38,9 +38,6 @@ public class Order {
     @NotNull
     private Address address;
 
-    @Field(name = "status")
-    @NotNull
-    private String status;
 
     @Embedded
     @Field(name = "order_items")
