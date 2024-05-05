@@ -58,6 +58,15 @@ public class OrderController {
         return ResponseEntity.noContent().build();
     }
 
+    //Update order status
+    @PutMapping("/updateStatus/{id}")
+    public ResponseEntity<Order> updateOrderStatus(@PathVariable(name = "id") String id, @RequestParam(name = "status") String status){
+        Order updatedOrder = orderService.updatestatus(id, status);
+        return ResponseEntity.ok(updatedOrder);
+    }
+
+
+
 
 
 
