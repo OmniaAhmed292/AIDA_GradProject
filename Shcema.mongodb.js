@@ -430,7 +430,8 @@ db.createCollection("orders", {
                 "order_date",
                 "address",
                 "order_items",
-                "card"
+                "card",
+                "status",
             ],
             properties: {
                 _id: { bsonType: "objectId" },
