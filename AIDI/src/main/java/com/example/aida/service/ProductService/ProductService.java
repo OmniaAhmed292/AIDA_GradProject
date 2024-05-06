@@ -1,9 +1,11 @@
 package com.example.aida.service.ProductService;
 
 import com.example.aida.Entities.Product;
+import com.example.aida.Entities.Tag;
 import com.example.aida.Enums.SortFeild;
 import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.Repositories.ProductRepositoryImpl;
+import com.example.aida.Repositories.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -19,6 +21,7 @@ import java.util.List;
 public class ProductService {
     private final ProductRepositoryImpl searchRep;
     private final ProductRepository repository;
+    private final TagRepository tagRepository;
 
     @Value("#{systemProperties['QUERY_LIMIT']}")
     private int QUERY_LIMIT;
@@ -27,6 +30,25 @@ public class ProductService {
 
     private float SYSTEM_PRICE_BANNER;
 
+    //---------------------------------Tags crud---------------------------------
+    public List<Tag> getAllTags(){
+        List<Tag> tags = new ArrayList<>();
+        tags = tagRepository.findAll();
+        return tags;
+    }
+
+    public Tag getTagById(String id){
+        return tagRepository.findById(id).orElse(null);
+    }
+
+    public Tag getTagByName(String name){
+        return tagRepository.findByTagName(name).orElse(null);
+    }
+
+    public Tag saveTag(Tag tag){
+        return tagRepository.save(tag);
+    }
+    //---------------------------------Product Service---------------------------------
 
     public Product getProductById(String id){
         return repository.findById(id).orElse(null);
