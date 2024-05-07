@@ -69,15 +69,20 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public Order updatestatus(String id, String status) {
-        Order order = orderRepository.findById(id).get();
-        order.setStatus(status);
-        return orderRepository.save(order);
-    }
-
 
     public void deleteOrder(String id) {
         orderRepository.deleteById(id);
     }
 
+    public Order updateItemStatus(String id, String itemId, String status) {
+        Order order = orderRepository.findById(id).get();
+        List<OrderItem> orderItems = order.getOrderItems();
+        for (OrderItem orderItem : orderItems) {
+            if (orderItem.getItemId().equals(itemId)) {
+                orderItem.setStatus(status);
+                break;
+            }
+        }
+        return orderRepository.save(order);
+    }
 }

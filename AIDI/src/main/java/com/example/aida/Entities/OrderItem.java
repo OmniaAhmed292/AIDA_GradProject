@@ -17,6 +17,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Embeddable
 public class OrderItem {
+
+    @Field(name = "item_id")
+    @NotNull
+    private String itemId;
     
     @Field(name = "quantity")
     @NotNull
