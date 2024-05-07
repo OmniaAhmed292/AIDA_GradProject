@@ -41,6 +41,9 @@ public class AuthenticationService {
     @Value("#{systemProperties['TOKEN_LENGTH']}")
     private int tokenLength;
 
+    @Value("${server.port}")
+    private String serverPort;
+
     //    private final EmailService emailService;
     @Transactional
     public AuthenticationResponse register(RegisterRequest request) throws MessagingException {
@@ -171,14 +174,13 @@ public class AuthenticationService {
     }
 
     private void SendValidationEmail(User user, String token) throws MessagingException {
-        String activationLink = "http://localhost:8080/api/v1/auth/activate-account/" + token; // replace with your server URL and endpoint
+        String activationLink = "http://localhost:"+ serverPort +"/api/v1/auth/activate-account/" + token; // replace with your server URL and endpoint
 //        send email
         emailServiceImpl.sendMail(
                 user.getEmail(),
                 "Activate your account",
-                "Hello "+user.getFname()+" "+user.getLname()+"\n"+
-                        "Thank you for signing up! Please use the following activation code to activate your account: \n"+activationLink
-                );
+                buildEmail(user.getFname(), activationLink)
+        );
     }
 
 
@@ -235,6 +237,84 @@ public class AuthenticationService {
         user.setIsEnabled(true);
         userRepository.save(user);
     }
+
+    private String buildEmail(String name, String link) {
+        String emailTemplate = "<div style=\"font-family: 'Roboto', Arial, sans-serif; font-size: 16px; margin: 0; color: #03BCBF;\">"
+                + "<link href=\"https://fonts.googleapis.com/css2?family=Raleway:wght@500&display=swap\" rel=\"stylesheet\">"
+                + "<style>"
+                + "body, p {"
+                + "  font-family: 'Raleway', sans-serif;"
+                + "  font-size: 16px;"
+                + "  color: #000000;"
+                + "}"
+                + "a {"
+                + "  color: #FF897F;"
+                + "  text-decoration: none;"
+                + "}"
+                + ".email-header {"
+                + "  background-color: #03BCBF;"
+                + "  color: #ffffff;"
+                + "  font-family: 'Roboto', sans-serif;"
+                + "  font-size: 24px;"
+                + "  font-weight: 700;"
+                + "  padding: 20px;"
+                + "  text-align: center;"
+                + "}"
+                + ".email-body {"
+                + "  background-color: #ffffff;"
+                + "  color: #03BCBF;"
+                + "  padding: 20px;"
+                + "  max-width: 560px;"
+                + "  margin: 0 auto;"
+                + "}"
+                + ".cta-button {"
+                + "  background-color: #FF897F;"
+                + "  color: #ffffff;"
+                + "  padding: 10px 20px;"
+                + "  border-radius: 5px;"
+                + "  font-weight: bold;"
+                + "  display: inline-block;"
+                + "}"
+                + "</style>"
+                + "<table role=\"presentation\" width=\"100%\" style=\"border-collapse: collapse; min-width: 100%; width: 100% !important;\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\">"
+                + "<tbody>"
+                + "  <tr>"
+                + "    <td class=\"email-header\">"
+                + "      Welcome to AIDA - Activate Your Account Now!"
+                + "    </td>"
+                + "  </tr>"
+                + "</tbody>"
+                + "</table>"
+                + "<table role=\"presentation\" class=\"email-body\" align=\"center\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"border-collapse: collapse; max-width: 580px; width: 100% !important;\" width=\"100%\">"
+                + "<tbody>"
+                + "  <tr>"
+                + "    <td>"
+                + "      <p>Hello {{name}},</p>"
+                + "      <p>We’re thrilled to have you on board! 🎉 Your journey towards a seamless, innovative, and personalized shopping experience begins here.</p>"
+                + "      <p>To ensure the security and reliability you deserve, please activate your account by clicking on the link below:</p>"
+                + "      <p style=\"text-align: center;\">"
+                + "        <a class=\"cta-button\" href=\"{{link}}\">Activate My Account</a>"
+                + "      </p>"
+                + "      <p>Please note: This link will remain active for 15 minutes to maintain efficiency and protect your privacy.</p>"
+                + "      <p>Once activated, get ready to dive into a world of modern design, user-friendly navigation, and exclusive offerings tailored just for you. And remember, our responsive team is always here to support you every step of the way.</p>"
+                + "      <p>We can’t wait to see you soon!</p>"
+                + "      <p>Warm regards,</p>"
+                + "      <p>The AIDA Team</p>"
+                + "    </td>"
+                + "  </tr>"
+                + "</tbody>"
+                + "</table>"
+                + "</div>";
+
+
+        // Replace placeholders with actual values
+        emailTemplate = emailTemplate.replace("{{name}}", name);
+        emailTemplate = emailTemplate.replace("{{link}}", link);
+
+        return  emailTemplate;
+
+    }
+
 }
 
 
