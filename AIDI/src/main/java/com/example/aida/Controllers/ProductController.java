@@ -1,6 +1,7 @@
 package com.example.aida.Controllers;
 
 import com.example.aida.Entities.Product;
+import com.example.aida.Entities.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,21 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
+    //---------------------------------Tag---------------------------------
+    @GetMapping("/tags")
+    public ResponseEntity<List<Tag>> getAllTags(){
+        return ResponseEntity.ok(productService.getAllTags());
+    }
+    @GetMapping("/tags/{id}")
+    public ResponseEntity<Tag> getTagById(@PathVariable(name = "id") String id){
+        return ResponseEntity.ok(productService.getTagById(id));
+    }
+    @PostMapping("/tags")
+    public ResponseEntity<Tag> saveTag(@RequestBody Tag tag){
+        return ResponseEntity.ok(productService.saveTag(tag));
+    }
 
+    //---------------------------------Product---------------------------------
     @PostMapping
     public ResponseEntity<Product> saveProduct(@RequestBody Product product){
         return ResponseEntity.ok(productService.save(product));
