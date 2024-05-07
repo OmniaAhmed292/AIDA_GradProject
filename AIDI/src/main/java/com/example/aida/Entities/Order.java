@@ -1,16 +1,14 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,15 +18,16 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @Document(collection = "orders")
 public class Order {
 
     @Id
-    private String orderId;
+    private String _id;
 
-    @Field(name = "Shipment_price", targetType = FieldType.DECIMAL128)
+    @Field(name = "shipment_price")
     @NotNull
-    private BigDecimal shipmentPrice;
+    private Double shipmentPrice;
 
     @Field(name = "created_at")
     @CreatedDate
@@ -46,9 +45,9 @@ public class Order {
     @Field(name = "order_items")
     private List<OrderItem> orderItems; // Embedded array of OrderItem
 
-    @DBRef
+
     @Field(name = "customer_id")
-    private Customer customer;
+    private ObjectId customer;
 
     @Field(name = "percentage_discount")
     @NotNull
@@ -57,5 +56,6 @@ public class Order {
     @Embedded
     @Field(name = "card") //TODO: add card to the order in mongoDB schema
     private Card card;
+
 
 }

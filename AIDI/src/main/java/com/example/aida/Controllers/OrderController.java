@@ -48,6 +48,7 @@ public class OrderController {
 
     @PostMapping("/create")
     public ResponseEntity<Order> createOrder(@RequestBody Order order){
+       System.out.println(order);
         Order createdOrder = orderService.createOrder(order);
         return ResponseEntity.ok(createdOrder);
     }
@@ -64,10 +65,4 @@ public class OrderController {
         Order updatedOrder = orderService.updatestatus(id, status);
         return ResponseEntity.ok(updatedOrder);
     }
-
-
-
-
-
-
 }
