@@ -26,7 +26,7 @@ public class ProductRepositoryImpl {
     }
 
     public List<Product> productSearch(String search, Double minRating, Double minPrice,
-                                Double maxPrice, Boolean available, Boolean is_used, SortFeild sortFeild, Boolean discount, Pageable pageable){
+                                       Double maxPrice, Boolean available, Boolean is_used, SortFeild sortFeild, Boolean discount, Pageable pageable){
 
         Criteria criteria = new Criteria();
 

@@ -1,13 +1,14 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.hibernate.annotations.ColumnDefault;
 import org.springframework.data.annotation.TypeAlias;
 import org.springframework.data.mongodb.core.mapping.Field;
 
-import java.time.LocalDate;
+import java.util.Date;
 
 
 @Embeddable
@@ -36,6 +37,6 @@ public class Discount {
 
 
     @Field(name = "end_date")
-    private LocalDate endDate;
+    private Date endDate;
 }
 

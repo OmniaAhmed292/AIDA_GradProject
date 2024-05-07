@@ -40,6 +40,5 @@ public interface ProductRepository extends MongoRepository<Product, String> {
 
     //TODO: get recommended products
 
-    }
-
+}
 

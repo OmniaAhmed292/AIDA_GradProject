@@ -33,7 +33,7 @@ public class ProductController {
     public ResponseEntity<Product> getProductById(@PathVariable(name = "id") String id){
         return ResponseEntity.ok(productService.getProductById(id));
     }
-    @GetMapping("/{category}/{page}")
+    @GetMapping("/a/{category}/{page}")
     public ResponseEntity<List<Product>> getProductByCategory(@PathVariable(name = "category") String category,
                                                               @PathVariable(name = "page") int page){
         return ResponseEntity.ok(productService.getProductByCategory(category,page));

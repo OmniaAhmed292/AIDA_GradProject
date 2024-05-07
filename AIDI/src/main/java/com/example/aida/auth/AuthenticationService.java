@@ -7,11 +7,8 @@ import com.example.aida.Repositories.VendorRepository;
 import com.example.aida.config.JwtService;
 import com.example.aida.service.EmailService;
 import jakarta.mail.MessagingException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.bson.types.Decimal128;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,11 +16,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
 @RequiredArgsConstructor
@@ -42,8 +37,9 @@ public class AuthenticationService {
     private int tokenLength;
 
     //    private final EmailService emailService;
-    @Transactional
+
     public AuthenticationResponse register(RegisterRequest request) throws MessagingException {
+        //System.out.println(request);
         //-----------------------------
         //  Validations
         //-----------------------------
@@ -60,7 +56,7 @@ public class AuthenticationService {
                 .lname(request.getLname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .userType(request.getUser_type())
+                .userType(request.getUserType())
                 .isEnabled(false)
                 .isAccountLocked(false)
                 .confirmationToken(null)
@@ -73,14 +69,14 @@ public class AuthenticationService {
         //-----------------------------
         //  Customer Creation
         //-----------------------------
-        if(request.getUser_type().equals("customer")){
+        if(request.getUserType().equals("customer")){
             var customerBuilder = Customer.builder()
                 .fname(request.getFname())
                 .lname(request.getLname())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .customerSettings(new CustomerSettings(true, true, true, true))
-                .balance(BigDecimal.valueOf(0.0))
+                .balance(0.0)
                 .points(0);
             if (request.getBirthdate() != null) {
                 customerBuilder.birthdate(LocalDate.parse(request.getBirthdate()));
@@ -112,13 +108,13 @@ public class AuthenticationService {
         //-----------------------------
         //  Vendor Creation
         //-----------------------------
-        else if(request.getUser_type().equals("vendor")) {
+        else if(request.getUserType().equals("vendor")) {
             var vendorBuilder = Vendor.builder()
                     .fname(request.getFname())
                     .lname(request.getLname())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .balance(BigDecimal.valueOf(0.0))
+                    .balance(0.0)
                     .settings(new VendorSettings(true,true));
 
             //TODO: this is required data, to be removed from IF statement When File Storage is implemented
@@ -216,7 +212,6 @@ public class AuthenticationService {
 
     }
 
-    @Transactional
     public void activateAccount(String token) throws IllegalStateException {
 
         User user = userRepository.findByConfirmationTokenToken(token)
@@ -230,7 +225,6 @@ public class AuthenticationService {
             throw new IllegalStateException("Token expired");
         }
         confirmationToken.setConfirmedDate(LocalDateTime.now());
-
 
         user.setIsEnabled(true);
         userRepository.save(user);

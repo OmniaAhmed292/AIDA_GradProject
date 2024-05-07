@@ -5,12 +5,10 @@ import com.example.aida.Enums.SortFeild;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 @Data
 @Builder
 @AllArgsConstructor
-@NoArgsConstructor
 public class ProductSearchRequest {
 
     private String search;

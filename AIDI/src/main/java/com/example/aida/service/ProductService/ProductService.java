@@ -1,6 +1,7 @@
 package com.example.aida.service.ProductService;
 
 import com.example.aida.Entities.Product;
+import com.example.aida.Entities.ProductImage;
 import com.example.aida.Enums.SortFeild;
 import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.Repositories.ProductRepositoryImpl;
@@ -10,7 +11,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +42,7 @@ public class ProductService {
     }
 
     public Product findById(String id) {
-           return repository.findById(id).orElse(null);
+        return repository.findById(id).orElse(null);
     }
 
     public List<Product> findAll() {
@@ -94,6 +98,24 @@ public class ProductService {
         Pageable pageable = PageRequest.of(page, QUERY_LIMIT);
         BigDecimal price = new BigDecimal(SYSTEM_PRICE_BANNER);
         return repository.findByPriceLessThanAndIsShownOrderByPriceAsc(price, true, pageable);
+    }
+    public List<byte[]> getProductImages(String productId) throws IOException {
+        Product product = repository.findById(productId).orElse(null);
+        if(product == null){
+            throw new RuntimeException("Product not found with id: " + productId);
+        }
+        List<ProductImage> images = product.getImages();
+        if(images == null || images.isEmpty()){
+            throw new RuntimeException("No images found for product with id: " + productId);
+        }
+        List<byte[]> imageBytes = new ArrayList<>();
+        for(ProductImage image: images){
+            if(image.getImageUrl() != null){
+                byte[] bytes = Files.readAllBytes(new File(image.getImageUrl()).toPath());
+                imageBytes.add(bytes);
+            }
+        }
+        return imageBytes;
     }
 
 }

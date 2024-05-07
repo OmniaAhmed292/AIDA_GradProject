@@ -33,7 +33,7 @@ public class RegisterRequest {
     private String Password;
     @NotEmpty(message = "First name is required")
     @NotBlank(message = "First name is required")
-    private String User_type;
+    private String userType;
     private String birthdate;
     private String phoneNumber;
     private String Gender;

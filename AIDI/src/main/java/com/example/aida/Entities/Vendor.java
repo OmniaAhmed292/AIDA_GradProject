@@ -1,17 +1,15 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.bson.types.Decimal128;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -55,8 +53,8 @@ public class Vendor{
     @Embedded
     private Address address;
 
-    @Field(name = "balance", targetType = FieldType.DECIMAL128)
-    private BigDecimal balance = BigDecimal.valueOf(0.0);
+    @Field(name = "balance")
+    private Double balance =0.0;
 
     @Field(name = "cards")
     @Embedded
