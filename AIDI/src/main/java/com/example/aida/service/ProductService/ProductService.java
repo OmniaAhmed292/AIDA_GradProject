@@ -6,6 +6,8 @@ import com.example.aida.Enums.SortFeild;
 import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.Repositories.ProductRepositoryImpl;
 import com.example.aida.Repositories.TagRepository;
+import com.mongodb.lang.NonNull;
+import com.mongodb.lang.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -50,7 +52,8 @@ public class ProductService {
     }
     //---------------------------------Product Service---------------------------------
 
-    public Product getProductById(String id){
+    @Nullable
+    public Product getProductById(@NonNull String id){
         return repository.findById(id).orElse(null);
     }
 

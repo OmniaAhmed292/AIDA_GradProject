@@ -13,12 +13,12 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @Embeddable
 public class ProductImage {
 
-    @Field("image_name")
+    @Field("imageName")
     private String imageName;
 
-    @Field("file_path")
+    @Field("filePath")
     private String filePath;
 
-    @Field("description")
+    @Field("imageDescription")
     private String Description;
 }

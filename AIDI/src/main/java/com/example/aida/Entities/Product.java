@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
@@ -14,6 +15,9 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -94,11 +98,11 @@ public class Product {
 
     @Embedded
     @Field(name = "images")
-    private Set<ProductImage> images;
+    private Set<ProductImage> images = new HashSet<>();
 
     @Field(name = "tags")
     @Embedded
-    private Set<ProductTags> tags;
+    private Set<ProductTags> tags = new HashSet<>();
 
     @Field(name = "discount")
     @Embedded
@@ -106,17 +110,15 @@ public class Product {
 
     @Field(name = "specifications")
     @Embedded
-    private Set<Specification> specifications;
+    private Set<Specification> specifications = new HashSet<>();
 
     @Field(name = "reviews")
-    @Embedded
-    private Set<Reviews> reviews;
+    private Set<Reviews> reviews = new HashSet<>();
 
-    @Field(name = "vendor_id")
-    private Vendor vendor;
+    @Field(name = "vendor_id", targetType = FieldType.OBJECT_ID)
+    @Indexed(unique = false)
+    private String vendorId;
 
-    @Field(name = "shelf_id")
-    private Shelf shelf;
 
     @Transient
     private Double rating;
