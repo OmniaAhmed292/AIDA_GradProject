@@ -320,7 +320,7 @@ db.createCollection("products", {
                 "taxes",
                 "isShown",
                 "categoryName",
-                "vendorId",
+                "vendor_id",
             ],
             properties: {
                 // Product identification
@@ -389,7 +389,7 @@ db.createCollection("products", {
                     bsonType: "array",
                     items: {
                         bsonType: "object",
-                        required: ["customerId", "body", "rate", "created_at"],
+                        required: ["customer_id", "body", "rate", "created_at"],
                         properties: {
                             customer_id: { bsonType: "objectId" },
                             body: { bsonType: "string" },

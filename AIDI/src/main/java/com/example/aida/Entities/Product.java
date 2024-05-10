@@ -72,7 +72,7 @@ public class Product {
     @NotNull
     private Boolean isUsed;
 
-    @Field(name = "is_in_event")
+    @Field(name = "isInEvent")
     @NotNull
     private Boolean isInEvent = false;
 
@@ -109,7 +109,6 @@ public class Product {
     private Discount discount;
 
     @Field(name = "specifications")
-    @Embedded
     private Set<Specification> specifications = new HashSet<>();
 
     @Field(name = "reviews")
