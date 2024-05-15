@@ -15,9 +15,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 
@@ -55,9 +53,9 @@ public class Product {
     @NotNull
     private BigDecimal price;
 
-    @Field(name = "taxes", targetType = FieldType.DECIMAL128)
+    @Field(name = "taxes")
     @NotNull
-    private BigDecimal taxes;
+    private double taxes;
 
     @Field(name = "categoryName")
     @NotNull

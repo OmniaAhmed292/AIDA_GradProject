@@ -10,8 +10,6 @@ import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.bson.types.Decimal128;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,11 +17,9 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import io.github.cdimascio.dotenv.Dotenv;
 
 @Service
 @RequiredArgsConstructor
@@ -83,7 +79,7 @@ public class AuthenticationService {
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
                 .customerSettings(new CustomerSettings(true, true, true, true))
-                .balance(BigDecimal.valueOf(0.0))
+                .balance(0.0)
                 .points(0);
             if (request.getBirthdate() != null) {
                 customerBuilder.birthdate(LocalDate.parse(request.getBirthdate()));
@@ -121,7 +117,7 @@ public class AuthenticationService {
                     .lname(request.getLname())
                     .email(request.getEmail())
                     .password(passwordEncoder.encode(request.getPassword()))
-                    .balance(BigDecimal.valueOf(0.0))
+                    .balance(0.0)
                     .settings(new VendorSettings(true,true));
 
             //TODO: this is required data, to be removed from IF statement When File Storage is implemented
