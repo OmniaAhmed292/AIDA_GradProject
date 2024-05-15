@@ -1,12 +1,10 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import org.springframework.data.mongodb.core.mapping.Field;
 @Setter
 @Getter
@@ -24,6 +22,6 @@ public class Address {
     @Field(name = "address_apartment_no")
     private String apartmentNo;
 
-    @Field(name = "address_building_no")
+    @Field(name = "address_Building_no")
     private String BuildingNo;
 }

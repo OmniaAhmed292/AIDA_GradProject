@@ -1,16 +1,13 @@
 package com.example.aida.Entities;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,13 +21,13 @@ import java.util.List;
 public class Order {
 
     @Id
-    private String orderId;
+    private String _id;
 
-    @Field(name = "Shipment_price", targetType = FieldType.DECIMAL128)
+    @Field(name = "shipment_price")
     @NotNull
-    private BigDecimal shipmentPrice;
+    private Double shipmentPrice;
 
-    @Field(name = "created_at")
+    @Field(name = "order_date")
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -43,9 +40,9 @@ public class Order {
     @Field(name = "order_items")
     private List<OrderItem> orderItems; // Embedded array of OrderItem
 
-    @DBRef
+
     @Field(name = "customer_id")
-    private Customer customer;
+    private String customer;
 
     @Field(name = "percentage_discount")
     @NotNull

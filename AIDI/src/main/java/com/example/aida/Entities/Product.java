@@ -12,7 +12,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -29,7 +28,7 @@ import java.util.Set;
 public class Product {
 
     @Id
-    private String productId;
+    private String _id;
 
     //--------------------
     // product details
@@ -45,13 +44,13 @@ public class Product {
     @Field(name = "description")
     private String description;
 
-    @Field(name="time_since_restocking")
+    @Field(name="timeSinceRestocking")
     @NotNull
     private LocalDate timeSinceRestocking;
 
-    @Field(name="price", targetType = FieldType.DECIMAL128)
+    @Field(name="price")
     @NotNull
-    private BigDecimal price;
+    private Double price;
 
     @Field(name = "taxes")
     @NotNull
