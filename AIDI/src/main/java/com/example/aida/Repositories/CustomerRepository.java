@@ -6,5 +6,8 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 @Transactional
 public interface CustomerRepository extends MongoRepository<Customer, String> {
-    public <Optional> Customer findById(String id);
+
+    <Optional> Customer findById(String id);
+    <Optional> Customer findByEmail(String email);
+
 }
