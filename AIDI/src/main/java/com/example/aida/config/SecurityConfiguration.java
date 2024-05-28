@@ -38,7 +38,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(req ->
                         req.requestMatchers(WHITE_LIST_URL)
                                 .permitAll()
-                                .requestMatchers("/api/v1/**").permitAll()
+                                .requestMatchers("/api/v1/**", "/api/product/{id}").permitAll()
 
                                 .anyRequest().authenticated()
                 )

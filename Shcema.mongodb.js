@@ -92,7 +92,7 @@ db.createCollection("customers", {
                 },
 
                 // Financial information
-                balance: { bsonType: "decimal", description: "Balance of the customer's account" },
+                balance: { bsonType: "double", description: "Balance of the customer's account" },
                 cards: {
                     bsonType: "array",
                     items: {
@@ -197,7 +197,7 @@ db.createCollection("vendors", {
                 },
 
                 // Vendor financial information
-                balance: { bsonType: "decimal", description: "Balance of the vendor's account" },
+                balance: { bsonType: "double", description: "Balance of the vendor's account" },
                 cards: {
                     bsonType: "array",
                     items: {
@@ -262,10 +262,10 @@ db.createCollection("Dummy_Admin", {
                 _id: { bsonType: "objectId" },
 
                 // Financial settings
-                service_fees: { bsonType: "decimal", maximum: 100.0, minimum: 0.0, description: "Service fees percentage (max 100.0)" },
-                points_to_discount_ratio: { bsonType: "decimal", maximum: 100.0, minimum: 0.0, description: "Points to discount ratio percentage (max 100.0)" },
-                shipment_fees: { bsonType: "decimal", description: "Shipment fees" },
-                banner_price: { bsonType: "decimal", description: "Maximum price for the banner for budget conscious customers" },
+                service_fees: { bsonType: "double", maximum: 100.0, minimum: 0.0, description: "Service fees percentage (max 100.0)" },
+                points_to_discount_ratio: { bsonType: "double", maximum: 100.0, minimum: 0.0, description: "Points to discount ratio percentage (max 100.0)" },
+                shipment_fees: { bsonType: "double", description: "Shipment fees" },
+                banner_price: { bsonType: "double", description: "Maximum price for the banner for budget conscious customers" },
 
                 // Bank account information
                 bank_account: { bsonType: "string", maxLength: 50, description: "Account at which system money will be transferred" },
@@ -317,13 +317,10 @@ db.createCollection("products", {
                 "isUsed",
                 "timeSinceRestocking",
                 "price",
-                "subscriptionDate",
                 "taxes",
                 "isShown",
                 "categoryName",
-                "purchasesNumber",
-                "shelfId",
-                "vendorId",
+                "vendor_id",
             ],
             properties: {
                 // Product identification
@@ -334,8 +331,8 @@ db.createCollection("products", {
                 quantity: { bsonType: "int", minimum: 0 },
                 description: { bsonType: "string", maxLength: 100 },
                 timeSinceRestocking: { bsonType: "date" },
-                price: { bsonType: "decimal", minimum: 0.0 },
-                taxes: { bsonType: "decimal", minimum: 0.0 },
+                price: { bsonType: "double", minimum: 0.0 },
+                taxes: { bsonType: "double", minimum: 0.0 },
                 categoryName: { bsonType: "string", maxLength: 50 },
 
                 // Flags
@@ -352,10 +349,13 @@ db.createCollection("products", {
 
                 // Product specifications
                 specifications: {
-                    bsonType: "object",
-                    properties: {
-                        attributeName: { bsonType: "string", maxLength: 50 },
-                        attributeValue: { bsonType: "string", maxLength: 100 },
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        properties: {
+                            attributeName: { bsonType: "string", maxLength: 50 },
+                            attributeValue: { bsonType: "string", maxLength: 100 },
+                        },
                     },
                 },
 
@@ -389,7 +389,7 @@ db.createCollection("products", {
                     bsonType: "array",
                     items: {
                         bsonType: "object",
-                        required: ["customerId", "body", "rate", "created_at"],
+                        required: ["customer_id", "body", "rate", "created_at"],
                         properties: {
                             customer_id: { bsonType: "objectId" },
                             body: { bsonType: "string" },
@@ -402,13 +402,12 @@ db.createCollection("products", {
 
                 // Vendor and shelf information
                 vendorId: { bsonType: "objectId" },
-                shelfId: { bsonType: "objectId" },
 
                 // Product discount
                 discount: {
                     bsonType: "object",
                     properties: {
-                        percentage: { bsonType: "decimal", minimum: 0.0, maximum: 100.0 },
+                        percentage: { bsonType: "double", minimum: 0.0, maximum: 100.0 },
                         endDate: { bsonType: "date" },
                         code: { bsonType: "string", maxLength: 20 },
                     }
@@ -431,13 +430,13 @@ db.createCollection("orders", {
                 "address",
                 "order_items",
                 "card",
-                "status",
+
             ],
             properties: {
                 _id: { bsonType: "objectId" },
                 customer_id: { bsonType: "objectId" }, // References customers collection (FK)
-                percentage_discount: { bsonType: "decimal", minimum: 0.0, maximum: 1.0 }, // Assuming percentage is between 0 and 1
-                shipment_price: { bsonType: "decimal", minimum: 0.0 },
+                percentage_discount: { bsonType: "double", minimum: 0.0, maximum: 1.0 }, // Assuming percentage is between 0 and 1
+                shipment_price: { bsonType: "double", minimum: 0.0 },
                 created_at: { bsonType: "date" },
 
                 //Embedded address
@@ -463,14 +462,15 @@ db.createCollection("orders", {
                     bsonType: "array",
                     items: {
                         bsonType: "object",
-                        required: ["product_id", "quantity", "Status", "Taxes", "Product_price", "Discount_price"],
+                        required: ["item_id", "product_id", "quantity", "Status", "Taxes", "Product_price", "Discount_price"],
                         properties: {
+                            item_id: { bsonType: "objectId" },
                             product_id: { bsonType: "objectId" }, // References products collection (FK)
                             quantity: { bsonType: "int", minimum: 1 },
                             Status: { bsonType: "string", enum: ["pending", "shipped", "delivered"] },
-                            Taxes: { bsonType: "decimal", minimum: 0.0 },
-                            Product_price: { bsonType: "decimal", minimum: 0.0 },
-                            Discount_price: { bsonType: "decimal", minimum: 0.0 },
+                            Taxes: { bsonType: "double", minimum: 0.0 },
+                            Product_price: { bsonType: "double", minimum: 0.0 },
+                            Discount_price: { bsonType: "double", minimum: 0.0 },
                         },
                     },
                 },

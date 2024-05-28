@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -19,8 +21,9 @@ public class Reviews {
     @Field("rate")
     private Integer rate;
 
-    @Field("customer_id")
-    private Customer customer;
+    @Field(name = "customer_id", targetType = FieldType.OBJECT_ID)
+    private String customerId;
+
     @Field(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;

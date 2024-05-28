@@ -1,14 +1,22 @@
 package com.example.aida.Entities;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 @Embeddable
 public class Specification {
-    @Field("attribute_name")
+    @Field("attributeName")
     private String attributeName;
 
-    @Field("attribute_value")
+    @Field("attributeValue")
     private String attributeValue;
 
 }

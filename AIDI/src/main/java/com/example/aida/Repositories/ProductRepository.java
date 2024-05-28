@@ -2,6 +2,7 @@ package com.example.aida.Repositories;
 
 import com.example.aida.Entities.Product;
 import com.example.aida.Enums.SortFeild;
+import com.mongodb.lang.NonNull;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface ProductRepository extends MongoRepository<Product, String> {
 
-    public Optional<Product> findById(String id);
+    public Optional<Product> findById(@NonNull String id);
 
     public Optional<List<Product>> findByCategoryNameAndIsShown(String categoryName, Boolean isShown, Pageable pageable);
 

@@ -16,8 +16,6 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@TypeAlias("discount_type")
 public class Discount {
     /**
      * The percentage of the discount

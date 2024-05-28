@@ -3,12 +3,15 @@ package com.example.aida.service.OrderService;
 import com.example.aida.Entities.Order;
 import com.example.aida.Entities.OrderItem;
 import com.example.aida.Entities.Product;
+import com.example.aida.Repositories.CustomerRepository;
 import com.example.aida.Repositories.OrderRepository;
+import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.service.ProductService.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,8 +21,8 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
     private final ProductService productService;
-
-
+    private final ProductRepository productRepository;
+    private final CustomerRepository customerRepository;
 
     public Order getOrderById(String id) {
         Optional<Order> orderOptional = orderRepository.findById(id);
@@ -39,8 +42,13 @@ public class OrderService {
     @Transactional
     public Order createOrder(Order order) {
         //Update products because of orderitems
+        order.setCreatedAt(LocalDateTime.now());
         for (OrderItem orderItem : order.getOrderItems()) {
-            Product product = orderItem.getProduct();
+            Product product = productRepository.findById(orderItem.getProduct().get_id()).get();
+            //order.setCustomer(customerRepository.findById(order.getCustomer().get_id()).get());
+            orderItem.setProduct(product);
+            System.out.println(product);
+            //Product product = orderItem.getProduct();
             int orderedQuantity = orderItem.getQuantity();
             int currentQuantity = product.getQuantity();
 
@@ -57,6 +65,7 @@ public class OrderService {
             productService.save(product);
         }
         // Save the order
+
          orderRepository.save(order);
 
         // Return the updated order
@@ -65,13 +74,7 @@ public class OrderService {
 
 
     public Order updateOrder(String id, Order order) {
-        order.setOrderId(id);
-        return orderRepository.save(order);
-    }
-
-    public Order updatestatus(String id, String status) {
-        Order order = orderRepository.findById(id).get();
-        order.setStatus(status);
+        order.set_id(id);
         return orderRepository.save(order);
     }
 
@@ -80,4 +83,15 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
+    public Order updateItemStatus(String id, String itemId, String status) {
+        Order order = orderRepository.findById(id).get();
+        List<OrderItem> orderItems = order.getOrderItems();
+        for (OrderItem orderItem : orderItems) {
+            if (orderItem.get_id().equals(itemId)) {
+                orderItem.setStatus(status);
+                break;
+            }
+        }
+        return orderRepository.save(order);
+    }
 }

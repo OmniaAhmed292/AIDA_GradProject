@@ -6,6 +6,8 @@ import com.example.aida.Enums.SortFeild;
 import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.Repositories.ProductRepositoryImpl;
 import com.example.aida.Repositories.TagRepository;
+import com.mongodb.lang.NonNull;
+import com.mongodb.lang.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
@@ -50,7 +52,8 @@ public class ProductService {
     }
     //---------------------------------Product Service---------------------------------
 
-    public Product getProductById(String id){
+    @Nullable
+    public Product getProductById(@NonNull String id){
         return repository.findById(id).orElse(null);
     }
 
@@ -72,12 +75,12 @@ public class ProductService {
 
     public List<Product> productSearch(String search, Double minRating, Double minPrice,
                                        Double maxPrice, Boolean available, Boolean is_used, SortFeild sortFeild, Boolean discount, int page){
-        Pageable pageable = PageRequest.of(page, QUERY_LIMIT);
+        Pageable pageable = PageRequest.of(page-1, QUERY_LIMIT); // page is 1 indexed
         return searchRep.productSearch(search, minRating, minPrice, maxPrice, available, is_used, sortFeild, discount, pageable);
     }
 
     public List<Product> getProductByCategory(String categoryName,int page){
-        Pageable pageable = PageRequest.of(page, QUERY_LIMIT);
+        Pageable pageable = PageRequest.of(page-1, QUERY_LIMIT); // page is 1 indexed
         return repository.findByCategoryNameAndIsShown(categoryName, true, pageable).orElse(null);
     }
 
@@ -98,22 +101,22 @@ public class ProductService {
     }
 
     public List<Product> getProductsInEventBanner(int page){
-        Pageable pageable = PageRequest.of(page, QUERY_LIMIT);
+        Pageable pageable = PageRequest.of(page-1, QUERY_LIMIT);
         return repository.findByIsInEventAndIsShownOrderByUpdatedAtDesc(true, true, pageable);
     }
 
     public List<Product> getOnSaleProducts(int page){
-        Pageable pageable = PageRequest.of(page, QUERY_LIMIT);
+        Pageable pageable = PageRequest.of(page-1, QUERY_LIMIT);
         return repository.findByDiscountPercentageGreaterThanAndIsShownOrderByPriceAsc(0.0, true, pageable);
     }
 
     public List<Product> getLatestProducts(int page){
-        Pageable pageable = PageRequest.of(page, QUERY_LIMIT);
+        Pageable pageable = PageRequest.of(page-1, QUERY_LIMIT);
         return repository.findByIsShownOrderByCreatedAtDesc(true, pageable);
     }
 
     public List<Product> getProductsUnderPrice(int page){
-        Pageable pageable = PageRequest.of(page, QUERY_LIMIT);
+        Pageable pageable = PageRequest.of(page-1, QUERY_LIMIT);
         BigDecimal price = new BigDecimal(SYSTEM_PRICE_BANNER);
         return repository.findByPriceLessThanAndIsShownOrderByPriceAsc(price, true, pageable);
     }

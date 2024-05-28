@@ -17,11 +17,11 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 @Embeddable
 public class ProductTags {
 
-    @Field(name = "tag_id", targetType = FieldType.OBJECT_ID)
+    @Field(name = "tagId", targetType = FieldType.OBJECT_ID)
     private String tagId;
 
-    @Field("tag_name")
-    @Indexed(unique = true)
+    @Field("tagName")
+    @Indexed(unique = false)
     private String tagName;
 
 }
