@@ -5,6 +5,7 @@ import com.example.aida.Entities.Card;
 import com.example.aida.Entities.Customer;
 import com.example.aida.Entities.CustomerSettings;
 import com.example.aida.Repositories.CustomerRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,14 +15,19 @@ import java.util.List;
 import java.util.Set;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerService {
 
     @Autowired
     private CustomerRepository customerRepository;
 
-    public Customer updateInfo(Address address, String phone){
+    public Customer getCustomerInfo(){
         String username = getAuthenticatedUsername();
-        Customer customer = customerRepository.findByEmail(username);
+        return customerRepository.findByEmail(username);
+    }
+
+    public Customer updateInfo(Address address, String phone){
+        Customer customer = getCustomerInfo();
         if (customer != null) {
             customer.setAddress(address);
             customer.setPhoneNumber(phone);
@@ -31,8 +37,7 @@ public class CustomerService {
     }
 
     public Customer updateCards(Set<Card> cards){
-        String username = getAuthenticatedUsername();
-        Customer customer = customerRepository.findByEmail(username);
+        Customer customer = getCustomerInfo();
         if (customer != null) {
             customer.setCards(cards);
         }
@@ -40,8 +45,7 @@ public class CustomerService {
     }
 
     public Customer updateSettings(CustomerSettings settings){
-        String username = getAuthenticatedUsername();
-        Customer customer = customerRepository.findByEmail(username);
+        Customer customer = getCustomerInfo();
         if (customer != null) {
             customer.setCustomerSettings(settings);
         }
