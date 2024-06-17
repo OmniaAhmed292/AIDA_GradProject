@@ -8,4 +8,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface VendorRepository extends MongoRepository<Vendor, String> {
     // Additional methods specific to Vendor (if needed)
     <Optional> Vendor findById(String id);
+
+    <Optional> Vendor findByEmail(String email);
 }
