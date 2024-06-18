@@ -59,6 +59,7 @@ public class OrderService {
 
             // Update product quantity
             product.setQuantity(currentQuantity - orderedQuantity);
+            product.setSales(product.getSales() + orderedQuantity);
             // Update other product properties if needed
 
             // Save or update product

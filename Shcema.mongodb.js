@@ -115,6 +115,20 @@ db.createCollection("customers", {
                     },
                     description: "Image of the customer"
                 },
+
+                //subscription
+                subscriptions: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        required: ["vendor_id", "product_id", "created_at"],
+                        properties: {
+                            product_id: { bsonType: "objectId" },
+                            created_at: { bsonType: "date" },
+                            status: { bsonType: "string", enum: ["NewShipment", "OnSale", "OutOfStock"] },
+                        },
+                    },
+                },
             },
         },
     },

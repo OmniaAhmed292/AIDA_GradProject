@@ -1,22 +1,30 @@
 package com.example.aida.service.ProductService;
 
+import com.example.aida.Entities.Customer;
 import com.example.aida.Entities.Product;
 import com.example.aida.Entities.Tag;
+import com.example.aida.Entities.Vendor;
 import com.example.aida.Enums.SortFeild;
 import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.Repositories.ProductRepositoryImpl;
 import com.example.aida.Repositories.TagRepository;
+import com.example.aida.Repositories.VendorRepository;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +32,7 @@ public class ProductService {
     private final ProductRepositoryImpl searchRep;
     private final ProductRepository repository;
     private final TagRepository tagRepository;
+    private final VendorRepository vendorRepository;
 
     @Value("#{systemProperties['QUERY_LIMIT']}")
     private int QUERY_LIMIT;
@@ -53,13 +62,67 @@ public class ProductService {
     //---------------------------------Product Service---------------------------------
 
     @Nullable
-    public Product getProductById(@NonNull String id){
-        return repository.findById(id).orElse(null);
+    public Product getProductById(@NonNull String id, Boolean isVendor){
+        if(isVendor) {
+            String username = getAuthenticatedUsername();
+            Vendor vendor = vendorRepository.findByEmail(username);
+            Product product = repository.findById(id).orElse(null);
+
+            if(product == null || vendor == null || !product.getVendorId().equals(vendor.getId())){
+                return null;
+            }
+
+            return product;
+        }
+        Product product = repository.findById(id).orElse(null);
+        product.setViews(product.getViews() + 1);
+        saveProductAsync(product);
+        return product;
     }
 
 
     public Product save(Product product) {
-        return repository.save(product);
+
+        String username = getAuthenticatedUsername();
+        Vendor vendor = vendorRepository.findByEmail(username);
+        if(product.get_id() == null){ //this is a create operation
+            product.setVendorId(vendor.getId());
+            product.setIsShown(true);
+            product.setSubscribers(0);
+            product.setViews(0);
+            product.setSales(0);
+
+            if(product.getQuantity() !=0)
+                product.setTimeSinceRestocking(LocalDate.now());
+
+            return repository.save(product);
+        }else{ //this is an update operation
+            Product oldProduct = repository.findById(product.get_id()).orElse(null);
+            //check if the product exists and belongs to the vendor
+            if(oldProduct == null || !oldProduct.getVendorId().equals(vendor.getId())){
+                return null;
+            }
+
+            oldProduct.setProductName(product.getProductName());
+
+            oldProduct.setDescription(product.getDescription());
+            oldProduct.setPrice(product.getPrice());
+            oldProduct.setTaxes(product.getTaxes());
+            oldProduct.setCategoryName(product.getCategoryName());
+
+            oldProduct.setAllowSubscription(product.getAllowSubscription());
+            oldProduct.setIsUsed(product.getIsUsed());
+            oldProduct.setSpecifications(product.getSpecifications());
+            oldProduct.setTags(product.getTags());
+            oldProduct.setDiscount(product.getDiscount());
+            //TODO time since restocking
+            if(product.getQuantity() > 0 && oldProduct.getQuantity() == 0) {
+                oldProduct.setTimeSinceRestocking(LocalDate.now());
+                notifyRestock(oldProduct.get_id());
+            }
+            oldProduct.setQuantity(product.getQuantity());
+            return repository.save(oldProduct);
+        }
     }
 
     public Product findById(String id) {
@@ -117,8 +180,27 @@ public class ProductService {
 
     public List<Product> getProductsUnderPrice(int page){
         Pageable pageable = PageRequest.of(page-1, QUERY_LIMIT);
-        BigDecimal price = new BigDecimal(SYSTEM_PRICE_BANNER);
+        Double price = (double) SYSTEM_PRICE_BANNER;
         return repository.findByPriceLessThanAndIsShownOrderByPriceAsc(price, true, pageable);
     }
 
+
+    @Async
+    public void notifyRestock(String product_id){
+        //TODO implement subscription restock notification
+    }
+
+    @Async
+    public CompletableFuture<Product> saveProductAsync(Product product) {
+        return CompletableFuture.completedFuture(repository.save(product));
+    }
+
+    private String getAuthenticatedUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails)principal).getUsername();
+        } else {
+            return principal.toString();
+        }
+    }
 }

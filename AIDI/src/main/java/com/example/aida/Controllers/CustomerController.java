@@ -40,4 +40,8 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.updateSettings(settings));
     }
 
+    @GetMapping("/subscribe/{product_id}")
+    public ResponseEntity<Customer> subscribe(@PathVariable String product_id){
+        return ResponseEntity.ok(customerService.subscribe(product_id));
+    }
 }
