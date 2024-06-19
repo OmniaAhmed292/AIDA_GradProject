@@ -9,6 +9,8 @@ import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.service.ProductService.ProductService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -33,8 +35,9 @@ public class OrderService {
         return orders.isEmpty() ? null : orders;
     }
 
-    public List<Order> getOrdersByUser(String userId) {
-        List<Order> orders = orderRepository.findByCustomer(userId);
+    public List<Order> getOrdersByUser(String userId, int page) {
+        Pageable pageable = PageRequest.of(page-1, 10);
+        List<Order> orders = orderRepository.findByCustomer(userId, pageable);
         return orders.isEmpty() ? null : orders;
     }
 
@@ -44,9 +47,10 @@ public class OrderService {
         //Update products because of orderitems
         order.setCreatedAt(LocalDateTime.now());
         for (OrderItem orderItem : order.getOrderItems()) {
-            Product product = productRepository.findById(orderItem.getProduct().get_id()).get();
+            Product product = productRepository.findById(orderItem.getProductId()).get();
             //order.setCustomer(customerRepository.findById(order.getCustomer().get_id()).get());
-            orderItem.setProduct(product);
+            orderItem.setProductId(product.get_id());
+            orderItem.setVendorId(product.getVendorId());
             System.out.println(product);
             //Product product = orderItem.getProduct();
             int orderedQuantity = orderItem.getQuantity();

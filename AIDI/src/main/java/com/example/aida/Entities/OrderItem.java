@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 
 @Setter
@@ -37,6 +38,9 @@ public class OrderItem {
     private Double discountPrice;
 
     @DBRef
-    @Field(name = "product_id")
-    private Product product;
+    @Field(name = "product_id", targetType = FieldType.OBJECT_ID)
+    private String productId;
+
+    @Field(name = "vendor_id", targetType = FieldType.OBJECT_ID)
+    private String vendorId;
 }

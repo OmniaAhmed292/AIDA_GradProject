@@ -36,9 +36,9 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable(name = "userId") String userId){
-        List<Order> orders = orderService.getOrdersByUser(userId);
+    @GetMapping("/user/{userId}/{page}")
+    public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable(name = "userId") String userId, @PathVariable(name = "page") int page){
+        List<Order> orders = orderService.getOrdersByUser(userId, page);
         if (orders != null) {
             return ResponseEntity.ok(orders);
         } else {

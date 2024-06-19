@@ -480,6 +480,7 @@ db.createCollection("orders", {
                         properties: {
                             item_id: { bsonType: "objectId" },
                             product_id: { bsonType: "objectId" }, // References products collection (FK)
+                            vendorId: { bsonType: "objectId" },
                             quantity: { bsonType: "int", minimum: 1 },
                             Status: { bsonType: "string", enum: ["pending", "shipped", "delivered"] },
                             Taxes: { bsonType: "double", minimum: 0.0 },

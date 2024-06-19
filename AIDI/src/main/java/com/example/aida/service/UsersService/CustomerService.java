@@ -46,6 +46,7 @@ public class CustomerService {
         Customer customer = getCustomerInfo();
         if (customer != null) {
             customer.setCards(cards);
+            customerRepository.save(customer);
         }
         return customer;
     }
@@ -54,6 +55,7 @@ public class CustomerService {
         Customer customer = getCustomerInfo();
         if (customer != null) {
             customer.setCustomerSettings(settings);
+            customerRepository.save(customer);
         }
         return customer;
     }
