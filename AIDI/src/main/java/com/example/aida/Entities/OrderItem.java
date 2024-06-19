@@ -38,7 +38,7 @@ public class OrderItem {
     @Field(name = "Discount_price")
     private Double discountPrice;
 
-    @DBRef
+
     @Field(name = "product_id", targetType = FieldType.OBJECT_ID)
     private String productId;
 

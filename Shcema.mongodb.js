@@ -476,11 +476,11 @@ db.createCollection("orders", {
                     bsonType: "array",
                     items: {
                         bsonType: "object",
-                        required: ["item_id", "product_id", "quantity", "Status", "Taxes", "Product_price", "Discount_price"],
+                        required: ["_id", "vendor_id" ,"product_id", "quantity", "Status", "Taxes", "Product_price", "Discount_price"],
                         properties: {
-                            item_id: { bsonType: "objectId" },
+                            _id: { bsonType: "objectId" },
                             product_id: { bsonType: "objectId" }, // References products collection (FK)
-                            vendorId: { bsonType: "objectId" },
+                            vendor_id: { bsonType: "objectId" },
                             quantity: { bsonType: "int", minimum: 1 },
                             Status: { bsonType: "string", enum: ["pending", "shipped", "delivered"] },
                             Taxes: { bsonType: "double", minimum: 0.0 },
