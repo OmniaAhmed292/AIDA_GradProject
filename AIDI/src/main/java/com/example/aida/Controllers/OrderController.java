@@ -46,6 +46,16 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/vendor/{page}")
+    public ResponseEntity<List<Order>> getOrdersByVendor(@PathVariable(name = "page") int page){
+        List<Order> orders = orderService.getOrdersByVendor(page);
+        if (orders != null) {
+            return ResponseEntity.ok(orders);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/create")
     public ResponseEntity<Order> createOrder(@RequestBody Order order){
         Order createdOrder = orderService.createOrder(order);

@@ -4,6 +4,7 @@ import com.example.aida.Entities.*;
 import com.example.aida.Enums.SubscriptionStatus;
 import com.example.aida.Repositories.CustomerRepository;
 import com.example.aida.Repositories.ProductRepository;
+import com.example.aida.auth.Authorization;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,13 +28,13 @@ public class CustomerService {
     @Autowired
     private ProductRepository productRepository;
 
-    public Customer getCustomerInfo(){
-        String username = getAuthenticatedUsername();
-        return customerRepository.findByEmail(username);
-    }
+    @Autowired
+    private Authorization authorization;
+
+
 
     public Customer updateInfo(Address address, String phone){
-        Customer customer = getCustomerInfo();
+        Customer customer = authorization.getCustomerInfo();
         if (customer != null) {
             customer.setAddress(address);
             customer.setPhoneNumber(phone);
@@ -43,7 +44,7 @@ public class CustomerService {
     }
 
     public Customer updateCards(Set<Card> cards){
-        Customer customer = getCustomerInfo();
+        Customer customer = authorization.getCustomerInfo();
         if (customer != null) {
             customer.setCards(cards);
             customerRepository.save(customer);
@@ -52,7 +53,7 @@ public class CustomerService {
     }
 
     public Customer updateSettings(CustomerSettings settings){
-        Customer customer = getCustomerInfo();
+        Customer customer = authorization.getCustomerInfo();
         if (customer != null) {
             customer.setCustomerSettings(settings);
             customerRepository.save(customer);
@@ -65,7 +66,7 @@ public class CustomerService {
         if(product == null ){
             return null;
         }
-        Customer customer = getCustomerInfo();
+        Customer customer = authorization.getCustomerInfo();
         if (customer != null && product.getAllowSubscription()) {
             Subscription subscription = Subscription.builder()
                     .product_id(product_id).build();
@@ -92,13 +93,8 @@ public class CustomerService {
         return customer;
     }
 
-    private String getAuthenticatedUsername() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            return ((UserDetails)principal).getUsername();
-        } else {
-            return principal.toString();
-        }
+    public Customer getCustomerInfo(){
+        return authorization.getCustomerInfo();
     }
 
     @Async

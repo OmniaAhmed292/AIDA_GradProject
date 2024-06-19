@@ -9,9 +9,11 @@ import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.Repositories.ProductRepositoryImpl;
 import com.example.aida.Repositories.TagRepository;
 import com.example.aida.Repositories.VendorRepository;
+import com.example.aida.auth.Authorization;
 import com.mongodb.lang.NonNull;
 import com.mongodb.lang.Nullable;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +35,9 @@ public class ProductService {
     private final ProductRepository repository;
     private final TagRepository tagRepository;
     private final VendorRepository vendorRepository;
+
+    @Autowired
+    private Authorization authorization;
 
     @Value("#{systemProperties['QUERY_LIMIT']}")
     private int QUERY_LIMIT;
@@ -64,8 +69,7 @@ public class ProductService {
     @Nullable
     public Product getProductById(@NonNull String id, Boolean isVendor){
         if(isVendor) {
-            String username = getAuthenticatedUsername();
-            Vendor vendor = vendorRepository.findByEmail(username);
+            Vendor vendor = authorization.getVendorInfo();
             Product product = repository.findById(id).orElse(null);
 
             if(product == null || vendor == null || !product.getVendorId().equals(vendor.getId())){
@@ -83,8 +87,7 @@ public class ProductService {
 
     public Product save(Product product) {
 
-        String username = getAuthenticatedUsername();
-        Vendor vendor = vendorRepository.findByEmail(username);
+        Vendor vendor = authorization.getVendorInfo();
         if(product.get_id() == null){ //this is a create operation
             product.setVendorId(vendor.getId());
             product.setIsShown(true);
@@ -195,12 +198,4 @@ public class ProductService {
         return CompletableFuture.completedFuture(repository.save(product));
     }
 
-    private String getAuthenticatedUsername() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            return ((UserDetails)principal).getUsername();
-        } else {
-            return principal.toString();
-        }
-    }
 }

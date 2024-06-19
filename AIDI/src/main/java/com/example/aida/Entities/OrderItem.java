@@ -1,5 +1,6 @@
 package com.example.aida.Entities;
 
+import com.example.aida.Enums.OrderStatus;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
@@ -26,7 +27,7 @@ public class OrderItem {
 
     @Field(name = "Status")
     @NotNull
-    private String status;
+    private OrderStatus status;
 
     @Field(name = "Taxes")
     private Double taxes;
