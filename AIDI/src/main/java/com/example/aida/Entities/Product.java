@@ -65,6 +65,10 @@ public class Product {
     // flags
     //--------------------
 
+    @Field(name = "allowSubscription")
+    @NotNull
+    private Boolean allowSubscription;
+
     @Field(name = "isUsed")
     @NotNull
     private Boolean isUsed;
@@ -92,6 +96,22 @@ public class Product {
 
     @Field(name="deleted_at")
     private LocalDateTime deletedAt;
+
+    //--------------------
+    // statistics
+    //--------------------
+
+    @Field(name = "views")
+    @NotNull
+    private Integer views = 0;
+
+    @Field(name = "sales")
+    @NotNull
+    private Integer sales = 0;
+
+    @Field(name = "subscribers")
+    @NotNull
+    private Integer subscribers = 0;
 
     @Embedded
     @Field(name = "images")

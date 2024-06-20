@@ -7,6 +7,7 @@ import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,7 +42,7 @@ public class Order {
     private List<OrderItem> orderItems; // Embedded array of OrderItem
 
 
-    @Field(name = "customer_id")
+    @Field(name = "customer_id", targetType = FieldType.OBJECT_ID)
     private String customer;
 
     @Field(name = "percentage_discount")

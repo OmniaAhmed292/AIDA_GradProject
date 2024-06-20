@@ -1,11 +1,13 @@
 package com.example.aida.Entities;
 
+import com.example.aida.Enums.OrderStatus;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.data.mongodb.core.mapping.FieldType;
 
 
 @Setter
@@ -25,7 +27,7 @@ public class OrderItem {
 
     @Field(name = "Status")
     @NotNull
-    private String status;
+    private OrderStatus status;
 
     @Field(name = "Taxes")
     private Double taxes;
@@ -36,7 +38,10 @@ public class OrderItem {
     @Field(name = "Discount_price")
     private Double discountPrice;
 
-    @DBRef
-    @Field(name = "product_id")
-    private Product product;
+
+    @Field(name = "product_id", targetType = FieldType.OBJECT_ID)
+    private String productId;
+
+    @Field(name = "vendor_id", targetType = FieldType.OBJECT_ID)
+    private String vendorId;
 }

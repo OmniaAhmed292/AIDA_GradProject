@@ -5,6 +5,7 @@ import com.example.aida.Entities.Card;
 import com.example.aida.Entities.Vendor;
 import com.example.aida.Entities.VendorSettings;
 import com.example.aida.Repositories.VendorRepository;
+import com.example.aida.auth.Authorization;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -19,13 +20,12 @@ public class VendorService {
     @Autowired
     private VendorRepository vendorRepository;
 
-    public Vendor getVendorInfo(){
-        String username = getAuthenticatedUsername();
-        return vendorRepository.findByEmail(username);
-    }
+    @Autowired
+    private Authorization authorization;
+
 
     public Vendor updateStoreInfo(String phoneNumber, Address address, String storeName){
-        Vendor vendor = getVendorInfo();
+        Vendor vendor = authorization.getVendorInfo();
         if (vendor != null) {
             vendor.setPhoneNumber(phoneNumber);
             vendor.setAddress(address);
@@ -36,7 +36,7 @@ public class VendorService {
     }
 
     public Vendor updateCards(Set<Card> cards){
-        Vendor vendor = getVendorInfo();
+        Vendor vendor = authorization.getVendorInfo();
         if (vendor != null) {
             vendor.setCards(cards);
             vendorRepository.save(vendor);
@@ -45,7 +45,7 @@ public class VendorService {
     }
 
     public Vendor updateSettings(VendorSettings settings){
-        Vendor vendor = getVendorInfo();
+        Vendor vendor = authorization.getVendorInfo();
         if (vendor != null) {
             vendor.setSettings(settings);
             vendorRepository.save(vendor);
@@ -53,12 +53,8 @@ public class VendorService {
         return vendor;
     }
 
-    private String getAuthenticatedUsername() {
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        if (principal instanceof UserDetails) {
-            return ((UserDetails)principal).getUsername();
-        } else {
-            return principal.toString();
-        }
+    public Vendor getVendorInfo(){
+        return authorization.getVendorInfo();
     }
+
 }

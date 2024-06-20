@@ -18,8 +18,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Order>> getOrders(){
-        List <Order> orders = orderService.getAllOrders();
+    public ResponseEntity<List<Order>> getOrders() {
+        List<Order> orders = orderService.getAllOrders();
         if (orders != null) {
             return ResponseEntity.ok(orders);
         } else {
@@ -29,18 +29,39 @@ public class OrderController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable(name = "id") String id){
+    public ResponseEntity<Order> getOrderById(@PathVariable(name = "id") String id) {
         Order order = orderService.getOrderById(id);
         if (order != null) {
             return ResponseEntity.ok(order);
         } else {
             return ResponseEntity.notFound().build();
         }
+
     }
 
     @GetMapping("/user")
-    public ResponseEntity<List<Order>> getOrdersByUser(){
+    public ResponseEntity<List<Order>> getOrdersByUserAuth(){
         List<Order> orders = orderService.getOrdersByUser();
+        if (orders != null) {
+            return ResponseEntity.ok(orders);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/user/{userId}/{page}")
+    public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable(name = "userId") String userId, @PathVariable(name = "page") int page){
+        List<Order> orders = orderService.getOrdersByUserP(userId, page);
+        if (orders != null) {
+            return ResponseEntity.ok(orders);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/vendor/{page}")
+    public ResponseEntity<List<Order>> getOrdersByVendor(@PathVariable(name = "page") int page){
+        List<Order> orders = orderService.getOrdersByVendor(page);
         if (orders != null) {
             return ResponseEntity.ok(orders);
         } else {

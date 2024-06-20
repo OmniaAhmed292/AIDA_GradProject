@@ -12,6 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -81,10 +82,14 @@ public class Customer {
 
     @Field(name = "cards")
     @Embedded
-    private Set<Card> cards;
+    private Set<Card> cards = new HashSet<>();
 
     @Field(name = "image")
     @Embedded
     private Image image;
+
+    @Field(name = "subscriptions")
+    @Embedded
+    private Set<Subscription> subscriptions = new HashSet<>();
 
 }

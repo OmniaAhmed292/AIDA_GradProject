@@ -37,10 +37,15 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     public List<Product> findByIsShownOrderByCreatedAtDesc(Boolean isShown, Pageable pageable);
 
     //get products for prices under a certain price
-    public List<Product> findByPriceLessThanAndIsShownOrderByPriceAsc(BigDecimal price, Boolean isShown, Pageable pageable);
+    public List<Product> findByPriceLessThanAndIsShownOrderByPriceAsc(Double price, Boolean isShown, Pageable pageable);
 
     //TODO: get recommended products
 
+    // get top selling 3 product
+    public List<Product> findTop3ByIsShownOrderBySalesDesc(Boolean isShown, Pageable pageable);
+
+    // out of stock products
+    public List<Product> findByQuantityLessThanAndIsShownOrderBySubscribersDesc(int quantity, Boolean isShown, Pageable pageable);
     }
 
 
