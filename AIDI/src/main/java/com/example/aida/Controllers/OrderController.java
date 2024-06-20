@@ -1,7 +1,9 @@
 package com.example.aida.Controllers;
 
+import com.example.aida.Entities.Customer;
 import com.example.aida.Entities.Order;
 import com.example.aida.service.OrderService.OrderService;
+import com.example.aida.service.UsersService.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,9 +38,9 @@ public class OrderController {
         }
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable(name = "userId") String userId){
-        List<Order> orders = orderService.getOrdersByUser(userId);
+    @GetMapping("/user")
+    public ResponseEntity<List<Order>> getOrdersByUser(){
+        List<Order> orders = orderService.getOrdersByUser();
         if (orders != null) {
             return ResponseEntity.ok(orders);
         } else {

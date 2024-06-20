@@ -1,5 +1,6 @@
 package com.example.aida.service.OrderService;
 
+import com.example.aida.Entities.Customer;
 import com.example.aida.Entities.Order;
 import com.example.aida.Entities.OrderItem;
 import com.example.aida.Entities.Product;
@@ -7,8 +8,11 @@ import com.example.aida.Repositories.CustomerRepository;
 import com.example.aida.Repositories.OrderRepository;
 import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.service.ProductService.ProductService;
+import com.example.aida.service.UsersService.CustomerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -24,6 +28,15 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
 
+    private String getAuthenticatedUsername() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof UserDetails) {
+            return ((UserDetails)principal).getUsername();
+        } else {
+            return principal.toString();
+        }
+    }
+
     public Order getOrderById(String id) {
         Optional<Order> orderOptional = orderRepository.findById(id);
         return orderOptional.orElse(null);
@@ -33,8 +46,10 @@ public class OrderService {
         return orders.isEmpty() ? null : orders;
     }
 
-    public List<Order> getOrdersByUser(String userId) {
-        List<Order> orders = orderRepository.findByCustomer(userId);
+    public List<Order> getOrdersByUser() {
+        String username = getAuthenticatedUsername();
+        Customer customer = customerRepository.findByEmail(username);
+        List<Order> orders = orderRepository.findByCustomer(customer.getId());
         return orders.isEmpty() ? null : orders;
     }
 
