@@ -46,8 +46,18 @@ public class ProductController {
     }
     @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable(name = "id") String id){
-        return ResponseEntity.ok(productService.getProductById(id));
+        Product product = productService.getProductById(id, false);
+        product.setSales(0);
+        product.setSubscribers(0);
+        product.setViews(0);
+        return ResponseEntity.ok(product);
     }
+
+    @GetMapping("/{id}/vendor-view")
+    public ResponseEntity<Product> getProductByIdVendorView(@PathVariable(name = "id") String id){
+        return ResponseEntity.ok(productService.getProductById(id, true));
+    }
+
     @GetMapping("/{category}/{page}")
     public ResponseEntity<List<Product>> getProductByCategory(@PathVariable(name = "category") String category,
                                                               @PathVariable(name = "page") int page){
