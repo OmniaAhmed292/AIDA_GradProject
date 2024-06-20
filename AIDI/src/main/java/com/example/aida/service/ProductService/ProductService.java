@@ -1,6 +1,5 @@
 package com.example.aida.service.ProductService;
 
-import com.example.aida.Entities.Customer;
 import com.example.aida.Entities.Product;
 import com.example.aida.Entities.Tag;
 import com.example.aida.Entities.Vendor;
@@ -18,11 +17,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,6 +32,7 @@ public class ProductService {
     private final ProductRepository repository;
     private final TagRepository tagRepository;
     private final VendorRepository vendorRepository;
+
 
     @Autowired
     private Authorization authorization;
@@ -85,7 +83,7 @@ public class ProductService {
     }
 
 
-    public Product save(Product product) {
+    public Product save(Product product) throws IOException {
 
         Vendor vendor = authorization.getVendorInfo();
         if(product.get_id() == null){ //this is a create operation
@@ -106,8 +104,16 @@ public class ProductService {
                 return null;
             }
 
-            oldProduct.setProductName(product.getProductName());
 
+            //save the image
+//            Set<ProductImage> images = oldProduct.getImages();
+//            //String imageUrl = imageUploadService.uploadImage(file);
+//            ProductImage productImage = new ProductImage();
+//            productImage.setFilePath(imageUrl);
+//            images.add(productImage);
+
+
+            oldProduct.setProductName(product.getProductName());
             oldProduct.setDescription(product.getDescription());
             oldProduct.setPrice(product.getPrice());
             oldProduct.setTaxes(product.getTaxes());

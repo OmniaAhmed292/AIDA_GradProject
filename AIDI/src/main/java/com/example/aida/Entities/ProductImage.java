@@ -21,4 +21,5 @@ public class ProductImage {
 
     @Field("imageDescription")
     private String Description;
+
 }

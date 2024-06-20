@@ -2,12 +2,17 @@ package com.example.aida.Controllers;
 
 import com.example.aida.Entities.Product;
 import com.example.aida.Entities.Tag;
+import com.example.aida.service.ProductService.FileProcessingService;
+import com.example.aida.service.ProductService.ProductSearchRequest;
+import com.example.aida.service.ProductService.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.example.aida.service.ProductService.ProductService;
-import com.example.aida.service.ProductService.ProductSearchRequest;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -15,7 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
-
+    private final FileProcessingService fileProcessingService;
     //---------------------------------Tag---------------------------------
     @GetMapping("/tags")
     public ResponseEntity<List<Tag>> getAllTags(){
@@ -32,9 +37,25 @@ public class ProductController {
 
     //---------------------------------Product---------------------------------
     @PostMapping
-    public ResponseEntity<Product> saveProduct(@RequestBody Product product){
+    public ResponseEntity<Product> saveProduct(@RequestBody Product product)throws IOException {
         return ResponseEntity.ok(productService.save(product));
     }
+    @PostMapping("/fileSystem")
+    public String uploadFile(@RequestBody MultipartFile file) {
+        String status = fileProcessingService.uploadFile(file);
+        return status;
+        //return "CREATED".equals(status) ? new ResponseEntity<>(HttpStatus.CREATED) : ("EXIST".equals(status) ? new ResponseEntity<>(HttpStatus.NOT_MODIFIED) : new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+    }
+
+    @GetMapping("/fileSystem/{fileName}")
+    public ResponseEntity<?> downloadImageFromFileSystem(@PathVariable String fileName) throws IOException {
+        byte[] imageData= fileProcessingService.downloadImageFromFileSystem(fileName);
+        return ResponseEntity.status(HttpStatus.OK)
+                .contentType(MediaType.valueOf("image/png"))
+                .body(imageData);
+
+    }
+
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts(){
         return ResponseEntity.ok(productService.findAll());
