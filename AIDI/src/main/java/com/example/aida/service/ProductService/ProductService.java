@@ -1,6 +1,7 @@
 package com.example.aida.service.ProductService;
 
 import com.example.aida.Entities.Product;
+import com.example.aida.Entities.ProductImage;
 import com.example.aida.Entities.Tag;
 import com.example.aida.Entities.Vendor;
 import com.example.aida.Enums.SortFeild;
@@ -18,11 +19,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -32,7 +35,7 @@ public class ProductService {
     private final ProductRepository repository;
     private final TagRepository tagRepository;
     private final VendorRepository vendorRepository;
-
+    private final FileProcessingServiceImpl imageUploadService;
 
     @Autowired
     private Authorization authorization;
@@ -82,7 +85,19 @@ public class ProductService {
         return product;
     }
 
-
+    public String saveProductImage(String productId, MultipartFile file) {
+        Product product = repository.findById(productId).orElse(null);
+        if (product == null) {
+            throw new RuntimeException("Product not found with id: " + productId);
+        }
+        String imageUrl = imageUploadService.uploadFile(file);
+            Set<ProductImage> images = product.getImages();
+            ProductImage productImage = new ProductImage();
+            productImage.setFilePath(imageUrl);
+            images.add(productImage);
+            repository.save(product);
+            return imageUrl;
+    }
     public Product save(Product product) throws IOException {
 
         Vendor vendor = authorization.getVendorInfo();
@@ -105,12 +120,7 @@ public class ProductService {
             }
 
 
-            //save the image
-//            Set<ProductImage> images = oldProduct.getImages();
-//            //String imageUrl = imageUploadService.uploadImage(file);
-//            ProductImage productImage = new ProductImage();
-//            productImage.setFilePath(imageUrl);
-//            images.add(productImage);
+
 
 
             oldProduct.setProductName(product.getProductName());

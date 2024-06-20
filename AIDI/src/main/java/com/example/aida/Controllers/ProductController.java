@@ -46,6 +46,12 @@ public class ProductController {
         return status;
         //return "CREATED".equals(status) ? new ResponseEntity<>(HttpStatus.CREATED) : ("EXIST".equals(status) ? new ResponseEntity<>(HttpStatus.NOT_MODIFIED) : new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
+    @PostMapping("/fileSystem/{productId}")
+    public String uploadImage(@PathVariable String productId,@RequestBody MultipartFile file) {
+        String status = productService.saveProductImage(productId, file);
+        return status;
+        //return "CREATED".equals(status) ? new ResponseEntity<>(HttpStatus.CREATED) : ("EXIST".equals(status) ? new ResponseEntity<>(HttpStatus.NOT_MODIFIED) : new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+    }
 
     @GetMapping("/fileSystem/{fileName}")
     public ResponseEntity<?> downloadImageFromFileSystem(@PathVariable String fileName) throws IOException {
