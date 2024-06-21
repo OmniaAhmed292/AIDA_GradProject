@@ -15,6 +15,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -128,12 +129,16 @@ public class Product {
     @Field(name = "specifications")
     private Set<Specification> specifications = new HashSet<>();
 
-    @Field(name = "reviews")
-    private Set<Reviews> reviews = new HashSet<>();
+//    @Field(name = "reviews")
+//    private Set<Reviews> reviews = new HashSet<>();
 
     @Field(name = "vendor_id", targetType = FieldType.OBJECT_ID)
     @Indexed(unique = false)
     private String vendorId;
+
+    @Embedded
+    @Field(name="reviews")
+    private List<Reviews> reviewsList;
 
 
     @Transient
