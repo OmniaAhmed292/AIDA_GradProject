@@ -1,5 +1,3 @@
-//CREATE AND USE DATABASE AIDA
-db.users.createIndex({ email: 1 })
 use AIDA;
 db.createCollection("users", {
     validator: {
@@ -20,13 +18,13 @@ db.createCollection("users", {
                 is_account_locked: { bsonType: "bool" },
 
                 confirmation_tokens: {
-                        bsonType: "object",
-                        properties: {
-                            token: { bsonType: "string" },
-                            creation_date: { bsonType: "date" },
-                            expiration_date: { bsonType: "date" },
-                            confirmed_date: { bsonType: "date" }
-                        }
+                    bsonType: "object",
+                    properties: {
+                        token: { bsonType: "string" },
+                        creation_date: { bsonType: "date" },
+                        expiration_date: { bsonType: "date" },
+                        confirmed_date: { bsonType: "date" }
+                    }
 
                 }
             }
@@ -319,7 +317,6 @@ db.createCollection("tags", {
     },
 });
 
-
 db.createCollection("products", {
     validator: {
         $jsonSchema: {
@@ -379,7 +376,7 @@ db.createCollection("products", {
                     items: {
                         bsonType: "object",
                         properties: {
-                            tagId: { bsonType: "string"}, // Reference to tags collection
+                            tagId: { bsonType: "objectId"}, // Reference to tags collection
                             tagName: { bsonType: "string", maxLength: 50 }, // Name of the tag
                         },
                     },
@@ -405,7 +402,7 @@ db.createCollection("products", {
                         bsonType: "object",
                         required: ["customer_id", "body", "rate", "created_at"],
                         properties: {
-                            customer_id: { bsonType: "objectId" },
+                            customer_id: { bsonType: "string" },
                             body: { bsonType: "string" },
                             rate: { bsonType: "int", minimum: 1, maximum: 5 },
                             created_at: { bsonType: "date" },
@@ -451,8 +448,6 @@ db.createCollection("products", {
         },
     },
 });
-
-
 //Order with order-items embedded
 db.createCollection("orders", {
     validator: {
@@ -497,7 +492,7 @@ db.createCollection("orders", {
                     bsonType: "array",
                     items: {
                         bsonType: "object",
-                        required: ["_id", "vendor_id" ,"product_id", "quantity", "Status", "Taxes", "Product_price", "Discount_price"],
+                        required: ["vendor_id" ,"product_id", "quantity", "Status", "Product_price"],
                         properties: {
                             _id: { bsonType: "objectId" },
                             product_id: { bsonType: "objectId" }, // References products collection (FK)
