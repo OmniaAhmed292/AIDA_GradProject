@@ -103,16 +103,20 @@ public class ProductService {
     public Product save(Product product, Boolean isVendor) throws IOException {
         if(isVendor) { //if vendor check if the product belongs to the vendor
             Vendor vendor = authorization.getVendorInfo();
-          if(product.get_id() == null) { //this is a create operation
+
+            if(product.get_id() == null) { //this is a create operation
                 product.setVendorId(vendor.getId());
                 product.setIsShown(true);
                 product.setSubscribers(0);
                 product.setViews(0);
                 product.setSales(0);
                 product.setRevenue(0.0);
-          if (product.getQuantity() != 0){
+
+                if (product.getQuantity() != 0)
                     product.setTimeSinceRestocking(LocalDate.now());
-            return repository.save(product); }
+
+                return repository.save(product);
+            }
             else {
                 //this is an update operation
                 Product oldProduct = repository.findById(product.get_id()).orElse(null);
@@ -144,13 +148,13 @@ public class ProductService {
             }
         }
         else { //this is an update operation
-                      //save the image
+            //save the image
 //            Set<ProductImage> images = oldProduct.getImages();
 //            //String imageUrl = imageUploadService.uploadImage(file);
 //            ProductImage productImage = new ProductImage();
 //            productImage.setFilePath(imageUrl);
 //            images.add(productImage);
-              return repository.save(product);
+            return repository.save(product);
         }
 
     }
