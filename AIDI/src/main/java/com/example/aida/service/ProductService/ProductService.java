@@ -167,6 +167,14 @@ public class ProductService {
         return repository.findAll();
     }
     public void deleteById(String id) {
+        Vendor vendor = authorization.getVendorInfo();
+        Product product = repository.findById(id).orElse(null);
+        if(product == null ){
+            throw new RuntimeException("Product not found in the database");
+        }
+        if (!Objects.equals(product.getVendorId(), vendor.getId())){
+            throw new RuntimeException("unauthorised deletion: vendor_id doesn't match");
+        }
         repository.deleteById(id);
     }
 
