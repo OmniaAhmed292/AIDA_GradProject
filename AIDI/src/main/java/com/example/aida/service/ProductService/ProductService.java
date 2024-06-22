@@ -1,6 +1,7 @@
 package com.example.aida.service.ProductService;
 
 import com.example.aida.Entities.Product;
+import com.example.aida.Entities.ProductImage;
 import com.example.aida.Entities.Tag;
 import com.example.aida.Entities.Vendor;
 import com.example.aida.Enums.SortFeild;
@@ -18,12 +19,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -33,7 +36,7 @@ public class ProductService {
     private final ProductRepository repository;
     private final TagRepository tagRepository;
     private final VendorRepository vendorRepository;
-
+    private final FileProcessingServiceImpl imageUploadService;
 
     @Autowired
     private Authorization authorization;
@@ -82,25 +85,34 @@ public class ProductService {
         saveProductAsync(product);
         return product;
     }
-
+  
+  public String saveProductImage(String productId, MultipartFile file) {
+        Product product = repository.findById(productId).orElse(null);
+        if (product == null) {
+            throw new RuntimeException("Product not found with id: " + productId);
+        }
+        String imageUrl = imageUploadService.uploadFile(file);
+            Set<ProductImage> images = product.getImages();
+            ProductImage productImage = new ProductImage();
+            productImage.setFilePath(imageUrl);
+            images.add(productImage);
+            repository.save(product);
+            return imageUrl;
+    }
 
     public Product save(Product product, Boolean isVendor) throws IOException {
         if(isVendor) { //if vendor check if the product belongs to the vendor
             Vendor vendor = authorization.getVendorInfo();
-
-            if(product.get_id() == null) { //this is a create operation
+          if(product.get_id() == null) { //this is a create operation
                 product.setVendorId(vendor.getId());
                 product.setIsShown(true);
                 product.setSubscribers(0);
                 product.setViews(0);
                 product.setSales(0);
                 product.setRevenue(0.0);
-
-                if (product.getQuantity() != 0)
+          if (product.getQuantity() != 0){
                     product.setTimeSinceRestocking(LocalDate.now());
-
-                return repository.save(product);
-            }
+            return repository.save(product); }
             else {
                 //this is an update operation
                 Product oldProduct = repository.findById(product.get_id()).orElse(null);
@@ -132,13 +144,13 @@ public class ProductService {
             }
         }
         else { //this is an update operation
-            //save the image
+                      //save the image
 //            Set<ProductImage> images = oldProduct.getImages();
 //            //String imageUrl = imageUploadService.uploadImage(file);
 //            ProductImage productImage = new ProductImage();
 //            productImage.setFilePath(imageUrl);
 //            images.add(productImage);
-            return repository.save(product);
+              return repository.save(product);
         }
 
     }

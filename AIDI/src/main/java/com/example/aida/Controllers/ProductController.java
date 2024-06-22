@@ -1,10 +1,12 @@
 package com.example.aida.Controllers;
 
 import com.example.aida.Entities.Product;
+import com.example.aida.Entities.Reviews;
 import com.example.aida.Entities.Tag;
 import com.example.aida.service.ProductService.FileProcessingService;
 import com.example.aida.service.ProductService.ProductSearchRequest;
 import com.example.aida.service.ProductService.ProductService;
+import com.example.aida.service.ReviewService.ReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -21,6 +23,7 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
     private final FileProcessingService fileProcessingService;
+    private final ReviewService reviewService;
     //---------------------------------Tag---------------------------------
     @GetMapping("/tags")
     public ResponseEntity<List<Tag>> getAllTags(){
@@ -46,7 +49,12 @@ public class ProductController {
         return status;
         //return "CREATED".equals(status) ? new ResponseEntity<>(HttpStatus.CREATED) : ("EXIST".equals(status) ? new ResponseEntity<>(HttpStatus.NOT_MODIFIED) : new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
     }
-
+    @PostMapping("/fileSystem/{productId}")
+    public String uploadImage(@PathVariable String productId,@RequestBody MultipartFile file) {
+        String status = productService.saveProductImage(productId, file);
+        return status;
+        //return "CREATED".equals(status) ? new ResponseEntity<>(HttpStatus.CREATED) : ("EXIST".equals(status) ? new ResponseEntity<>(HttpStatus.NOT_MODIFIED) : new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED));
+    }
     @GetMapping("/fileSystem/{fileName}")
     public ResponseEntity<?> downloadImageFromFileSystem(@PathVariable String fileName) throws IOException {
         byte[] imageData= fileProcessingService.downloadImageFromFileSystem(fileName);
@@ -120,6 +128,37 @@ public class ProductController {
     @GetMapping("/price-under/{page}")
     public ResponseEntity<List<Product>> getProductsForPricesUnder(@PathVariable(name = "page") int page){
         return ResponseEntity.ok(productService.getProductsUnderPrice(page));
+    }
+
+    @PostMapping("/{productId}/reviews")
+    public ResponseEntity<Reviews> createReview(
+            @PathVariable String productId,
+            @RequestBody Reviews review) {
+        Reviews createdReview = reviewService.createReview(productId, review);
+        return ResponseEntity.ok(createdReview);
+    }
+
+
+    @GetMapping("/{userId}/reviews")
+    public ResponseEntity<List<Reviews>> getReviewsByUserId(@PathVariable String userId) {
+        List<Reviews> reviews = reviewService.getReviewsByUserId(userId);
+        return ResponseEntity.ok(reviews);
+    }
+
+    @DeleteMapping("/{productId}/reviews/{reviewId}")
+    public ResponseEntity<Void> deleteReview(
+            @PathVariable String productId,
+            @PathVariable String reviewId) {
+        reviewService.deleteReview(productId, reviewId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/{productId}/reviews/{reviewId}")
+    public ResponseEntity<Reviews> getReviewById(
+            @PathVariable String productId,
+            @PathVariable String reviewId) {
+        Reviews review = reviewService.getReviewById(productId, reviewId);
+        return ResponseEntity.ok(review);
     }
 
 

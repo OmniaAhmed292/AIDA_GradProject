@@ -1,7 +1,9 @@
 package com.example.aida.Controllers;
 
+import com.example.aida.Entities.Customer;
 import com.example.aida.Entities.Order;
 import com.example.aida.service.OrderService.OrderService;
+import com.example.aida.service.UsersService.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +18,8 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<Order>> getOrders(){
-        List <Order> orders = orderService.getAllOrders();
+    public ResponseEntity<List<Order>> getOrders() {
+        List<Order> orders = orderService.getAllOrders();
         if (orders != null) {
             return ResponseEntity.ok(orders);
         } else {
@@ -27,10 +29,21 @@ public class OrderController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Order> getOrderById(@PathVariable(name = "id") String id){
+    public ResponseEntity<Order> getOrderById(@PathVariable(name = "id") String id) {
         Order order = orderService.getOrderById(id);
         if (order != null) {
             return ResponseEntity.ok(order);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+
+    }
+
+    @GetMapping("/user")
+    public ResponseEntity<List<Order>> getOrdersByUserAuth(){
+        List<Order> orders = orderService.getOrdersByUser();
+        if (orders != null) {
+            return ResponseEntity.ok(orders);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -38,7 +51,7 @@ public class OrderController {
 
     @GetMapping("/user/{userId}/{page}")
     public ResponseEntity<List<Order>> getOrdersByUser(@PathVariable(name = "userId") String userId, @PathVariable(name = "page") int page){
-        List<Order> orders = orderService.getOrdersByUser(userId, page);
+        List<Order> orders = orderService.getOrdersByUserP(userId, page);
         if (orders != null) {
             return ResponseEntity.ok(orders);
         } else {

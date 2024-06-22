@@ -32,10 +32,7 @@ public class FileProcessingServiceImpl implements FileProcessingService{
     @Override
     public String uploadFile(MultipartFile file) {
         // Find product by ID
-//        Product product = productRepository.findById(productId).orElse(null);
-//        if (product == null) {
-//            throw new RuntimeException("Product not found with id: " + productId);
-//        }
+
 
         // Check if the file is not empty
         if (file != null && !file.isEmpty()) {
@@ -68,4 +65,6 @@ public class FileProcessingServiceImpl implements FileProcessingService{
         byte[] images = Files.readAllBytes(new File(filePath).toPath());
         return images;
     }
+
+
 }

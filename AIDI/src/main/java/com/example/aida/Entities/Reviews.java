@@ -1,12 +1,13 @@
 package com.example.aida.Entities;
-import jakarta.persistence.*;
+
+import jakarta.persistence.Embeddable;
+import jakarta.persistence.Id;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Setter
@@ -16,6 +17,8 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Embeddable
 public class Reviews {
+    @Id
+    private String id;
     @Field("body")
     private String body;
     @Field("rate")

@@ -14,6 +14,7 @@ public interface OrderRepository extends MongoRepository<Order, String> {
 
     List<Order> findByCustomer(String CustomerId, Pageable pageable);
 
+    List<Order> findByCustomer(String CustomerId);
     @Query(value = "{'orderItems.vendorId': ?0}")
     List<Order> findByOrderItemsVendorId(String vendorId, Pageable pageable);
 

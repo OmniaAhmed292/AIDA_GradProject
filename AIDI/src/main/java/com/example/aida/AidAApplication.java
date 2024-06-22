@@ -2,17 +2,11 @@ package com.example.aida;
 
 
 import com.example.aida.Repositories.VendorRepository;
-import com.mongodb.client.MongoClient;
-import com.mongodb.client.MongoClients;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoDatabase;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.data.mongodb.config.EnableMongoAuditing;
-import org.bson.Document;
 import org.springframework.scheduling.annotation.EnableAsync;
 
 
@@ -38,12 +32,12 @@ public class AidAApplication {
             //------------------------------------------------------------------------
             //Database Clean initialiser
             // TODO: Delete before production
-            MongoClient mongoClient = MongoClients.create();
-            MongoDatabase database = mongoClient.getDatabase("AIDA");
-            for (String name : database.listCollectionNames()) {
-                MongoCollection<org.bson.Document> collection = database.getCollection(name);
-                collection.deleteMany(new Document());
-            }
+//            MongoClient mongoClient = MongoClients.create();
+//            MongoDatabase database = mongoClient.getDatabase("AIDA");
+//            for (String name : database.listCollectionNames()) {
+//                MongoCollection<org.bson.Document> collection = database.getCollection(name);
+//                collection.deleteMany(new Document());
+//            }
             //------------------------------------------------------------------------
         };
     }

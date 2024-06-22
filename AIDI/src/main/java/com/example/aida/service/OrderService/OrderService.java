@@ -1,5 +1,5 @@
 package com.example.aida.service.OrderService;
-
+import com.example.aida.Entities.Customer;
 import com.example.aida.Entities.Order;
 import com.example.aida.Entities.OrderItem;
 import com.example.aida.Entities.Product;
@@ -10,6 +10,7 @@ import com.example.aida.Repositories.OrderRepository;
 import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.auth.Authorization;
 import com.example.aida.service.ProductService.ProductService;
+import com.example.aida.service.UsersService.CustomerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.bson.codecs.ObjectIdGenerator;
@@ -35,8 +36,10 @@ public class OrderService {
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
 
+
     @Autowired
     private Authorization authorization;
+
 
     public Order getOrderById(String id) {
         Optional<Order> orderOptional = orderRepository.findById(id);
@@ -46,8 +49,15 @@ public class OrderService {
         List<Order> orders = orderRepository.findAll();
         return orders.isEmpty() ? null : orders;
     }
+    public List<Order> getOrdersByUser() {
+        String username = getAuthenticatedUsername();
+        Customer customer = customerRepository.findByEmail(username);
+        List<Order> orders = orderRepository.findByCustomer(customer.getId());
+        return orders.isEmpty() ? null : orders;
+    }
 
-    public List<Order> getOrdersByUser(String userId, int page) {
+
+    public List<Order> getOrdersByUserP(String userId, int page) {
         Pageable pageable = PageRequest.of(page-1, 10);
         List<Order> orders = orderRepository.findByCustomer(userId, pageable);
         return orders.isEmpty() ? null : orders;
@@ -118,7 +128,7 @@ public class OrderService {
         }
         // Save the order
 
-         orderRepository.save(order);
+        orderRepository.save(order);
 
         // Return the updated order
         return order;
