@@ -38,7 +38,7 @@ public class ProductController {
     //---------------------------------Product---------------------------------
     @PostMapping
     public ResponseEntity<Product> saveProduct(@RequestBody Product product)throws IOException {
-        return ResponseEntity.ok(productService.save(product));
+        return ResponseEntity.ok(productService.save(product, true));
     }
     @PostMapping("/fileSystem")
     public String uploadFile(@RequestBody MultipartFile file) {

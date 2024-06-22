@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 
 @Service
@@ -83,55 +84,63 @@ public class ProductService {
     }
 
 
-    public Product save(Product product) throws IOException {
+    public Product save(Product product, Boolean isVendor) throws IOException {
+        if(isVendor) { //if vendor check if the product belongs to the vendor
+            Vendor vendor = authorization.getVendorInfo();
 
-        Vendor vendor = authorization.getVendorInfo();
-        if(product.get_id() == null){ //this is a create operation
-            product.setVendorId(vendor.getId());
-            product.setIsShown(true);
-            product.setSubscribers(0);
-            product.setViews(0);
-            product.setSales(0);
+            if(product.get_id() == null) { //this is a create operation
+                product.setVendorId(vendor.getId());
+                product.setIsShown(true);
+                product.setSubscribers(0);
+                product.setViews(0);
+                product.setSales(0);
+                product.setRevenue(0.0);
 
-            if(product.getQuantity() !=0)
-                product.setTimeSinceRestocking(LocalDate.now());
+                if (product.getQuantity() != 0)
+                    product.setTimeSinceRestocking(LocalDate.now());
 
-            return repository.save(product);
-        }else{ //this is an update operation
-            Product oldProduct = repository.findById(product.get_id()).orElse(null);
-            //check if the product exists and belongs to the vendor
-            if(oldProduct == null || !oldProduct.getVendorId().equals(vendor.getId())){
-                return null;
+                return repository.save(product);
             }
+            else {
+                //this is an update operation
+                Product oldProduct = repository.findById(product.get_id()).orElse(null);
+                //check if the product exists and belongs to the vendor
+                if(oldProduct == null ){
+                    throw new RuntimeException("Product not found in the database");
+                } else if (!Objects.equals(oldProduct.getVendorId(), vendor.getId())){
+                    throw new RuntimeException("Product does not belong to the vendor");
+                }
 
+                oldProduct.setProductName(product.getProductName());
+                oldProduct.setDescription(product.getDescription());
+                oldProduct.setPrice(product.getPrice());
+                oldProduct.setTaxes(product.getTaxes());
+                oldProduct.setCategoryName(product.getCategoryName());
 
+                oldProduct.setAllowSubscription(product.getAllowSubscription());
+                oldProduct.setIsUsed(product.getIsUsed());
+                oldProduct.setSpecifications(product.getSpecifications());
+                oldProduct.setTags(product.getTags());
+                oldProduct.setDiscount(product.getDiscount());
+                //set time since restocking
+                if(product.getQuantity() > 0 && oldProduct.getQuantity() == 0) {
+                    oldProduct.setTimeSinceRestocking(LocalDate.now());
+                    notifyRestock(oldProduct.get_id());
+                }
+                oldProduct.setQuantity(product.getQuantity());
+                return repository.save(oldProduct);
+            }
+        }
+        else { //this is an update operation
             //save the image
 //            Set<ProductImage> images = oldProduct.getImages();
 //            //String imageUrl = imageUploadService.uploadImage(file);
 //            ProductImage productImage = new ProductImage();
 //            productImage.setFilePath(imageUrl);
 //            images.add(productImage);
-
-
-            oldProduct.setProductName(product.getProductName());
-            oldProduct.setDescription(product.getDescription());
-            oldProduct.setPrice(product.getPrice());
-            oldProduct.setTaxes(product.getTaxes());
-            oldProduct.setCategoryName(product.getCategoryName());
-
-            oldProduct.setAllowSubscription(product.getAllowSubscription());
-            oldProduct.setIsUsed(product.getIsUsed());
-            oldProduct.setSpecifications(product.getSpecifications());
-            oldProduct.setTags(product.getTags());
-            oldProduct.setDiscount(product.getDiscount());
-            //TODO time since restocking
-            if(product.getQuantity() > 0 && oldProduct.getQuantity() == 0) {
-                oldProduct.setTimeSinceRestocking(LocalDate.now());
-                notifyRestock(oldProduct.get_id());
-            }
-            oldProduct.setQuantity(product.getQuantity());
-            return repository.save(oldProduct);
+            return repository.save(product);
         }
+
     }
 
     public Product findById(String id) {
