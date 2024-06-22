@@ -379,7 +379,7 @@ db.createCollection("products", {
                     items: {
                         bsonType: "object",
                         properties: {
-                            tagId: { bsonType: "objectId"}, // Reference to tags collection
+                            tagId: { bsonType: "string"}, // Reference to tags collection
                             tagName: { bsonType: "string", maxLength: 50 }, // Name of the tag
                         },
                     },
@@ -413,9 +413,30 @@ db.createCollection("products", {
                         },
                     },
                 },
+                cart: {
+                    bsonType: "object",
+                    required: ["items", "totalPrice", "updatedAt"],
+                    properties: {
+                        items: {
+                            bsonType: "array",
+                            items: {
+                                bsonType: "object",
+                                required: ["productId", "name", "quantity", "price"],
+                                properties: {
+                                    productId: { bsonType: "objectId" },
+                                    name: { bsonType: "string" },
+                                    quantity: { bsonType: "int" },
+                                    price: { bsonType: "double" }
+                                },
+                            },
+                        },
+                        totalPrice: { bsonType: "double" },
+                        updatedAt: { bsonType: "date" }
+                    },
+                },
 
                 // Vendor and shelf information
-                vendorId: { bsonType: "objectId" },
+                vendorId: { bsonType: "string" },
 
                 // Product discount
                 discount: {
