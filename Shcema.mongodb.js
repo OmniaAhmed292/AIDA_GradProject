@@ -129,26 +129,20 @@ db.createCollection("customers", {
                 },
 
                 //cart
-                cart: {
-                    bsonType: "object",
-                    required: ["items", "totalPrice", "updatedAt"],
-                    properties: {
-                        items: {
-                            bsonType: "array",
-                            items: {
-                                bsonType: "object",
-                                required: ["productId", "name", "quantity", "price"],
-                                properties: {
-                                    productId: { bsonType: "objectId" },
-                                    name: { bsonType: "string" },
-                                    quantity: { bsonType: "int" },
-                                    price: { bsonType: "double" }
-                                },
-                            },
-                        },
-                        totalPrice: { bsonType: "double" },
-                        updatedAt: { bsonType: "date" }
-                    },
+                 cart: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        required: ["productId", "name", "quantity", "price", "totalPrice", "updatedAt"],
+                        properties: {
+                            productId: { bsonType: "objectId" },
+                            name: { bsonType: "string" },
+                            quantity: { bsonType: "int" },
+                            price: { bsonType: "double" },
+                            totalPrice: { bsonType: "double" },
+                            updatedAt: { bsonType: "date" }
+                        }
+                    }
                 },
             },
         },
