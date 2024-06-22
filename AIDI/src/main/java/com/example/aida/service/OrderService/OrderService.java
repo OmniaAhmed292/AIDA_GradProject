@@ -13,6 +13,7 @@ import com.example.aida.service.ProductService.ProductService;
 import com.example.aida.service.UsersService.CustomerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.bson.codecs.ObjectIdGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -20,6 +21,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -83,12 +85,26 @@ public class OrderService {
         //Update products because of orderitems
         order.setCreatedAt(LocalDateTime.now());
         for (OrderItem orderItem : order.getOrderItems()) {
-            Product product = productRepository.findById(orderItem.getProductId()).get();
+            Optional<Product> opProduct = productRepository.findById(orderItem.getProductId());
+            Product product;
+            product = opProduct.orElseThrow(() -> new RuntimeException("Product not found"));
             //order.setCustomer(customerRepository.findById(order.getCustomer().get_id()).get());
             orderItem.setProductId(product.get_id());
             orderItem.setVendorId(product.getVendorId());
-            System.out.println(product);
-            //Product product = orderItem.getProduct();
+            orderItem.setTaxes(product.getTaxes());
+
+            if(product.getDiscount() != null) {
+                orderItem.setDiscountPrice(product.getDiscount().getPercentage()*product.getPrice()/100);
+            }
+            else {
+                orderItem.setDiscountPrice(0.0);
+            }
+
+            // create mongodb id
+            ObjectIdGenerator objectIdGenerator = new ObjectIdGenerator();
+            String id = objectIdGenerator.generate().toString();
+            orderItem.set_id(id);
+
             int orderedQuantity = orderItem.getQuantity();
             int currentQuantity = product.getQuantity();
 
@@ -99,11 +115,16 @@ public class OrderService {
 
             // Update product quantity
             product.setQuantity(currentQuantity - orderedQuantity);
-            product.setSales(product.getSales() + orderedQuantity);
+
             // Update other product properties if needed
 
             // Save or update product
-            productService.save(product);
+            try {
+                productService.save(product, false);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to update product");
+            }
+
         }
         // Save the order
 
@@ -129,12 +150,38 @@ public class OrderService {
         Vendor vendor = authorization.getVendorInfo();
         Order order = orderRepository.findById(id).get();
         List<OrderItem> orderItems = order.getOrderItems();
+        OrderItem updatedOrderItem = null;
         for (OrderItem orderItem : orderItems) {
             if (orderItem.get_id().equals(itemId) && orderItem.getVendorId().equals(vendor.getId())) {
                 orderItem.setStatus(enumStatus);
+                updatedOrderItem = orderItem;
                 break;
             }
         }
+
+        if(updatedOrderItem == null) {
+            throw new RuntimeException("Order item not found");
+        }
+        //update product sales and revenues if status is delivered
+        if (enumStatus == OrderStatus.delivered) {
+            Optional<Product> product = productRepository.findById(updatedOrderItem.getProductId());
+            if (product.isEmpty()) {
+                throw new RuntimeException("Product not found");
+            }
+            else {
+                Product actualProduct = product.get();
+                Double discount = updatedOrderItem.getDiscountPrice();
+                if (discount != null) {
+                    Double profit = updatedOrderItem.getProductPrice() - discount;
+                    actualProduct.setRevenue(actualProduct.getRevenue() + profit);
+                }
+                else
+                    actualProduct.setRevenue(actualProduct.getRevenue());
+                actualProduct.setSales(actualProduct.getSales() + updatedOrderItem.getQuantity());
+                productService.saveProductAsync(actualProduct);
+            }
+        }
+
         return orderRepository.save(order);
     }
 

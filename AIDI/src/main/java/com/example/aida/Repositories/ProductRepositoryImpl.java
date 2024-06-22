@@ -90,5 +90,16 @@ public class ProductRepositoryImpl {
 
     }
 
+    // total sum of views of a vendor's products
+    public int sumViewsByVendorId(String vendorId){
+        Aggregation aggregation = Aggregation.newAggregation(
+                Aggregation.match(Criteria.where("vendorId").is(vendorId)),
+                Aggregation.group().sum("views").as("totalViews")
+        );
+
+        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "products", Document.class);
+
+        return results.getUniqueMappedResult().getInteger("totalViews");
+    }
 
 };

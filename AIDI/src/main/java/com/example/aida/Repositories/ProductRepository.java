@@ -42,10 +42,12 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     //TODO: get recommended products
 
     // get top selling 3 product
-    public List<Product> findTop3ByIsShownOrderBySalesDesc(Boolean isShown, Pageable pageable);
+    public List<Product> findTop3ByIsShownOrderBySalesDesc(Boolean isShown);
 
     // out of stock products
     public List<Product> findByQuantityLessThanAndIsShownOrderBySubscribersDesc(int quantity, Boolean isShown, Pageable pageable);
-    }
+
+
+}
 
 

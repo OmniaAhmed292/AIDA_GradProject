@@ -119,7 +119,7 @@ db.createCollection("customers", {
                     bsonType: "array",
                     items: {
                         bsonType: "object",
-                        required: ["vendor_id", "product_id", "created_at"],
+                        required: ["product_id", "created_at"],
                         properties: {
                             product_id: { bsonType: "objectId" },
                             created_at: { bsonType: "date" },
@@ -346,6 +346,12 @@ db.createCollection("products", {
                 taxes: { bsonType: "double", minimum: 0.0 },
                 categoryName: { bsonType: "string", maxLength: 50 },
 
+                // statistics
+                views: { bsonType: "int", minimum: 0 },
+                sales: { bsonType: "int", minimum: 0 },
+                subscribers: { bsonType: "int", minimum: 0 },
+                revenue: { bsonType: "double", minimum: 0.0 },
+
                 // Flags
                 allowSubscription: { bsonType: "bool" },
                 isInEvent: { bsonType: "bool" },
@@ -456,7 +462,7 @@ db.createCollection("orders", {
             required: [
                 "customer_id",
                 "shipment_price",
-                "order_date",
+                "created_at",
                 "address",
                 "order_items",
                 "card",

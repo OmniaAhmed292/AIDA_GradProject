@@ -110,6 +110,10 @@ public class Product {
     @NotNull
     private Integer sales = 0;
 
+    @Field(name = "revenue")
+    @NotNull
+    private Double revenue = 0.0;
+
     @Field(name = "subscribers")
     @NotNull
     private Integer subscribers = 0;

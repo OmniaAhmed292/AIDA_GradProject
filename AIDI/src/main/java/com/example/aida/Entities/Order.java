@@ -28,7 +28,7 @@ public class Order {
     @NotNull
     private Double shipmentPrice;
 
-    @Field(name = "order_date")
+    @Field(name = "created_at")
     @CreatedDate
     private LocalDateTime createdAt;
 
