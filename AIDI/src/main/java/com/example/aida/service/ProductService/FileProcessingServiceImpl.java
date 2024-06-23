@@ -41,7 +41,9 @@ public class FileProcessingServiceImpl implements FileProcessingService{
 
             try {
                 // Copy file to the target location (replace existing file with the same name)
-                Path targetLocation = Paths.get(basePath + fileName+"_"+System.currentTimeMillis()+".png");
+                String path=fileName+"_"+System.currentTimeMillis()+".png";
+                Path targetLocation = Paths.get(basePath+ path);
+
                 System.out.println(fileName);
                 Files.copy(file.getInputStream(), targetLocation, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 
@@ -50,7 +52,7 @@ public class FileProcessingServiceImpl implements FileProcessingService{
 
                 // Save updated product with image URL
                 //return productRepository.save(product);
-                return fileName;
+                return path;
             } catch (IOException ex) {
                 throw new RuntimeException("Failed to store file " + fileName, ex);
             }

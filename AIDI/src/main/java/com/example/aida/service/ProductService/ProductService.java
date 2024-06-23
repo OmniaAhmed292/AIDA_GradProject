@@ -94,7 +94,7 @@ public class ProductService {
         String imageUrl = imageUploadService.uploadFile(file);
             Set<ProductImage> images = product.getImages();
             ProductImage productImage = new ProductImage();
-            productImage.setFilePath(imageUrl+"_"+System.currentTimeMillis()+".png");
+            productImage.setFilePath(imageUrl);
             imageUrl = productImage.getFilePath();
             images.add(productImage);
             repository.save(product);
