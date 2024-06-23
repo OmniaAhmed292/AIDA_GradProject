@@ -41,6 +41,7 @@ public class ProductController {
     //---------------------------------Product---------------------------------
     @PostMapping
     public ResponseEntity<Product> saveProduct(@RequestBody Product product)throws IOException {
+        System.out.println(product);
         return ResponseEntity.ok(productService.save(product, true));
     }
     @PostMapping("/fileSystem")

@@ -41,7 +41,7 @@ public class FileProcessingServiceImpl implements FileProcessingService{
 
             try {
                 // Copy file to the target location (replace existing file with the same name)
-                Path targetLocation = Paths.get(basePath + fileName);
+                Path targetLocation = Paths.get(basePath + fileName+"_"+System.currentTimeMillis()+".png");
                 System.out.println(fileName);
                 Files.copy(file.getInputStream(), targetLocation, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
 

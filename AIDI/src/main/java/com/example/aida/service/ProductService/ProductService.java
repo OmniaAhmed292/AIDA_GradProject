@@ -94,13 +94,15 @@ public class ProductService {
         String imageUrl = imageUploadService.uploadFile(file);
             Set<ProductImage> images = product.getImages();
             ProductImage productImage = new ProductImage();
-            productImage.setFilePath(imageUrl);
+            productImage.setFilePath(imageUrl+"_"+System.currentTimeMillis()+".png");
+            imageUrl = productImage.getFilePath();
             images.add(productImage);
             repository.save(product);
             return imageUrl;
     }
 
     public Product save(Product product, Boolean isVendor) throws IOException {
+        System.out.println(product);
         if(isVendor) { //if vendor check if the product belongs to the vendor
             Vendor vendor = authorization.getVendorInfo();
 
