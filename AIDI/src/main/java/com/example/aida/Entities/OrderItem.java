@@ -5,7 +5,6 @@ import jakarta.persistence.Embeddable;
 import jakarta.persistence.Id;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.data.mongodb.core.mapping.FieldType;
 
@@ -19,7 +18,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 public class OrderItem {
 
     @Id
-    private String _id;
+    private String id;
     
     @Field(name = "quantity")
     @NotNull

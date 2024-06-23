@@ -14,6 +14,7 @@ import org.springframework.data.mongodb.core.mapping.FieldType;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -142,7 +143,7 @@ public class Product {
 
     @Embedded
     @Field(name="reviews")
-    private List<Reviews> reviewsList;
+    private List<Reviews> reviewsList = new ArrayList<>();
 
 
     @Transient

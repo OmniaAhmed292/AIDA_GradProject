@@ -1,16 +1,12 @@
 package com.example.aida.service.OrderService;
-import com.example.aida.Entities.Customer;
-import com.example.aida.Entities.Order;
-import com.example.aida.Entities.OrderItem;
-import com.example.aida.Entities.Product;
-import com.example.aida.Entities.Vendor;
+
+import com.example.aida.Entities.*;
 import com.example.aida.Enums.OrderStatus;
 import com.example.aida.Repositories.CustomerRepository;
 import com.example.aida.Repositories.OrderRepository;
 import com.example.aida.Repositories.ProductRepository;
 import com.example.aida.auth.Authorization;
 import com.example.aida.service.ProductService.ProductService;
-import com.example.aida.service.UsersService.CustomerService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.bson.codecs.ObjectIdGenerator;
@@ -103,7 +99,7 @@ public class OrderService {
             // create mongodb id
             ObjectIdGenerator objectIdGenerator = new ObjectIdGenerator();
             String id = objectIdGenerator.generate().toString();
-            orderItem.set_id(id);
+            orderItem.setId(id);
 
             int orderedQuantity = orderItem.getQuantity();
             int currentQuantity = product.getQuantity();
@@ -136,7 +132,7 @@ public class OrderService {
 
 
     public Order updateOrder(String id, Order order) {
-        order.set_id(id);
+        order.setId(id);
         return orderRepository.save(order);
     }
 
@@ -152,7 +148,7 @@ public class OrderService {
         List<OrderItem> orderItems = order.getOrderItems();
         OrderItem updatedOrderItem = null;
         for (OrderItem orderItem : orderItems) {
-            if (orderItem.get_id().equals(itemId) && orderItem.getVendorId().equals(vendor.getId())) {
+            if (orderItem.getId().equals(itemId) && orderItem.getVendorId().equals(vendor.getId())) {
                 orderItem.setStatus(enumStatus);
                 updatedOrderItem = orderItem;
                 break;

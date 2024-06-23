@@ -9,12 +9,9 @@ import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
@@ -101,5 +98,7 @@ public class CustomerService {
     public CompletableFuture<Product> saveProductAsync(Product product) {
         return CompletableFuture.completedFuture(productRepository.save(product));
     }
+
+
 
 }

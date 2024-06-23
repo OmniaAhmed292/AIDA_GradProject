@@ -1,13 +1,12 @@
 package com.example.aida.Controllers;
 
-import com.example.aida.Entities.Customer;
 import com.example.aida.Entities.Order;
 import com.example.aida.service.OrderService.OrderService;
-import com.example.aida.service.UsersService.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -70,7 +69,7 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Order> createOrder(@RequestBody Order order){
+    public ResponseEntity<Order> createOrder(@RequestBody Order order) throws IOException {
         Order createdOrder = orderService.createOrder(order);
         return ResponseEntity.ok(createdOrder);
     }

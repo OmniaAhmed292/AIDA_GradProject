@@ -12,7 +12,9 @@ import org.springframework.data.mongodb.core.mapping.Field;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 
@@ -91,5 +93,9 @@ public class Customer {
     @Field(name = "subscriptions")
     @Embedded
     private Set<Subscription> subscriptions = new HashSet<>();
+
+    @Field(name="cart")
+    @Embedded
+    private List<CartItem> cart = new ArrayList<>();
 
 }

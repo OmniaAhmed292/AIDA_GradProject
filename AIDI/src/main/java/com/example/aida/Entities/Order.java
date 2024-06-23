@@ -22,7 +22,7 @@ import java.util.List;
 public class Order {
 
     @Id
-    private String _id;
+    private String id;
 
     @Field(name = "shipment_price")
     @NotNull

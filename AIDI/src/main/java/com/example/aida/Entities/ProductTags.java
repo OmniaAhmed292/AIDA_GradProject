@@ -1,7 +1,6 @@
 package com.example.aida.Entities;
 
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

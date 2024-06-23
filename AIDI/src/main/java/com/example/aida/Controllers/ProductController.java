@@ -160,8 +160,4 @@ public class ProductController {
         Reviews review = reviewService.getReviewById(productId, reviewId);
         return ResponseEntity.ok(review);
     }
-
-
-
-
 }
