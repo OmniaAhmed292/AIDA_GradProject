@@ -127,6 +127,23 @@ db.createCollection("customers", {
                         },
                     },
                 },
+
+                //cart
+                 cart: {
+                    bsonType: "array",
+                    items: {
+                        bsonType: "object",
+                        required: ["productId", "name", "quantity", "price", "totalPrice", "updatedAt"],
+                        properties: {
+                            productId: { bsonType: "objectId" },
+                            name: { bsonType: "string" },
+                            quantity: { bsonType: "int" },
+                            price: { bsonType: "double" },
+                            totalPrice: { bsonType: "double" },
+                            updatedAt: { bsonType: "date" }
+                        }
+                    }
+                },
             },
         },
     },
@@ -416,27 +433,7 @@ db.createCollection("products", {
                         },
                     },
                 },
-                cart: {
-                    bsonType: "object",
-                    required: ["items", "totalPrice", "updatedAt"],
-                    properties: {
-                        items: {
-                            bsonType: "array",
-                            items: {
-                                bsonType: "object",
-                                required: ["productId", "name", "quantity", "price"],
-                                properties: {
-                                    productId: { bsonType: "objectId" },
-                                    name: { bsonType: "string" },
-                                    quantity: { bsonType: "int" },
-                                    price: { bsonType: "double" }
-                                },
-                            },
-                        },
-                        totalPrice: { bsonType: "double" },
-                        updatedAt: { bsonType: "date" }
-                    },
-                },
+                
 
                 // Vendor and shelf information
                 vendorId: { bsonType: "string" },
