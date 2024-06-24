@@ -45,7 +45,7 @@ public interface ProductRepository extends MongoRepository<Product, String> {
     public List<Product> findTop3ByIsShownOrderBySalesDesc(Boolean isShown);
 
     // out of stock products
-    public List<Product> findByQuantityLessThanAndIsShownOrderBySubscribersDesc(int quantity, Boolean isShown, Pageable pageable);
+    public List<Product> findByQuantityLessThanAndIsShownAndVendorIdOrderBySubscribersDesc(Integer quantity, Boolean isShown, String vendorId, Pageable pageable);
 
 
 }
