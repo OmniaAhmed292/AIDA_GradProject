@@ -62,8 +62,9 @@ public class StatisticsService {
 
 
     public List<Product> getOutOfStock(int page) {
-        Pageable pageable = PageRequest.of(page-1, 6);
-        return productRepository.findByQuantityLessThanAndIsShownOrderBySubscribersDesc(1, true, pageable);
+        Vendor vendor = authorization.getVendorInfo();
+        Pageable pageable = PageRequest.of(page-1, 60);
+        return productRepository.findByQuantityLessThanAndIsShownAndVendorIdOrderBySubscribersDesc(1 ,true, vendor.getId() ,pageable);
     }
 
 }

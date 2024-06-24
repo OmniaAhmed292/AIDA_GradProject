@@ -3,6 +3,7 @@ package com.example.aida.Controllers;
 import com.example.aida.Entities.Product;
 import com.example.aida.Entities.Reviews;
 import com.example.aida.Entities.Tag;
+import com.example.aida.service.MachineLearningService;
 import com.example.aida.service.ProductService.FileProcessingService;
 import com.example.aida.service.ProductService.ProductSearchRequest;
 import com.example.aida.service.ProductService.ProductService;
@@ -24,6 +25,8 @@ public class ProductController {
     private final ProductService productService;
     private final FileProcessingService fileProcessingService;
     private final ReviewService reviewService;
+    private final MachineLearningService machineLearningService;
+
     //---------------------------------Tag---------------------------------
     @GetMapping("/tags")
     public ResponseEntity<List<Tag>> getAllTags(){
@@ -160,5 +163,11 @@ public class ProductController {
             @PathVariable String reviewId) {
         Reviews review = reviewService.getReviewById(productId, reviewId);
         return ResponseEntity.ok(review);
+    }
+
+    //recommended products
+    @GetMapping("/recommendation")
+    public ResponseEntity<List<Product>> getRecommendedProducts() {
+        return ResponseEntity.ok(machineLearningService.getPrediction());
     }
 }

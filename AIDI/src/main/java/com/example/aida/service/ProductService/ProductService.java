@@ -230,6 +230,7 @@ public class ProductService {
     }
 
 
+
     @Async
     public void notifyRestock(String product_id){
         //TODO implement subscription restock notification
