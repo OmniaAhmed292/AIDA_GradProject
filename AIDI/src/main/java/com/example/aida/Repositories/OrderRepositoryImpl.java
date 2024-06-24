@@ -17,6 +17,7 @@ import org.springframework.stereotype.Repository;
 import org.bson.Document;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -65,9 +66,9 @@ public class OrderRepositoryImpl {
                Aggregation.group("month").count().as("ordersCount").sum("revenue").as("revenue"),
 
                 //project change _id to month
-                Aggregation.project().and("_id").as("month")
-                        .and("revenue").as("revenue")
-                        .and("ordersCount").as("ordersCount"),
+                Aggregation.project().andExpression("_id").as("month")
+                        .andExpression("revenue").as("revenue")
+                        .andExpression("ordersCount").as("ordersCount"),
                         //.andExclude("_id"),
 
                 //sort by month
@@ -76,15 +77,13 @@ public class OrderRepositoryImpl {
 
 
         AggregationResults<MonthSales> results = mongoTemplate.aggregate(aggregation, "orders", MonthSales.class);
-        List<MonthSales> monthSales = results.getMappedResults();
-
-        return monthSales ;
+        return results.getMappedResults();
     }
 
     //get the age group of customers who make orders to a vendor
     public CustomerInsightsResponse getCustomerInsights(String vendorId){
         //match vendorId
-        Criteria matchCriteria = Criteria.where("order_items.vendor_id").is(vendorId);
+        Criteria matchCriteria = Criteria.where("order_items.vendor_id").is(new ObjectId(vendorId));
 
         //unwind order_items
         Aggregation aggregation = Aggregation.newAggregation(
@@ -93,50 +92,53 @@ public class OrderRepositoryImpl {
                 //join with customer collection
                 Aggregation.lookup("customers", "customer_id", "_id", "customers"),
                 //add field age extracted from customer.birthdate (now year subtracted from customer birth year)
-                Aggregation.addFields().addField("order_items.age")
+                Aggregation.unwind("customers"),
+                Aggregation.addFields().addField("age")
                         .withValueOf(ArithmeticOperators.Subtract
-                                .valueOf(DateOperators.dateOf("created_at").year()).subtract(DateOperators.dateOf("customers.birthdate").year())).build(),
+                                .valueOf(DateOperators.dateOf("created_at").year())
+                                .subtract(DateOperators.dateOf("customers.birthdate").year())).build(),
                 //get minimum age
-                Aggregation.group().min("order_items.age").as("minAgeGroup"),
-                //get maximum age
-                Aggregation.group().max("order_items.age").as("maxAgeGroup"),
-                //get number of female customers
-                Aggregation.group("customer_id").count().as("customersCount"),
-                Aggregation.match(Criteria.where("customers.gender").is("Female")),
-                Aggregation.group("customer_id").count().as("femaleCount"),
-                //get number of male customers as customers count - femaleCount
-                Aggregation.addFields().addField("maleCount").withValueOf(ArithmeticOperators.Subtract
-                        .valueOf("customersCount").subtract("femaleCount")).build()
+                Aggregation.group().min("age").as("minAgeGroup")
+//                        //get maximum age
+                        .max("age").as("maxAgeGroup")
+                        .sum(ConditionalOperators.when(Criteria.where("customers.gender")
+                                .is("Female")).then(1).otherwise(0)).as("femaleCount")
+                        .sum(ConditionalOperators.when(Criteria.where("customers.gender")
+                                .is("Male")).then(1).otherwise(0)).as("maleCount")
 
 
         );
 
-        AggregationResults<CustomerInsightsResponse> results = mongoTemplate.aggregate(aggregation, "order", CustomerInsightsResponse.class);
-        return results.getUniqueMappedResult();
+        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "orders", Document.class);
+        CustomerInsightsResponse customerInsightsResponse = new CustomerInsightsResponse();
+        Document document = results.getUniqueMappedResult();
+        if (document != null) {
+            customerInsightsResponse.setMinAgeGroup(document.getInteger("minAgeGroup"));
+            customerInsightsResponse.setMaxAgeGroup(document.getInteger("maxAgeGroup"));
+            customerInsightsResponse.setFemaleCustomersCount(document.getInteger("femaleCount"));
+            customerInsightsResponse.setMaleCustomersCount(document.getInteger("maleCount"));
+        }
+        return customerInsightsResponse;
     }
 
     public Double getRepeatCustomerRate(String vendor_id){
         //match vendorId
-        Criteria matchCriteria = Criteria.where("order_items.vendor_id").is(vendor_id);
+        MatchOperation matchStage = Aggregation.match(Criteria.where("order_items.vendor_id").is(new ObjectId(vendor_id)));
+        GroupOperation groupStage1 = Aggregation.group("customer_id").count().as("ordersCount");
+        GroupOperation groupStage2 = Aggregation.group().count().as("totalCustomers")
+                .sum(ConditionalOperators.when(Criteria.where("ordersCount").gt(1)).then(1).otherwise(0)).as("repeatCustomers");
+        ProjectionOperation projectStage = Aggregation.project()
+                .andExclude("_id")
+                .and(ArithmeticOperators.valueOf("repeatCustomers").divideBy("totalCustomers")).as("repeatCustomerRate");
 
+        Aggregation aggregation = Aggregation.newAggregation(matchStage, groupStage1, groupStage2, projectStage);
 
-        Aggregation aggregation = Aggregation.newAggregation(
-                //match vendorId
-                Aggregation.match(matchCriteria),
-                //group by customer_id and count the number of orders
-                Aggregation.group("customer_id").count().as("ordersCount"),
-                //get the total number of customers
-                Aggregation.group().sum("customersCount").as("totalCustomers"),
-                //get the number of customers who made more than one order
-                Aggregation.match(Criteria.where("customersCount").gt(1)),
-                Aggregation.group().count().as("repeatCustomers"),
-                //get the repeat customer rate
-                Aggregation.addFields().addField("repeatCustomerRate").withValueOf(ArithmeticOperators.Divide
-                        .valueOf("repeatCustomers").divideBy("totalCustomers")).build()
-        );
-
-        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "order", Document.class);
-        return Objects.requireNonNull(results.getUniqueMappedResult()).getDouble("repeatCustomerRate");
+        AggregationResults<Document> results = mongoTemplate.aggregate(aggregation, "orders", Document.class);
+        Document document = results.getUniqueMappedResult();
+        if (document != null) {
+            return document.getDouble("repeatCustomerRate");
+        }
+        return 0.0;
 
     }
 }

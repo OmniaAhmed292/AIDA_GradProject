@@ -4,6 +4,7 @@ import com.example.aida.Entities.Product;
 
 import com.example.aida.Enums.SortFeild;
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
@@ -93,7 +94,7 @@ public class ProductRepositoryImpl {
     // total sum of views of a vendor's products
     public int sumViewsByVendorId(String vendorId){
         Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.match(Criteria.where("vendorId").is(vendorId)),
+                Aggregation.match(Criteria.where("vendor_id").is(new ObjectId(vendorId))),
                 Aggregation.group().sum("views").as("totalViews")
         );
 

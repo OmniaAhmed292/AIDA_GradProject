@@ -64,6 +64,7 @@ public class ProductService {
     }
 
     public Tag saveTag(Tag tag){
+        tag.setTagName(tag.getTagName().toLowerCase());
         return tagRepository.save(tag);
     }
     //---------------------------------Product Service---------------------------------
